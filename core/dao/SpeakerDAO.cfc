@@ -214,7 +214,7 @@
   <cfset var qGetSpeaker = '' />
   <cfquery name="qGetSpeaker" datasource="#variables.instance.datasource.getDSN()#" username="#variables.instance.datasource.getUsername()#" password="#variables.instance.datasource.getPassword()#">
 	SELECT speakerId FROM speakers
-	WHERE speakerId = <cfqueryparam value="#ARGUMENTS.speaker.getUniqueID()#" cfsqltype="cf_sql_integer" />
+	WHERE speakerId = <cfqueryparam value="#ARGUMENTS.speaker.getSpeakerId()#" cfsqltype="cf_sql_integer" />
   </cfquery>
   <cfif qGetSpeaker.RecordCount>
 	<cfreturn true />

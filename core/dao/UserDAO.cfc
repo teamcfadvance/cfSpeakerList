@@ -85,7 +85,7 @@
 	  password = <cfqueryparam value="#APPLICATION.utils.dataEnc(ARGUMENTS.user.getPassword())#" cfsqltype="cf_sql_varchar" />,
 	  role = <cfqueryparam value="#APPLICATION.utils.dataEnc(ARGUMENTS.user.getRole())#" cfsqltype="cf_sql_varchar" />,
 	  isActive = <cfqueryparam value="#ARGUMENTS.user.getIsActive()#" cfsqltype="cf_sql_bit" />
-	WHERE userId = <cfqueryparam value="#ARGUMENTS.user.getUniqueID()#" cfsqltype="cf_sql_integer" />
+	WHERE userId = <cfqueryparam value="#ARGUMENTS.user.getUserId()#" cfsqltype="cf_sql_integer" />
   </cfquery>
   <!--- catch any errors --->
   <cfcatch type="any">
@@ -93,7 +93,7 @@
 	<cfreturn 0 />
   </cfcatch>
   </cftry>
-  <cfreturn ARGUMENTS.user.getUniqueID() />
+  <cfreturn ARGUMENTS.user.getUserId() />
 </cffunction>
 
 <!--- DELETE --->
@@ -129,7 +129,7 @@
   <cfset var qGetUser = '' />
   <cfquery name="qGetUser" datasource="#variables.instance.datasource.getDSN()#" username="#variables.instance.datasource.getUsername()#" password="#variables.instance.datasource.getPassword()#">
 	SELECT userId FROM users
-	WHERE userId = <cfqueryparam value="#ARGUMENTS.user.getUniqueID()#" cfsqltype="cf_sql_integer" />
+	WHERE userId = <cfqueryparam value="#ARGUMENTS.user.getUserId()#" cfsqltype="cf_sql_integer" />
   </cfquery>
   <cfif qGetUser.RecordCount>
 	<cfreturn true />

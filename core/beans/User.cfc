@@ -64,10 +64,6 @@
   <cfreturn variables.instance.userId />
 </cffunction>
 
-<cffunction name="getUniqueID" access="public" output="false" returntype="string" hint="I return the userId value. (alternate/ legacy method)">
-  <cfreturn variables.instance.userId />
-</cffunction>
-
 <cffunction name="getUsername" access="public" output="false" returntype="string" hint="I return the username value.">
   <cfreturn variables.instance.username />
 </cffunction>
