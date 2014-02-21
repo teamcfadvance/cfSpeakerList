@@ -100,9 +100,9 @@
 	<cfargument name="orderBy" type="string" required="false" default="lastName, firstName" hint="I am the column(s) (and optional ordinal ASC or DESC) that records should be ordered by." />
 	
 	<!--- var scope --->
-	<cfset var qGetSpeakers = '' />
+	<cfset var variables.qGetSpeakers = '' />
 	<cfset var queryName = 'qGetSpeakers' />
-	<cfset var ['db' & Hash(ARGUMENTS.searchTerm)] = '' />
+	<cfset var variables['db' & Hash(ARGUMENTS.searchTerm)] = '' />
 	<cfset var iX = 0 />
 	<cfset var thisTerm = '' />
 	
@@ -123,30 +123,14 @@
 		AND (  
 		<!--- first name loop --->
 		<cfloop from="1" to="#ListLen(ARGUMENTS.searchTerm,' ')#" index="iX">
-			<!--- assign encrypted value to a variable, since ACF adds spaces to strings returned from functions --->
-			<!--- and used directly in place of a string without first assigning it to a variable (/facepalm)    --->
-			<cfset thisTerm = APPLICATION.dataEnc(ListGetAt(ARGUMENTS.searchTerm,iX,' ')) />
-			s.firstName LIKE <cfqueryparam value="%#thisTerm#%" cfsqltype="cf_sql_varchar" />
+			s.firstName LIKE <cfqueryparam value="%#ListGetAt(ARGUMENTS.searchTerm,iX,' ')#%" cfsqltype="cf_sql_varchar" />
 			<cfif NOT iX EQ ListLen(ARGUMENTS.searchTerm,' ')> OR </cfif>
 		</cfloop>
 		)
 		OR (
 		<!--- last name loop --->
 		<cfloop from="1" to="#ListLen(ARGUMENTS.searchTerm,' ')#" index="iX">
-			<!--- assign encrypted value to a variable, since ACF adds spaces to strings returned from functions --->
-			<!--- and used directly in place of a string without first assigning it to a variable (/facepalm)    --->
-			<cfset thisTerm = APPLICATION.dataEnc(ListGetAt(ARGUMENTS.searchTerm,iX,' ')) />
-			s.lastName LIKE <cfqueryparam value="%#thisTerm#%" cfsqltype="cf_sql_varchar" />
-			<cfif NOT iX EQ ListLen(ARGUMENTS.searchTerm,' ')> OR </cfif>
-		</cfloop>
-		)
-		OR ( 
-		<!--- twitter handle loop --->
-		<cfloop from="1" to="#ListLen(ARGUMENTS.searchTerm,' ')#" index="iX">
-			<!--- assign encrypted value to a variable, since ACF adds spaces to strings returned from functions --->
-			<!--- and used directly in place of a string without first assigning it to a variable (/facepalm)    --->
-			<cfset thisTerm = APPLICATION.dataEnc(ListGetAt(ARGUMENTS.searchTerm,iX,' ')) />
-			s.twitter LIKE <cfqueryparam value="%#thisTerm#%" cfsqltype="cf_sql_varchar" />
+			s.lastName LIKE <cfqueryparam value="%#ListGetAt(ARGUMENTS.searchTerm,iX,' ')#%" cfsqltype="cf_sql_varchar" />
 			<cfif NOT iX EQ ListLen(ARGUMENTS.searchTerm,' ')> OR </cfif>
 		</cfloop>
 		)
@@ -179,9 +163,9 @@
 	<cfargument name="orderBy" type="string" required="false" default="lastName, firstName" hint="I am the column(s) (and optional ordinal ASC or DESC) that records should be ordered by." />
 	
 	<!--- var scope --->
-	<cfset var qGetSpeakers = '' />
+	<cfset var variables.qGetSpeakers = '' />
 	<cfset var queryName = 'qGetSpeakers' />
-	<cfset var ['db' & Hash(ARGUMENTS.searchTerms)] = '' />
+	<cfset var variables['db' & Hash(ARGUMENTS.searchTerms)] = '' />
 	<cfset var iX = 0 />
 	<cfset var iY = 0 />
 	<cfset var thisTerm = '' />
@@ -205,30 +189,14 @@
 			AND (  
 			<!--- first name loop --->
 			<cfloop from="1" to="#ListLen(ListGetAt(ARGUMENTS.searchTerms,iY),' ')#" index="iX">
-				<!--- assign encrypted value to a variable, since ACF adds spaces to strings returned from functions --->
-				<!--- and used directly in place of a string without first assigning it to a variable (/facepalm)    --->
-				<cfset thisTerm = APPLICATION.dataEnc(ListGetAt(ListGetAt(ARGUMENTS.searchTerms,iY),iX,' ')) />
-				s.firstName LIKE <cfqueryparam value="%#thisTerm#%" cfsqltype="cf_sql_varchar" />
+				s.firstName LIKE <cfqueryparam value="%#ListGetAt(ListGetAt(ARGUMENTS.searchTerms,iY),iX,' ')#%" cfsqltype="cf_sql_varchar" />
 				<cfif NOT iX EQ ListLen(ListGetAt(ARGUMENTS.searchTerms,iY),' ')> OR </cfif>
 			</cfloop>
 			)
 			OR (
 			<!--- last name loop --->
 			<cfloop from="1" to="#ListLen(ListGetAt(ARGUMENTS.searchTerms,iY),' ')#" index="iX">
-				<!--- assign encrypted value to a variable, since ACF adds spaces to strings returned from functions --->
-				<!--- and used directly in place of a string without first assigning it to a variable (/facepalm)    --->
-				<cfset thisTerm = APPLICATION.dataEnc(ListGetAt(ListGetAt(ARGUMENTS.searchTerms,iY),iX,' ')) />
-				s.lastName LIKE <cfqueryparam value="%#thisTerm#%" cfsqltype="cf_sql_varchar" />
-				<cfif NOT iX EQ ListLen(ListGetAt(ARGUMENTS.searchTerms,iY),' ')> OR </cfif>
-			</cfloop>
-			)
-			OR ( 
-			<!--- twitter handle loop --->
-			<cfloop from="1" to="#ListLen(ListGetAt(ARGUMENTS.searchTerms,iY),' ')#" index="iX">
-				<!--- assign encrypted value to a variable, since ACF adds spaces to strings returned from functions --->
-				<!--- and used directly in place of a string without first assigning it to a variable (/facepalm)    --->
-				<cfset thisTerm = APPLICATION.dataEnc(ListGetAt(ListGetAt(ARGUMENTS.searchTerms,iY),iX,' ')) />
-				s.twitter LIKE <cfqueryparam value="%#thisTerm#%" cfsqltype="cf_sql_varchar" />
+				s.lastName LIKE <cfqueryparam value="%#ListGetAt(ListGetAt(ARGUMENTS.searchTerms,iY),iX,' ')#%" cfsqltype="cf_sql_varchar" />
 				<cfif NOT iX EQ ListLen(ListGetAt(ARGUMENTS.searchTerms,iY),' ')> OR </cfif>
 			</cfloop>
 			)
