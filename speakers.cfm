@@ -29,20 +29,12 @@
 <!--- otherwise, neither simple nor complex search requested --->
 <cfelse>
 
-	<!--- for testing purposes only --->
-	<cfset thisSpeaker = 'EA5E9CBBDE7019808D178C0E758D82656B6AD3E944239CB2A1C3C103506F4F64DD4B7B29904EA7D77656371648882C5F303357E2A5914998F5EB4497C92F87482F991B7969F8CC52A96E42D99A444E53B5E51B2AC3EDE153579D1633E256A20DB35AB10416F563E3AFCC4B2FCEAEBE822131A4708F0981EDE9D6E002E4F2EF24D53D4772339339CAEFB00EAC90C0B154' />
-
-	<!--- get a test user to return --->
+	<!--- get a blank query, this will notify the user that they have to start over --->
 	<cfset qGetResults = APPLICATION.speakerGateway.filter(
-		firstName	= thisSpeaker
+		firstName	= Hash(RandRange(1000,999999),'SHA-512')
 	) />
 
 </cfif>
-
-<cfif NOT qGetResults.RecordCount>
-	<cfdump var="#qGetResults#"><cfabort>
-</cfif>
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -82,7 +74,7 @@
     <div class="container">
 	  <div class="row">
         <div class="col-md-12">
-			<cfif qGetResults.RecordCount OR APPLICATION.debugOn>
+			<cfif qGetResults.RecordCount>
 			<div class="panel panel-primary">
 			  <div class="panel-heading">Matching Speakers</div>
 			  <div class="panel-body">
@@ -117,7 +109,7 @@
 			<div class="panel panel-danger">
 			  <div class="panel-heading">No Matching Speakers</div>
 			  <div class="panel-body">
-				<p>No speakers matched your <cfif FindNoCase(Hash('browse','SHA-512'),FORM.mode)>browse request<cfelse>search request for &apos;<cfoutput><em>#FORM.search#</em></cfoutput>&apos;</cfif>. <cfif FindNoCase(Hash('browse','SHA-512'),FORM.mode)>There are no speakers available in the location you have browsed. Please check back often as our list is constantly expanding to include new speakers.<cfelse>You can try narrowing your search or adding 'AND' between search terms to broaden your search.</cfif></p>
+				<p>No speakers matched your <cfif FindNoCase(Hash('browse','SHA-512'),FORM.mode)>browse request<cfelse>search request for &apos;<cfoutput><em>#FORM.search#</em></cfoutput>&apos;</cfif>. <cfif FindNoCase(Hash('browse','SHA-512'),FORM.mode)>There are no speakers available in the location you have browsed. Please check back often as our list is constantly expanding to include new speakers.<cfelse>You can try to broaden your search by using less terms (e.g. &apos;HTML&apos; instead of &apos;HTML AND CSS&apos;).</cfif></p>
 			  </div>
 			  <div class="panel-footer">
 			  	<cfoutput><a class="btn btn-info" href="#returnLink#" role="button">Click here to start over</a></cfoutput>
