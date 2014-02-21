@@ -36,9 +36,9 @@
   <cfargument name="isAEL" type="any" required="false" default="" hint="I am the isAEL boolean to return records for." />
   <cfargument name="isUGM" type="any" required="false" default="" hint="I am the isUGM boolean to return records for." />
   <cfargument name="isOther" type="any" required="false" default="" hint="I am the isOther boolean to return records for." />
-  <cfargument name="orderBy" type="any" required="false" default="" hint="I am the column (and optional ordinal ASC or DESC) that records should be ordered by." />
+  <cfargument name="orderBy" type="any" required="false" default="" hint="I am the column(s) (and optional ordinal ASC or DESC) that records should be ordered by." />
   <cfargument name="cache" type="any" required="false" default="false" hint="I am a flag to determine if this query should be cached." />
-  <cfargument name="cacheTime" type="any" required="false" default="#CreateTimeSpan(0,1,0,0)#" hint="I am timespan to cache this query (Use CreateTimeSpan() or use the default cache time of one hour by not passing this variable." />
+  <cfargument name="cacheTime" type="any" required="false" default="#CreateTimeSpan(0,1,0,0)#" hint="I am the timespan to cache this query (Use CreateTimeSpan() or use the default cache time of one hour by not passing this variable." />
     <cfset var thisFilter = StructNew() />
     <cfif IsDefined('ARGUMENTS.userId') AND ARGUMENTS.userId NEQ "">
 		<cfset thisFilter.userId = ARGUMENTS.userId />
@@ -94,19 +94,24 @@
 
 <cffunction name="simpleSearch" access="public" output="false" returntype="query" hint="I run a simple search of all terms provided accross multiple speaker fields.">
 	<cfargument name="searchTerm" type="string" required="true" hint="I am the search term to use for this search.">
-	<cfargument name="cache" type="boolean" required="false" default="false" hint="I am a flag to use for caching this query." />
-	<cfargument name="cacheTime" type="any" required="false" default="#CreateTimeSpan(0,0,0,0)#" hint="I am the amount of time to cache the query." />
-	<cfargument name="orderBy" type="string" required="false" default="lastName, firstName" hint="I am the order by which speakers should be returned." />
+	<cfargument name="cache" type="boolean" required="false" default="false" hint="I am a flag to determine if this query should be cached." />
+	<cfargument name="cacheTime" type="any" required="false" default="#CreateTimeSpan(0,0,0,0)#" hint="I am the timespan to cache this query (Use CreateTimeSpan())." />
+	<cfargument name="orderBy" type="string" required="false" default="lastName, firstName" hint="I am the column(s) (and optional ordinal ASC or DESC) that records should be ordered by." />
 	
+	<!--- var scope --->
 	<cfset var qGetSpeakers = '' />
 	<cfset var queryName = 'qGetSpeakers' />
 	<cfset var ['db' & Hash(ARGUMENTS.searchTerm)] = '' />
 	<cfset var iX = 0 />
 	
+	<!--- check if we're caching this query --->
 	<cfif cache>
+		<!--- we are, set the name of the query to a hash of the search terms --->
 		<cfset queryName = 'db' & Hash(ARGUMENTS.searchTerm) />
 	</cfif>	
 	
+	<!--- query (and possibly cache) the list of speakers by looping through the search term(s) --->
+	<!--- for each of the first name, last name, twitter handle, specialties and locations --->
 	<cfquery name="#queryName#" datasource="#variables.instance.datasource.getDSN()#" username="#variables.instance.datasource.getUsername()#" password="#variables.instance.datasource.getPassword()#" cachedwithin="#ARGUMENTS.cacheTime#">
 		SELECT s.speakerKey, s.firstName, s.lastName, s.specialties, s.locations
 		FROM speakers s
@@ -114,30 +119,35 @@
 		WHERE ( u.isActive = <cfqueryparam value="1" cfsqltype="cf_sql_bit" />
 		AND u.role = <cfqueryparam value="speaker" cfsqltype="cf_sql_varchar" /> )
 		AND (  
+		<!--- first name loop --->
 		<cfloop from="1" to="#ListLen(ARGUMENTS.searchTerm,' ')#" index="iX">
 			s.firstName LIKE <cfqueryparam value="%#APPLICATION.dataEnc(ListGetAt(ARGUMENTS.searchTerm,iX,' '))#%" cfsqltype="cf_sql_varchar" />
 			<cfif NOT iX EQ ListLen(ARGUMENTS.searchTerm,' ')> OR </cfif>
 		</cfloop>
 		)
 		OR (
+		<!--- last name loop --->
 		<cfloop from="1" to="#ListLen(ARGUMENTS.searchTerm,' ')#" index="iX">
 			s.lastName LIKE <cfqueryparam value="%#APPLICATION.dataEnc(ListGetAt(ARGUMENTS.searchTerm,iX,' '))#%" cfsqltype="cf_sql_varchar" />
 			<cfif NOT iX EQ ListLen(ARGUMENTS.searchTerm,' ')> OR </cfif>
 		</cfloop>
 		)
 		OR ( 
+		<!--- twitter handle loop --->
 		<cfloop from="1" to="#ListLen(ARGUMENTS.searchTerm,' ')#" index="iX">
 			s.twitter LIKE <cfqueryparam value="%#APPLICATION.dataEnc(ListGetAt(ARGUMENTS.searchTerm,iX,' '))#%" cfsqltype="cf_sql_varchar" />
 			<cfif NOT iX EQ ListLen(ARGUMENTS.searchTerm,' ')> OR </cfif>
 		</cfloop>
 		)
 		OR ( 
+		<!--- specialties loop --->
 		<cfloop from="1" to="#ListLen(ARGUMENTS.searchTerm,' ')#" index="iX">
 			s.specialties LIKE <cfqueryparam value="%#ListGetAt(ARGUMENTS.searchTerm,iX,' ')#%" cfsqltype="cf_sql_varchar" />
 			<cfif NOT iX EQ ListLen(ARGUMENTS.searchTerm,' ')> OR </cfif>
 		</cfloop>
 		)
 		OR ( 
+		<!--- locations loop --->
 		<cfloop from="1" to="#ListLen(ARGUMENTS.searchTerm,' ')#" index="iX">
 			s.locations LIKE <cfqueryparam value="%#ListGetAt(ARGUMENTS.searchTerm,iX,' ')#%" cfsqltype="cf_sql_varchar" />
 			<cfif NOT iX EQ ListLen(ARGUMENTS.searchTerm,' ')> OR </cfif>
@@ -146,6 +156,7 @@
 		ORDER BY #ARGUMENTS.orderBy#
 	</cfquery>
 	
+	<!--- return the query by name --->
 	<cfreturn variables[queryName] />
 </cffunction>	
 
@@ -157,48 +168,50 @@
 	<cfloop collection="#ARGUMENTS.filter#" item="thisFilter">
 		<cfset cachedQueryName = cachedQueryName & thisFilter & ARGUMENTS.filter[thisFilter] />
 	</cfloop>
-	<cfset cachedQueryName = Hash(cachedQueryName,'MD5') />
+	<cfset cachedQueryName = 'db' & Hash(cachedQueryName,'MD5') />
 	<cfquery name="#cachedQueryName#" datasource="#variables.instance.datasource.getDSN()#" username="#variables.instance.datasource.getUsername()#" password="#variables.instance.datasource.getPassword()#" cachedwithin="#ARGUMENTS.filter.cacheTime#">
 		SELECT speakerKey, userId, firstName, lastName, email, phone, showPhone, twitter, showTwitter, specialties, locations, isACP, isAEL, isUGM, isOther
-		FROM speakers
-		WHERE 1 = 1
+		FROM speakers s
+		LEFT JOIN users u ON u.userId = s.userId
+		WHERE ( u.isActive = <cfqueryparam value="1" cfsqltype="cf_sql_bit" />
+		AND u.role = <cfqueryparam value="speaker" cfsqltype="cf_sql_varchar" /> )
   <cfif NOT structIsEmpty(ARGUMENTS.filter)>
     <!--- filter is applied --->
     <cfif structKeyExists(ARGUMENTS.filter, 'userId')>
-		AND userId = <cfqueryparam value="#ARGUMENTS.filter.userId#" cfsqltype="cf_sql_integer" />
+		AND s.userId = <cfqueryparam value="#ARGUMENTS.filter.userId#" cfsqltype="cf_sql_integer" />
     </cfif>
     <cfif structKeyExists(ARGUMENTS.filter, 'firstName')>
-		AND firstName = <cfqueryparam value="#ARGUMENTS.filter.firstName#" cfsqltype="cf_sql_varchar" />
+		AND s.firstName = <cfqueryparam value="#ARGUMENTS.filter.firstName#" cfsqltype="cf_sql_varchar" />
     </cfif>
     <cfif structKeyExists(ARGUMENTS.filter, 'lastName')>
-		AND lastName = <cfqueryparam value="#ARGUMENTS.filter.lastName#" cfsqltype="cf_sql_varchar" />
+		AND s.lastName = <cfqueryparam value="#ARGUMENTS.filter.lastName#" cfsqltype="cf_sql_varchar" />
     </cfif>
     <cfif structKeyExists(ARGUMENTS.filter, 'email')>
-		AND email = <cfqueryparam value="#ARGUMENTS.filter.email#" cfsqltype="cf_sql_varchar" />
+		AND s.email = <cfqueryparam value="#ARGUMENTS.filter.email#" cfsqltype="cf_sql_varchar" />
     </cfif>
     <cfif structKeyExists(ARGUMENTS.filter, 'phone')>
-		AND phone = <cfqueryparam value="#ARGUMENTS.filter.phone#" cfsqltype="cf_sql_varchar" />
+		AND s.phone = <cfqueryparam value="#ARGUMENTS.filter.phone#" cfsqltype="cf_sql_varchar" />
     </cfif>
     <cfif structKeyExists(ARGUMENTS.filter, 'twitter')>
-		AND twitter = <cfqueryparam value="#ARGUMENTS.filter.twitter#" cfsqltype="cf_sql_varchar" />
+		AND s.twitter = <cfqueryparam value="#ARGUMENTS.filter.twitter#" cfsqltype="cf_sql_varchar" />
     </cfif>
     <cfif structKeyExists(ARGUMENTS.filter, 'specialties')>
-		AND specialties = <cfqueryparam value="#ARGUMENTS.filter.specialties#" cfsqltype="cf_sql_varchar" />
+		AND s.specialties = <cfqueryparam value="#ARGUMENTS.filter.specialties#" cfsqltype="cf_sql_varchar" />
     </cfif>
     <cfif structKeyExists(ARGUMENTS.filter, 'locations')>
-		AND locations = <cfqueryparam value="#ARGUMENTS.filter.locations#" cfsqltype="cf_sql_varchar" />
+		AND s.locations = <cfqueryparam value="#ARGUMENTS.filter.locations#" cfsqltype="cf_sql_varchar" />
     </cfif>
     <cfif structKeyExists(ARGUMENTS.filter, 'isACP')>
-		AND isACP = <cfqueryparam value="#ARGUMENTS.filter.isACP#" cfsqltype="cf_sql_bit" />
+		AND s.isACP = <cfqueryparam value="#ARGUMENTS.filter.isACP#" cfsqltype="cf_sql_bit" />
     </cfif>
     <cfif structKeyExists(ARGUMENTS.filter, 'isAEL')>
-		AND isAEL = <cfqueryparam value="#ARGUMENTS.filter.isAEL#" cfsqltype="cf_sql_bit" />
+		AND s.isAEL = <cfqueryparam value="#ARGUMENTS.filter.isAEL#" cfsqltype="cf_sql_bit" />
     </cfif>
     <cfif structKeyExists(ARGUMENTS.filter, 'isUGM')>
-		AND isUGM = <cfqueryparam value="#ARGUMENTS.filter.isUGM#" cfsqltype="cf_sql_bit" />
+		AND s.isUGM = <cfqueryparam value="#ARGUMENTS.filter.isUGM#" cfsqltype="cf_sql_bit" />
     </cfif>
     <cfif structKeyExists(ARGUMENTS.filter, 'isOther')>
-		AND isOther = <cfqueryparam value="#ARGUMENTS.filter.isOther#" cfsqltype="cf_sql_bit" />
+		AND s.isOther = <cfqueryparam value="#ARGUMENTS.filter.isOther#" cfsqltype="cf_sql_bit" />
     </cfif>
     <cfif structKeyExists(ARGUMENTS.filter, 'order_by')>
 	ORDER BY #ARGUMENTS.filter.order_by#
@@ -215,45 +228,47 @@
 
   <cfquery name="qGetSpeakers" datasource="#variables.instance.datasource.getDSN()#" username="#variables.instance.datasource.getUsername()#" password="#variables.instance.datasource.getPassword()#">
 		SELECT speakerKey, userId, firstName, lastName, email, phone, showPhone, twitter, showTwitter, specialties, locations, isACP, isAEL, isUGM, isOther
-		FROM speakers
-		WHERE 1 = 1
+		FROM speakers s
+		LEFT JOIN users u ON u.userId = s.userId
+		WHERE ( u.isActive = <cfqueryparam value="1" cfsqltype="cf_sql_bit" />
+		AND u.role = <cfqueryparam value="speaker" cfsqltype="cf_sql_varchar" /> )
   <cfif NOT structIsEmpty(ARGUMENTS.filter)>
     <!--- filter is applied --->
     <cfif structKeyExists(ARGUMENTS.filter, 'userId')>
-		AND userId = <cfqueryparam value="#ARGUMENTS.filter.userId#" cfsqltype="cf_sql_integer" />
+		AND s.userId = <cfqueryparam value="#ARGUMENTS.filter.userId#" cfsqltype="cf_sql_integer" />
     </cfif>
     <cfif structKeyExists(ARGUMENTS.filter, 'firstName')>
-		AND firstName = <cfqueryparam value="#ARGUMENTS.filter.firstName#" cfsqltype="cf_sql_varchar" />
+		AND s.firstName = <cfqueryparam value="#ARGUMENTS.filter.firstName#" cfsqltype="cf_sql_varchar" />
     </cfif>
     <cfif structKeyExists(ARGUMENTS.filter, 'lastName')>
-		AND lastName = <cfqueryparam value="#ARGUMENTS.filter.lastName#" cfsqltype="cf_sql_varchar" />
+		AND s.lastName = <cfqueryparam value="#ARGUMENTS.filter.lastName#" cfsqltype="cf_sql_varchar" />
     </cfif>
     <cfif structKeyExists(ARGUMENTS.filter, 'email')>
-		AND email = <cfqueryparam value="#ARGUMENTS.filter.email#" cfsqltype="cf_sql_varchar" />
+		AND s.email = <cfqueryparam value="#ARGUMENTS.filter.email#" cfsqltype="cf_sql_varchar" />
     </cfif>
     <cfif structKeyExists(ARGUMENTS.filter, 'phone')>
-		AND phone = <cfqueryparam value="#ARGUMENTS.filter.phone#" cfsqltype="cf_sql_varchar" />
+		AND s.phone = <cfqueryparam value="#ARGUMENTS.filter.phone#" cfsqltype="cf_sql_varchar" />
     </cfif>
     <cfif structKeyExists(ARGUMENTS.filter, 'twitter')>
-		AND twitter = <cfqueryparam value="#ARGUMENTS.filter.twitter#" cfsqltype="cf_sql_varchar" />
+		AND s.twitter = <cfqueryparam value="#ARGUMENTS.filter.twitter#" cfsqltype="cf_sql_varchar" />
     </cfif>
     <cfif structKeyExists(ARGUMENTS.filter, 'specialties')>
-		AND specialties = <cfqueryparam value="#ARGUMENTS.filter.specialties#" cfsqltype="cf_sql_varchar" />
+		AND s.specialties = <cfqueryparam value="#ARGUMENTS.filter.specialties#" cfsqltype="cf_sql_varchar" />
     </cfif>
     <cfif structKeyExists(ARGUMENTS.filter, 'locations')>
-		AND locations = <cfqueryparam value="#ARGUMENTS.filter.locations#" cfsqltype="cf_sql_varchar" />
+		AND s.locations = <cfqueryparam value="#ARGUMENTS.filter.locations#" cfsqltype="cf_sql_varchar" />
     </cfif>
     <cfif structKeyExists(ARGUMENTS.filter, 'isACP')>
-		AND isACP = <cfqueryparam value="#ARGUMENTS.filter.isACP#" cfsqltype="cf_sql_bit" />
+		AND s.isACP = <cfqueryparam value="#ARGUMENTS.filter.isACP#" cfsqltype="cf_sql_bit" />
     </cfif>
     <cfif structKeyExists(ARGUMENTS.filter, 'isAEL')>
-		AND isAEL = <cfqueryparam value="#ARGUMENTS.filter.isAEL#" cfsqltype="cf_sql_bit" />
+		AND s.isAEL = <cfqueryparam value="#ARGUMENTS.filter.isAEL#" cfsqltype="cf_sql_bit" />
     </cfif>
     <cfif structKeyExists(ARGUMENTS.filter, 'isUGM')>
-		AND isUGM = <cfqueryparam value="#ARGUMENTS.filter.isUGM#" cfsqltype="cf_sql_bit" />
+		AND s.isUGM = <cfqueryparam value="#ARGUMENTS.filter.isUGM#" cfsqltype="cf_sql_bit" />
     </cfif>
     <cfif structKeyExists(ARGUMENTS.filter, 'isOther')>
-		AND isOther = <cfqueryparam value="#ARGUMENTS.filter.isOther#" cfsqltype="cf_sql_bit" />
+		AND s.isOther = <cfqueryparam value="#ARGUMENTS.filter.isOther#" cfsqltype="cf_sql_bit" />
     </cfif>
     <cfif structKeyExists(ARGUMENTS.filter, 'order_by')>
 	ORDER BY #ARGUMENTS.filter.order_by#
