@@ -92,7 +92,8 @@
   </cfif>
 </cffunction>
 
-<cffunction name="simpleSearch" access="public" output="false" returntype="query" hint="I run a simple search of all terms provided accross multiple speaker fields.">
+<!--- SIMPLE SEARCH --->
+<cffunction name="simpleSearch" access="public" output="false" returntype="query" hint="I run a simple search of all terms provided across multiple speaker fields.">
 	<cfargument name="searchTerm" type="string" required="true" hint="I am the search term to use for this search.">
 	<cfargument name="cache" type="boolean" required="false" default="false" hint="I am a flag to determine if this query should be cached." />
 	<cfargument name="cacheTime" type="any" required="false" default="#CreateTimeSpan(0,0,0,0)#" hint="I am the timespan to cache this query (Use CreateTimeSpan())." />
@@ -163,6 +164,90 @@
 			<cfif NOT iX EQ ListLen(ARGUMENTS.searchTerm,' ')> OR </cfif>
 		</cfloop>
 		)
+		ORDER BY #ARGUMENTS.orderBy#
+	</cfquery>
+	
+	<!--- return the query by name --->
+	<cfreturn variables[queryName] />
+</cffunction>	
+
+<!--- COMPLEX SEARCH --->
+<cffunction name="complexSearch" access="public" output="false" returntype="query" hint="I run a complex AND search of all terms provided across multiple speaker fields.">
+	<cfargument name="searchTerms" type="string" required="true" hint="I am the search terms list to use for this search.">
+	<cfargument name="cache" type="boolean" required="false" default="false" hint="I am a flag to determine if this query should be cached." />
+	<cfargument name="cacheTime" type="any" required="false" default="#CreateTimeSpan(0,0,0,0)#" hint="I am the timespan to cache this query (Use CreateTimeSpan())." />
+	<cfargument name="orderBy" type="string" required="false" default="lastName, firstName" hint="I am the column(s) (and optional ordinal ASC or DESC) that records should be ordered by." />
+	
+	<!--- var scope --->
+	<cfset var qGetSpeakers = '' />
+	<cfset var queryName = 'qGetSpeakers' />
+	<cfset var ['db' & Hash(ARGUMENTS.searchTerms)] = '' />
+	<cfset var iX = 0 />
+	<cfset var iY = 0 />
+	<cfset var thisTerm = '' />
+	
+	<!--- check if we're caching this query --->
+	<cfif cache>
+		<!--- we are, set the name of the query to a hash of the search terms --->
+		<cfset queryName = 'db' & Hash(ARGUMENTS.searchTerms) />
+	</cfif>	
+	
+	<!--- query (and possibly cache) the list of speakers by looping through the search term(s) --->
+	<!--- for each of the first name, last name, twitter handle, specialties and locations --->
+	<cfquery name="#queryName#" datasource="#variables.instance.datasource.getDSN()#" username="#variables.instance.datasource.getUsername()#" password="#variables.instance.datasource.getPassword()#" cachedwithin="#ARGUMENTS.cacheTime#">
+		SELECT s.speakerKey, s.firstName, s.lastName, s.specialties, s.locations
+		FROM speakers s
+		LEFT JOIN users u ON u.userId = s.userId
+		WHERE ( u.isActive = <cfqueryparam value="1" cfsqltype="cf_sql_bit" />
+		AND u.role = <cfqueryparam value="speaker" cfsqltype="cf_sql_varchar" /> )
+		<!--- loop through 'AND' terms --->
+		<cfloop from="1" to="#ListLen(ARGUMENTS.searchTerms)#" index="iY">
+			AND (  
+			<!--- first name loop --->
+			<cfloop from="1" to="#ListLen(ListGetAt(ARGUMENTS.searchTerms,iY),' ')#" index="iX">
+				<!--- assign encrypted value to a variable, since ACF adds spaces to strings returned from functions --->
+				<!--- and used directly in place of a string without first assigning it to a variable (/facepalm)    --->
+				<cfset thisTerm = APPLICATION.dataEnc(ListGetAt(ListGetAt(ARGUMENTS.searchTerms,iY),iX,' ')) />
+				s.firstName LIKE <cfqueryparam value="%#thisTerm#%" cfsqltype="cf_sql_varchar" />
+				<cfif NOT iX EQ ListLen(ListGetAt(ARGUMENTS.searchTerms,iY),' ')> OR </cfif>
+			</cfloop>
+			)
+			OR (
+			<!--- last name loop --->
+			<cfloop from="1" to="#ListLen(ListGetAt(ARGUMENTS.searchTerms,iY),' ')#" index="iX">
+				<!--- assign encrypted value to a variable, since ACF adds spaces to strings returned from functions --->
+				<!--- and used directly in place of a string without first assigning it to a variable (/facepalm)    --->
+				<cfset thisTerm = APPLICATION.dataEnc(ListGetAt(ListGetAt(ARGUMENTS.searchTerms,iY),iX,' ')) />
+				s.lastName LIKE <cfqueryparam value="%#thisTerm#%" cfsqltype="cf_sql_varchar" />
+				<cfif NOT iX EQ ListLen(ListGetAt(ARGUMENTS.searchTerms,iY),' ')> OR </cfif>
+			</cfloop>
+			)
+			OR ( 
+			<!--- twitter handle loop --->
+			<cfloop from="1" to="#ListLen(ListGetAt(ARGUMENTS.searchTerms,iY),' ')#" index="iX">
+				<!--- assign encrypted value to a variable, since ACF adds spaces to strings returned from functions --->
+				<!--- and used directly in place of a string without first assigning it to a variable (/facepalm)    --->
+				<cfset thisTerm = APPLICATION.dataEnc(ListGetAt(ListGetAt(ARGUMENTS.searchTerms,iY),iX,' ')) />
+				s.twitter LIKE <cfqueryparam value="%#thisTerm#%" cfsqltype="cf_sql_varchar" />
+				<cfif NOT iX EQ ListLen(ListGetAt(ARGUMENTS.searchTerms,iY),' ')> OR </cfif>
+			</cfloop>
+			)
+			OR ( 
+			<!--- specialties loop --->
+			<cfloop from="1" to="#ListLen(ListGetAt(ARGUMENTS.searchTerms,iY),' ')#" index="iX">
+				s.specialties LIKE <cfqueryparam value="%#ListGetAt(ListGetAt(ARGUMENTS.searchTerms,iY),iX,' ')#%" cfsqltype="cf_sql_varchar" />
+				<cfif NOT iX EQ ListLen(ListGetAt(ARGUMENTS.searchTerms,iY),' ')> OR </cfif>
+			</cfloop>
+			)
+			OR ( 
+			<!--- locations loop --->
+			<cfloop from="1" to="#ListLen(ListGetAt(ARGUMENTS.searchTerms,iY),' ')#" index="iX">
+				s.locations LIKE <cfqueryparam value="%#ListGetAt(ListGetAt(ARGUMENTS.searchTerms,iY),iX,' ')#%" cfsqltype="cf_sql_varchar" />
+				<cfif NOT iX EQ ListLen(ListGetAt(ARGUMENTS.searchTerms,iY),' ')> OR </cfif>
+			</cfloop>
+			)
+		<!--- end looping through 'AND' terms --->
+		</cfloop>
 		ORDER BY #ARGUMENTS.orderBy#
 	</cfquery>
 	
