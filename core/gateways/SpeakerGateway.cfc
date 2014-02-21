@@ -265,7 +265,7 @@
 	</cfloop>
 	<cfset cachedQueryName = 'db' & Hash(cachedQueryName,'MD5') />
 	<cfquery name="#cachedQueryName#" datasource="#variables.instance.datasource.getDSN()#" username="#variables.instance.datasource.getUsername()#" password="#variables.instance.datasource.getPassword()#" cachedwithin="#ARGUMENTS.filter.cacheTime#">
-		SELECT speakerKey, userId, firstName, lastName, email, phone, showPhone, twitter, showTwitter, specialties, locations, isACP, isAEL, isUGM, isOther
+		SELECT s.speakerKey, s.userId, s.firstName, s.lastName, s.email, s.phone, s.showPhone, s.twitter, s.showTwitter, s.specialties, s.locations, s.isACP, s.isAEL, s.isUGM, s.isOther
 		FROM speakers s
 		LEFT JOIN users u ON u.userId = s.userId
 		WHERE ( u.isActive = <cfqueryparam value="1" cfsqltype="cf_sql_bit" />
@@ -309,7 +309,7 @@
 		AND s.isOther = <cfqueryparam value="#ARGUMENTS.filter.isOther#" cfsqltype="cf_sql_bit" />
     </cfif>
     <cfif structKeyExists(ARGUMENTS.filter, 'order_by')>
-	ORDER BY #ARGUMENTS.filter.order_by#
+	ORDER BY s.#ARGUMENTS.filter.order_by#
     </cfif>
   </cfif>
   </cfquery>
@@ -322,7 +322,7 @@
   <cfset var qGetSpeakers = '' />
 
   <cfquery name="qGetSpeakers" datasource="#variables.instance.datasource.getDSN()#" username="#variables.instance.datasource.getUsername()#" password="#variables.instance.datasource.getPassword()#">
-		SELECT speakerKey, userId, firstName, lastName, email, phone, showPhone, twitter, showTwitter, specialties, locations, isACP, isAEL, isUGM, isOther
+		SELECT s.speakerKey, s.userId, s.firstName, s.lastName, s.email, s.phone, s.showPhone, s.twitter, s.showTwitter, s.specialties, s.locations, s.isACP, s.isAEL, s.isUGM, s.isOther
 		FROM speakers s
 		LEFT JOIN users u ON u.userId = s.userId
 		WHERE ( u.isActive = <cfqueryparam value="1" cfsqltype="cf_sql_bit" />
@@ -366,7 +366,7 @@
 		AND s.isOther = <cfqueryparam value="#ARGUMENTS.filter.isOther#" cfsqltype="cf_sql_bit" />
     </cfif>
     <cfif structKeyExists(ARGUMENTS.filter, 'order_by')>
-	ORDER BY #ARGUMENTS.filter.order_by#
+	ORDER BY s.#ARGUMENTS.filter.order_by#
     </cfif>
   </cfif>
   </cfquery>
