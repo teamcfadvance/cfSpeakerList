@@ -18,7 +18,8 @@
 <cfset errorMsg = '' />
 
 <!--- check if the form was submitted --->
-<cfif IsDefined('FORM.btn_Submit') AND Len(FORM.btn_Submit)>
+-<!--- The fields existence alone should be sufficient enough to know the form was submitted.  A form button has no value so there is no length.  --->
+-<cfif IsDefined('FORM.btn_Submit')>
 
 	<!--- it was, sanitize the form values --->
 	<cfset saniForm = APPLICATION.utils.sanitize(FORM) />
