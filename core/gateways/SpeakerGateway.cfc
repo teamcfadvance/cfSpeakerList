@@ -103,6 +103,7 @@
 	<cfset var queryName = 'qGetSpeakers' />
 	<cfset var ['db' & Hash(ARGUMENTS.searchTerm)] = '' />
 	<cfset var iX = 0 />
+	<cfset var thisTerm = '' />
 	
 	<!--- check if we're caching this query --->
 	<cfif cache>
@@ -121,21 +122,30 @@
 		AND (  
 		<!--- first name loop --->
 		<cfloop from="1" to="#ListLen(ARGUMENTS.searchTerm,' ')#" index="iX">
-			s.firstName LIKE <cfqueryparam value="%#APPLICATION.dataEnc(ListGetAt(ARGUMENTS.searchTerm,iX,' '))#%" cfsqltype="cf_sql_varchar" />
+			<!--- assign encrypted value to a variable, since ACF adds spaces to strings returned from functions --->
+			<!--- and used directly in place of a string without first assigning it to a variable (/facepalm)    --->
+			<cfset thisTerm = APPLICATION.dataEnc(ListGetAt(ARGUMENTS.searchTerm,iX,' ')) />
+			s.firstName LIKE <cfqueryparam value="%#thisTerm#%" cfsqltype="cf_sql_varchar" />
 			<cfif NOT iX EQ ListLen(ARGUMENTS.searchTerm,' ')> OR </cfif>
 		</cfloop>
 		)
 		OR (
 		<!--- last name loop --->
 		<cfloop from="1" to="#ListLen(ARGUMENTS.searchTerm,' ')#" index="iX">
-			s.lastName LIKE <cfqueryparam value="%#APPLICATION.dataEnc(ListGetAt(ARGUMENTS.searchTerm,iX,' '))#%" cfsqltype="cf_sql_varchar" />
+			<!--- assign encrypted value to a variable, since ACF adds spaces to strings returned from functions --->
+			<!--- and used directly in place of a string without first assigning it to a variable (/facepalm)    --->
+			<cfset thisTerm = APPLICATION.dataEnc(ListGetAt(ARGUMENTS.searchTerm,iX,' ')) />
+			s.lastName LIKE <cfqueryparam value="%#thisTerm#%" cfsqltype="cf_sql_varchar" />
 			<cfif NOT iX EQ ListLen(ARGUMENTS.searchTerm,' ')> OR </cfif>
 		</cfloop>
 		)
 		OR ( 
 		<!--- twitter handle loop --->
 		<cfloop from="1" to="#ListLen(ARGUMENTS.searchTerm,' ')#" index="iX">
-			s.twitter LIKE <cfqueryparam value="%#APPLICATION.dataEnc(ListGetAt(ARGUMENTS.searchTerm,iX,' '))#%" cfsqltype="cf_sql_varchar" />
+			<!--- assign encrypted value to a variable, since ACF adds spaces to strings returned from functions --->
+			<!--- and used directly in place of a string without first assigning it to a variable (/facepalm)    --->
+			<cfset thisTerm = APPLICATION.dataEnc(ListGetAt(ARGUMENTS.searchTerm,iX,' ')) />
+			s.twitter LIKE <cfqueryparam value="%#thisTerm#%" cfsqltype="cf_sql_varchar" />
 			<cfif NOT iX EQ ListLen(ARGUMENTS.searchTerm,' ')> OR </cfif>
 		</cfloop>
 		)
