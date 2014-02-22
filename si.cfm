@@ -5,7 +5,7 @@
 </cfif>
 
 <!--- get a speaker object from the passed in path info (truncated to remove the /) --->
-<cfset speakerObj = APPLICATION.speakerDAO.getSpeakerByKey(Right(CGI.PATH_INFO,Len(CGI.PATH_INFO)-1)) />
+<cfset speakerObj = APPLICATION.speakerDAO.getSpeakerByKey(ListGetAt(CGI.PATH_INFO,1,'/')) />
 
 <!--- check if the speaker object returned has a valid speaker key --->
 <cfif NOT Len(speakerObj.getSpeakerKey())>
@@ -126,7 +126,7 @@
 			<div class="form-group">
 			  <label class="col-md-4 control-label" for="email">Your Email</label>  
 			  <div class="col-md-4">
-			  <input id="email" name="email" placeholder="someone@someplace.com" class="form-control input-md" required type="text">
+			  <input id="email" name="email" placeholder="someone@someplace.com" class="form-control input-md" required type="email">
 			  </div>
 			</div>
 			
@@ -144,7 +144,7 @@
 			  <label class="col-md-4 control-label" for="eventDate">Date</label>  
 			  <div class="col-md-2">  
 			    <div class="input-group date">
-				  <input id="eventDate" name="eventDate" placeholder="#DateFormat(DateAdd('d',30,Now()),'mm/dd/yyyy')#" class="form-control input-md" required type="text">
+				  <input id="eventDate" name="eventDate" placeholder="#DateFormat(DateAdd('d',30,Now()),'mm/dd/yyyy')#" class="form-control input-md" required type="date">
 			  	  <span class="help-block">Enter the date of your event</span>  
 				</div>
 			  </div>

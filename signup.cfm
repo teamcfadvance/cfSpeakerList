@@ -18,8 +18,7 @@
 <cfset errorMsg = '' />
 
 <!--- check if the form was submitted --->
--<!--- The fields existence alone should be sufficient enough to know the form was submitted.  A form button has no value so there is no length.  --->
--<cfif IsDefined('FORM.btn_Submit')>
+<cfif IsDefined('FORM.btn_Submit')>
 
 	<!--- it was, sanitize the form values --->
 	<cfset saniForm = APPLICATION.utils.sanitize(FORM) />
@@ -209,7 +208,7 @@
 		<div class="form-group">
 		  <label class="col-md-4 control-label" for="email">Email</label>  
 		  <div class="col-md-4">
-		  <input id="email" name="email" placeholder="someone@someplace.com" class="form-control input-md" required type="text" value="#FORM.email#">
+		  <input id="email" name="email" placeholder="someone@someplace.com" class="form-control input-md" required type="email" value="#FORM.email#">
 		  <span class="help-block">Used to login and receive contacts, never shared publicly</span>  
 		  </div>
 		</div>
@@ -249,7 +248,7 @@
 			  <span class="input-group-addon">     
 				  <input type="checkbox" name="pubPhone" value="1"<cfif FORM.pubPhone> checked="checked"</cfif>>     
 			  </span>
-			  <input id="phone" name="phone" class="form-control" placeholder="(999) 999-9999" type="text" value="#FORM.phone#">
+			  <input id="phone" name="phone" class="form-control" placeholder="(999) 999-9999" type="tel" value="#FORM.phone#">
 			</div>
 			<p class="help-block">Optional, check box to show publicly</p>
 		  </div>
