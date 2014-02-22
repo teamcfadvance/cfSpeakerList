@@ -1,9 +1,19 @@
 <cfparam name="FORM.email" default="" type="string" />
 <cfparam name="FORM.password" default="" type="string" />
-<cfparam name="FORM['ff' & LCase(Hash('seedId','SHA-256'))]" default="" />
+<cfparam name="FORM['ff' & LCase(Hash('seedId','SHA-256'))]" default="" type="string" />
+<cfparam name="errorMsg" default="" type="string" />
 
-<cfset errorMsg = '' />
+<!--- check if there is an existing session cookie in this request --->
+<cfif IsDefined('COOKIE.#APPLICATION.cookieName#')>
+	<!--- there is, get the decrypted session id from the cookie --->
+	<cfset dSid = APPLICATION.utils.dataDec(COOKIE[APPLICATION.cookieName], 'cookie') />
+	<!--- expire the cookie --->
+	<cfcookie name="#APPLICATION.cookieName#" value="" expires="now" />
+	<!--- and expire the session --->
+	<cfset APPLICATION.userDAO.expireSession(dSid) />
+</cfif>
 
+<!--- check if the form was submitted --->
 <cfif IsDefined('FORM.btn_Submit')>
 
 	<!--- it was, sanitize the form values --->
@@ -52,15 +62,7 @@
 		<!--- otherwise --->	
 		<cfelse>
 		
-			<!--- password matches, check if there is an existing session cookie --->
-			<cfif IsDefined('COOKIE.#APPLICATION.cookieName#') />
-				<!--- there is, remove it and expire the session --->
-				<cfset dSid = APPLICATION.utils.dataDec(COOKIE[APPLICATION.cookieName], 'cookie') />
-				<cfcookie name="#APPLICATION.cookieName#" value="" expires="now" />
-				<cfset APPLICATION.userDAO.expireSession(dSid) />
-			</cfif>
-			
-			<!--- generate a session id --->
+			<!--- password matches, generate a session id --->
 			<cfset sid = APPLICATION.utils.generateSessionId() />
 			<!--- generate an encrypted version of the session id to store in the cookie --->
 			<cfset cSid = APPLICATION.utils.dataEnc(sid, 'cookie') />
@@ -71,9 +73,14 @@
 			
 			<!--- redirect the user to the speakers area --->
 			<cflocation url="cfslpriv/index.cfm" addtoken="false" />
-			
+		
+		<!--- end checking if the stored password matches the password submitted --->	
 		</cfif>
+	
+	<!--- end checking if this user exists in the database --->
+	</cfif>
 
+<!--- end checking if the form was submitted --->
 </cfif>
 
 <!--- generate a seed id for later hashing with CryptoJS --->
@@ -106,6 +113,17 @@
   <body>
 
     <div class="container">
+
+		<cfif Len(errorMsg)>
+		
+		<div class="panel panel-danger">
+		  <div class="panel-heading">Sign In Required</div>
+		  	<div class="panel-body">
+		  	<cfoutput>#errorMsg#</cfoutput>
+		  </div>
+		</div>
+		
+		</cfif>
 
       <form class="form-signin" role="form" method="post" action="login.cfm" onSubmit="hashIt();">
 	  <cfoutput>

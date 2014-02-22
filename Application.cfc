@@ -102,7 +102,9 @@ THIS.scriptprotect="all";
 		<cfelse>
 			<!--- cookie present, verify session hasn't expired --->
 			<cfif NOT APPLICATION.userDAO.isValidSession(COOKIE[APPLICATION.cookieName])>
-				<!--- no valid session, include the login form --->
+				<!--- no valid session, set an error message to display --->
+				<cfset errorMsg = '<p>We&apos;re sorry but your session has expired. Please login again to continue working.</p>' />
+				<!--- and include the login form --->
 				<cfinclude template="login.cfm" />
 				<cfabort>
 			<!--- otherwise --->
