@@ -80,7 +80,7 @@
 		<cfset userObj = createObject('component','core.beans.User').init(
 			userId  	= 0,
 			username	= saniForm.email,
-			password	= Hash(saniForm.password,'SHA-384'),
+			password	= LCase(Hash(saniForm.password,'SHA-384')),
 			role    	= 'speaker',
 			isActive	= 0
 		) />
@@ -208,7 +208,7 @@
 		<div class="form-group">
 		  <label class="col-md-4 control-label" for="email">Email</label>  
 		  <div class="col-md-4">
-		  <input id="email" name="email" placeholder="someone@someplace.com" class="form-control input-md" required type="email" value="#FORM.email#">
+		  <input id="email" name="email" placeholder="someone@someplace.com" class="form-control input-md" required autofocus type="email" value="#FORM.email#">
 		  <span class="help-block">Used to login and receive contacts, never shared publicly</span>  
 		  </div>
 		</div>

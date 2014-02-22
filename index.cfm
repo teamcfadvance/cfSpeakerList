@@ -42,12 +42,12 @@
           <form class="navbar-form navbar-right" role="form" method="post" action="login.cfm" onSubmit="hashIt();">
 		  	<cfoutput><input type="hidden" id="#seedId#" name="ff#LCase(Hash('seedId','SHA-256'))#" value="#seedVal#" /></cfoutput>
             <div class="form-group">
-              <input type="text" placeholder="Email" class="form-control" name="email" id="email">
+              <input type="text" placeholder="Email" class="form-control" name="email" id="email" required>
             </div>
             <div class="form-group">
-              <input type="password" placeholder="Password" class="form-control" name="password" id="password">
+              <input type="password" placeholder="Password" class="form-control" name="password" id="password" required>
             </div>
-            <button type="submit" class="btn btn-success">Sign in</button>
+            <button name="btn_Submit" type="submit" class="btn btn-success">Sign in</button>
           </form>
         </div><!---/.navbar-collapse --->
       </div>
@@ -67,7 +67,7 @@
           <p>Enter your natural language search terms below to search for speakers by location, name, or specialty. Optionally, use AND to search multiple terms.</p>
 		  <form class="form-horizontal" role="form" method="post" action="speakers.cfm">
 		  	<cfoutput><input type="hidden" name="mode" value="#Hash('search','SHA-512')#" /></cfoutput>
-			<p><input type="search" class="form-control input-md" name="search" placeholder="Enter search term AND search term"></p>
+			<p><input type="search" class="form-control input-md" name="search" placeholder="Enter search term AND search term" required></p>
             <p><button type="submit" class="btn btn-primary">Search Speakers</button></p>
 		  </form>
         </div>

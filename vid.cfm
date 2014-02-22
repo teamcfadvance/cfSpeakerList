@@ -108,7 +108,7 @@
 			<div class="panel panel-success">
 			  <div class="panel-heading">Email Verification Complete</div>
 			  <div class="panel-body">
-				<p>Congratulations! You have now verified your email address and your speaker information is now published in our database.</p>
+				<p>Congratulations! You have now verified your email address and your speaker information is now published in our database. To make changes to your speaker profile in the future, simply log in from our home page with your email address and the password you chose during sign up.</p>
 			  </div>
 			  <div class="panel-footer">
 			  	<cfoutput><a class="btn btn-info" href="si.cfm/#ListGetAt(CGI.PATH_INFO,1,'/')#" role="button">Click here to view your information</a></cfoutput>

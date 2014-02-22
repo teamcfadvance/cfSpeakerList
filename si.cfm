@@ -110,7 +110,7 @@
 			<div class="form-group">
 			  <label class="col-md-4 control-label" for="cName">Your Name</label>  
 			  <div class="col-md-4">
-			  <input id="cName" name="cName" placeholder="John Doe" class="form-control input-md" required type="text">
+			  <input id="cName" name="cName" placeholder="John Doe" class="form-control input-md" required autofocus type="text">
 			  </div>
 			</div>
 			

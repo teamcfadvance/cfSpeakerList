@@ -36,6 +36,8 @@ THIS.scriptprotect="all";
 		APPLICATION.fromEmail = 'nospam@ugslist.tld';
 		APPLICATION.bccEmail = '';
 		APPLICATION.verificationTimeout = 12;
+		APPLICATION.cookieName = 'cfslid';
+		APPLICATION.sessionTimeout = 30;
 		APPLICATION.utils = CreateObject('component','core.utils.utils');	
 		APPLICATION.urlZero = APPLICATION.utils.dataEnc(value = 0, mode = 'url');
 		APPLICATION.formZero = APPLICATION.utils.dataEnc(value = 0, mode = 'form');
@@ -84,6 +86,55 @@ THIS.scriptprotect="all";
 <cffunction name="onRequestStart">
 	<!--- set up a tick counter --->
 	<cfset tickBegin = GetTickCount()>
+	
+	<!--- check if the user is in the private area of the site --->
+	<cfif FindNoCase('cfslpriv',CGI.SCRIPT_NAME)>
+	
+		<!--- expire old sessions --->
+		<cfset APPLICTION.userDAO.expireOldSessions() />
+	
+		<!--- user is in the private area, check for the existence of a session cookie --->
+		<cfif NOT IsDefined('COOKIE.#APPLICATION.cookieName#') OR NOT Len(COOKIE[APPLICATION.cookieName])>
+			<!--- no cookie present, include the login form --->
+			<cfinclude template="login.cfm" />
+			<cfabort>
+		<!--- otherwise --->
+		<cfelse>
+			<!--- cookie present, verify session hasn't expired --->
+			<cfif NOT APPLICATION.userDAO.isValidSession(COOKIE[APPLICATION.cookieName])>
+				<!--- no valid session, include the login form --->
+				<cfinclude template="login.cfm" />
+				<cfabort>
+			<!--- otherwise --->
+			<cfelse>
+				
+				<!--- get the user object for this user --->
+				<cfset userObj = APPLICATION.userDAO.getUserById(APPLICATION.userDAO.getSession(COOKIE[APPLICATION.cookieName])) />
+				<!--- do session rotation, decrypt the old cookie --->
+				<cfset dSid = APPLICATION.utils.dataDec(COOKIE[APPLICATION.cookieName], 'cookie') />
+				<!--- expire the cookie --->
+				<cfcookie name="#APPLICATION.cookieName#" value="" expires="now" />
+				<!--- expire the session --->
+				<cfset APPLICATION.userDAO.expireSession(dSid) />
+				
+				<!--- generate a session id --->
+				<cfset sid = APPLICATION.utils.generateSessionId() />
+				<!--- generate an encrypted version of the session id to store in the cookie --->
+				<cfset cSid = APPLICATION.utils.dataEnc(sid, 'cookie') />
+				<!--- send the new session cookie --->
+				<cfcookie name="#APPLICATION.cookieName#" value="#cSid#" expires="never" />
+				<!--- add the new session to the database --->
+				<cfset APPLICATION.userDAO.addSession(sessionId = sid, user = userObj) />
+			
+			<!--- end verifying session hasn't expired --->
+			</cfif>
+
+		<!--- end checking for the existence of a session cookie --->
+		</cfif>				
+	
+	<!--- end checking if the user is in the private area of the site --->
+	</cfif>
+	
 </cffunction>
 <cffunction name="onRequestEnd">
 	<!--- set up another tick counter --->

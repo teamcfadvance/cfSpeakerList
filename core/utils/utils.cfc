@@ -240,5 +240,13 @@
 		</cfmail>	
 	
 	</cffunction>
+	
+	<!--- GENERATE SESSION ID --->
+	<cffunction name="generateSessionId" access="public" returntype="string" output="false" hint="I generate a unique session id.">
+	
+		<!--- return a triple hash of CreateUUID() --->
+		<cfreturn Hash(Hash(Hash(CreateUUID(),'SHA-512'),'SHA-384'),'SHA-256') />
+		
+	</cffunction>
 		
 </cfcomponent>
