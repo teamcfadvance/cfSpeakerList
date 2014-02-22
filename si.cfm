@@ -118,7 +118,7 @@
 			<div class="form-group">
 			  <label class="col-md-4 control-label" for="cName">Organization Name</label>  
 			  <div class="col-md-4">
-			  <input id="orgName" name="orgName" placeholder="Northern VA CFUG" class="form-control input-md" required type="text">
+			  <input id="orgName" name="orgName" placeholder="Team CF Advance" class="form-control input-md" required type="text">
 			  </div>
 			</div>
 			
@@ -134,8 +134,8 @@
 			<div class="form-group">
 			  <label class="col-md-4 control-label" for="venue">Venue/Location</label>  
 			  <div class="col-md-4">
-				  <input id="venue" name="venue" placeholder="Sterling, Virginia" class="form-control input-md" required type="text">
-				  <span class="help-block">Enter the name and/or location of this event</span>  
+				  <input id="venue" name="venue" placeholder="Online or Metro D.C." class="form-control input-md" required type="text">
+				  <span class="help-block">Enter the venue and/or location for your event</span>  
 			  </div>
 			</div>
 			
@@ -145,7 +145,7 @@
 			  <div class="col-md-2">  
 			    <div class="input-group date">
 				  <input id="eventDate" name="eventDate" placeholder="#DateFormat(DateAdd('d',30,Now()),'mm/dd/yyyy')#" class="form-control input-md" required type="text">
-			  	  <span class="help-block">Enter the date of the event</span>  
+			  	  <span class="help-block">Enter the date of your event</span>  
 				</div>
 			  </div>
 			</div>
@@ -154,8 +154,8 @@
 			<div class="form-group">
 			  <label class="col-md-4 control-label" for="eventTime">Time</label>  
 			  <div class="col-md-2">
-			  <input id="eventTime" name="eventTime" placeholder="7:00 PM" class="form-control input-md" required type="text">
-			  <span class="help-block">Enter the time in HH:MM AM/PM format</span>  
+			  <input id="eventTime" name="eventTime" placeholder="7:00 PM EST" class="form-control input-md" required type="text">
+			  <span class="help-block">Enter the time in HH:MM AM/PM TZ format</span>  
 			  </div>
 			</div>
 			

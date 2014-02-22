@@ -1,7 +1,7 @@
 <cfcomponent>
 <!--- configure this Application.cfm options --->
 <cfscript>
-THIS.name = "UGSLIST_v1";
+THIS.name = "cfSpeakerList_v1";
 THIS.clientmanagement="True";
 THIS.loginstorage="session";
 THIS.sessionmanagement="True";
@@ -29,9 +29,13 @@ THIS.scriptprotect="all";
 		APPLICATION.dbkey3 = '<key3>';
 		APPLICATION.dbalg3 = '<alg3>';
 		APPLICATION.dbenc3 = '<enc3>';
+		APPLICATION.siteName = 'UGS List';
 		APPLICATION.debugOn = true;
 		APPLICATION.iusTable = 'speakers';
 		APPLICATION.iusColumn = 'speakerKey';
+		APPLICATION.fromEmail = 'nospam@ugslist.tld';
+		APPLICATION.bccEmail = '';
+		APPLICATION.verificationTimeout = 12;
 		APPLICATION.utils = CreateObject('component','core.utils.utils');	
 		APPLICATION.urlZero = APPLICATION.utils.dataEnc(value = 0, mode = 'url');
 		APPLICATION.formZero = APPLICATION.utils.dataEnc(value = 0, mode = 'form');

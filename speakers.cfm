@@ -78,7 +78,7 @@
 			<div class="panel panel-primary">
 			  <div class="panel-heading">Matching Speakers</div>
 			  <div class="panel-body">
-				<p>The following list of speakers matched your <cfif FindNoCase(Hash('browse','SHA-512'),FORM.mode)>browse request<cfelse>search request for &apos;<cfoutput><em>#FORM.search#</em></cfoutput>&apos;</cfif> . Click on the name of any speaker to see more info and to request them to speak at your event.</p>
+				<p>The following list of speakers matched your <cfif FindNoCase(Hash('browse','SHA-512'),FORM.mode)>browse request<cfelse>search request for &apos;<cfoutput><abbr title="Submitted Search Terms" class="initialism">#FORM.search#</abbr></cfoutput>&apos;</cfif> . Click on the name of any speaker to see more info and to request them to speak at your event.</p>
 			  </div>
 			
 			  <table class="table sortable">
@@ -109,7 +109,7 @@
 			<div class="panel panel-danger">
 			  <div class="panel-heading">No Matching Speakers</div>
 			  <div class="panel-body">
-				<p>No speakers matched your <cfif FindNoCase(Hash('browse','SHA-512'),FORM.mode)>browse request<cfelse>search request for &apos;<cfoutput><em>#FORM.search#</em></cfoutput>&apos;</cfif>. <cfif FindNoCase(Hash('browse','SHA-512'),FORM.mode)>There are no speakers available in the location you have browsed. Please check back often as our list is constantly expanding to include new speakers.<cfelse>You can try to broaden your search by using less terms (e.g. &apos;HTML&apos; instead of &apos;HTML AND CSS&apos;).</cfif></p>
+				<p>No speakers matched your <cfif FindNoCase(Hash('browse','SHA-512'),FORM.mode)>browse request<cfelse>search request for &apos;<cfoutput><abbr title="Submitted Search Term(s)" class="initialism">#FORM.search#</abbr></cfoutput>&apos;</cfif>. <cfif FindNoCase(Hash('browse','SHA-512'),FORM.mode)>There are no speakers available in the location you have browsed. Please check back often as our list is constantly expanding to include new speakers.<cfelse>You can try to broaden your search by using less terms (e.g. &apos;HTML&apos; instead of &apos;HTML AND CSS&apos;).</cfif></p>
 			  </div>
 			  <div class="panel-footer">
 			  	<cfoutput><a class="btn btn-info" href="#returnLink#" role="button">Click here to start over</a></cfoutput>

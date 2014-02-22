@@ -206,5 +206,39 @@
 		<cfreturn returnStruct />
 		
 	</cffunction>
+	
+	<!--- EMAIL VERIFICATION --->
+	<cffunction name="emailVerification" access="public" returntype="void" output="false" hint="I send an email to the user to validate their email address.">
+		<cfargument name="email" type="string" required="true" hint="I am the email address of the user to send the verification email to." />
+		<cfargument name="key" type="string" required="true" hint="I am the key assigned to this speaker - used to verify their email address." />
+		
+		<!--- var scope --->
+		<cfset var ts = APPLICATION.utils.dataEnc(Now(), 'cookie') />
+		<cfset var cR = Chr(10) & Chr(13) />
+		
+		<!--- send verification email to recipient --->
+		<cfmail to="#ARGUMENTS.email#" from="#APPLICATION.fromEmail#" subject="#APPLICATION.siteName# Email Verification" bcc="#APPLICATION.bccEmail#" charset="utf-8">
+		 <cfmailpart type="html">
+		 	<h4>#APPLICATION.siteName# Email Verification</h4>
+			<p>You, or someone you know, has entered your information into our database as a speaker. Before we can publish your information, we need to verify that you have made this request to be published in our database by clicking on the following link within the next #APPLICATION.verificationTimeout# hours:</p>
+			<p><a href="http://#CGI.HTTP_HOST#/vid.cfm/#ARGUMENTS.key#/#ts#">http://#CGI.HTTP_HOST#/vid.cfm/#ARGUMENTS.key#/#ts#</a></p>
+			<p>If you did not wish your information to be published, you do not need to take any action.</p>
+			<p>&nbsp;</p>
+			<p>Sincerely,<br />The #APPLICATION.siteName# Team</p>
+		 </cfmailpart>
+		 <cfmailpart type="plain">
+			#APPLICATION.siteName# Email Verification#cR##cR#
+			You, or someone you know, has entered your information into our database as a speaker.#cR#
+			Before we can publish your information, we need to verify that you have made this request#cR#
+			to be published in our database by clicking on the following link within the next #APPLICATION.verificationTimeout# hours:#cR##cR#
+			http://#CGI.HTTP_HOST#/vid.cfm/#ARGUMENTS.key#/#ts##cR##cR#
+			If you did not wish your information to be published, you do not need to take any action.#cR##cR#
+			&nbsp;
+			Sincerely,#cR#
+			The #APPLICATION.siteName# Team#cR##cR#
+		 </cfmailpart>
+		</cfmail>	
+	
+	</cffunction>
 		
 </cfcomponent>

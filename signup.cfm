@@ -127,7 +127,7 @@
 		<cfset APPLICATION.utils.emailVerification(email = saniForm.email, key = thisSpeakerKey) />
 		
 		<!--- redirect to verification form --->
-		<cflocation url="vid.cfm?v#Hash('speakerKey','MD5')#=#thisSpeakerKey#" addtoken="false" />
+		<cflocation url="vid.cfm" addtoken="false" />
 	
 	<!--- end checking if we've passed required fields, new user and capcha checks --->	
 	</cfif>
