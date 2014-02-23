@@ -5,12 +5,10 @@
 
 <!--- check if there is an existing session cookie in this request --->
 <cfif IsDefined('COOKIE.#APPLICATION.cookieName#')>
-	<!--- there is, get the decrypted session id from the cookie --->
-	<cfset dSid = APPLICATION.utils.dataDec(COOKIE[APPLICATION.cookieName], 'cookie') />
-	<!--- expire the cookie --->
+	<!--- existing session cookie, expire the existing session --->
+	<cfset APPLICATION.userDAO.expireSession(COOKIE[APPLICATION.cookieName]) />
+	<!--- and expire the cookie --->
 	<cfcookie name="#APPLICATION.cookieName#" value="" expires="now" />
-	<!--- and expire the session --->
-	<cfset APPLICATION.userDAO.expireSession(dSid) />
 </cfif>
 
 <!--- check if the form was submitted --->

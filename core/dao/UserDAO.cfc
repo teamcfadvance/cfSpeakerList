@@ -138,9 +138,7 @@
   </cfif>
 </cffunction>
 
-<!---                      --->
 <!--- CHECK IF USER EXISTS --->
-<!---                      --->
 <cffunction name="checkIfUserExists" access="public" returntype="boolean" output="false" hint="I check to see if a specific user is in the database, using their email address as the check.">
   <cfargument name="email" type="string" required="true" hint="I am the email address to check for the existence of." />
   <cfset var qGetUser = '' />
@@ -153,6 +151,112 @@
   <cfelse>
 	<cfreturn false />
   </cfif>
+</cffunction>
+
+<!---                    --->
+<!--- SESSION MANAGEMENT --->
+<!---                    --->
+
+<!--- EXPIRE OLD SESSIONS --->
+<cffunction name="expireOldSessions" access="public" returntype="void" output="false" hint="I expire sessions that are older than the timeout period passed in.">
+	<cfargument name="timeout" type="numeric" required="true" hint="I am the timeout period used to expire sessions." />
+	
+	<!--- var scope --->
+	<cfset var qDelSessions = '' />
+	
+	<!--- delete sessions whose lastActionAt is older than the timeout --->
+	<cfquery name="qDelSessions" datasource="#variables.instance.datasource.getDSN()#" username="#variables.instance.datasource.getUsername()#" password="#variables.instance.datasource.getPassword()#">
+		DELETE FROM sessions
+		WHERE lastActionAt < <cfqueryparam value="#DateAdd('n',-ARGUMENTS.timeout,Now())#" cfsqltype="cf_sql_timestamp" />
+	</cfquery>
+	
+</cffunction>
+
+<!--- IS VALID SESSION --->
+<cffunction name="isValidSession" access="public" returntype="boolean" output="false" hint="I validate a session exists in the database.">
+	<cfargument name="encId" type="string" required="true" hint="I am the encrypted session id returned from the cookie." />
+	
+	<!--- var scope --->
+	<cfset var qGetSession = '' />
+	<cfset var sid = APPLICATION.utils.dataDec(ARGUMENTS.encId, 'cookie') />
+	
+	<!--- get the session from the database --->
+	<cfquery name="qGetSession" datasource="#variables.instance.datasource.getDSN()#" username="#variables.instance.datasource.getUsername()#" password="#variables.instance.datasource.getPassword()#">
+		SELECT uniqueId
+		FROM sessions
+		WHERE sessionId = <cfqueryparam value="#Hash(sid,'SHA-512')#" cfsqltype="cf_sql_varchar" />
+	</cfquery>
+	
+	<!--- check if the session exists (record returned) --->
+	<cfif qGetSession.RecordCount>
+		<!--- session exists, return true --->
+		<cfreturn true />
+	<!--- otherwise --->
+	<cfelse>
+		<!--- session does not exist, return false --->
+		<cfreturn false />
+	</cfif>
+		
+</cffunction>
+
+<!--- GET USER ID FROM SESSION --->
+<cffunction name="getUserIdFromSession" access="public" returntype="boolean" output="false" hint="I return the user id stored with the session.">
+	<cfargument name="encId" type="string" required="true" hint="I am the encrypted session id returned from the cookie." />
+	
+	<!--- var scope --->
+	<cfset var qGetSession = '' />
+	<cfset var sid = APPLICATION.utils.dataDec(ARGUMENTS.encId, 'cookie') />
+	
+	<!--- get the session from the database --->
+	<cfquery name="qGetSession" datasource="#variables.instance.datasource.getDSN()#" username="#variables.instance.datasource.getUsername()#" password="#variables.instance.datasource.getPassword()#">
+		SELECT userId
+		FROM sessions
+		WHERE sessionId = <cfqueryparam value="#Hash(sid,'SHA-512')#" cfsqltype="cf_sql_varchar" />
+	</cfquery>
+	
+	<!--- return the user id from the session --->
+	<cfreturn qGetSession.userId />
+		
+</cffunction>
+
+<!--- EXPIRE SESSION --->
+<cffunction name="expireSession" access="public" returntype="void" output="false" hint="I expire a session based on the id passed in.">
+	<cfargument name="encId" type="string" required="true" hint="I am the encrypted session id returned from the cookie." />
+	
+	<!--- var scope --->
+	<cfset var qDelSession = '' />
+	<cfset var sid = APPLICATION.utils.dataDec(ARGUMENTS.encId, 'cookie') />
+	
+	<!--- delete session by session id --->
+	<cfquery name="qDelSession" datasource="#variables.instance.datasource.getDSN()#" username="#variables.instance.datasource.getUsername()#" password="#variables.instance.datasource.getPassword()#">
+		DELETE FROM sessions
+		WHERE sessionId = <cfqueryparam value="#Hash(sid,'SHA-512')#" cfsqltype="cf_sql_varchar" />
+	</cfquery>
+	
+</cffunction>
+
+<!--- ADD SESSION --->
+<cffunction name="addSession" access="public" returntype="void" output="false" hint="I add a new session to the database.">
+	<cfargument name="sid" type="string" required="true" hint="I am the unencrypted session id generated for this session." />
+	<cfargument name="user" type="any" required="true" hint="I am the user object for the user this session is beging added for." />
+
+	<!--- var scope --->
+	<cfset var qAddSession = '' />
+	
+	<!--- add the session --->
+	<cfquery name="qAddSession" datasource="#variables.instance.datasource.getDSN()#" username="#variables.instance.datasource.getUsername()#" password="#variables.instance.datasource.getPassword()#">
+		INSERT INTO sessions
+			(
+			sessionId,
+			userId,
+			lastActionAt
+			) VALUES (
+			<cfqueryparam value="#Hash(ARGUMENTS.sid,'SHA-512')#" cfsqltype="cf_sql_varchar" />,
+			<cfqueryparam value="#ARGUMENTS.user.getUserId()#" cfsqltype="cf_sql_integer" />,
+			<cfqueryparam value="#Now()#" cfsqltype="cf_sql_timestamp" />
+			)
+	</cfquery>
+
 </cffunction>
   
 </cfcomponent>

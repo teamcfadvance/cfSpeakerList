@@ -91,7 +91,7 @@ THIS.scriptprotect="all";
 	<cfif FindNoCase('cfslpriv',CGI.SCRIPT_NAME)>
 	
 		<!--- expire old sessions --->
-		<cfset APPLICTION.userDAO.expireOldSessions() />
+		<cfset APPLICATION.userDAO.expireOldSessions(APPLICATION.sessionTimeout) />
 	
 		<!--- user is in the private area, check for the existence of a session cookie --->
 		<cfif NOT IsDefined('COOKIE.#APPLICATION.cookieName#') OR NOT Len(COOKIE[APPLICATION.cookieName])>
@@ -111,13 +111,11 @@ THIS.scriptprotect="all";
 			<cfelse>
 				
 				<!--- get the user object for this user --->
-				<cfset userObj = APPLICATION.userDAO.getUserById(APPLICATION.userDAO.getSession(COOKIE[APPLICATION.cookieName])) />
-				<!--- do session rotation, decrypt the old cookie --->
-				<cfset dSid = APPLICATION.utils.dataDec(COOKIE[APPLICATION.cookieName], 'cookie') />
+				<cfset userObj = APPLICATION.userDAO.getUserById(APPLICATION.userDAO.getUserIdFromSession(COOKIE[APPLICATION.cookieName])) />
+				<!--- do session rotation, expire the existing session --->
+				<cfset APPLICATION.userDAO.expireSession(COOKIE[APPLICATION.cookieName]) />
 				<!--- expire the cookie --->
 				<cfcookie name="#APPLICATION.cookieName#" value="" expires="now" />
-				<!--- expire the session --->
-				<cfset APPLICATION.userDAO.expireSession(dSid) />
 				
 				<!--- generate a session id --->
 				<cfset sid = APPLICATION.utils.generateSessionId() />
