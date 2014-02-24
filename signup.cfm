@@ -27,6 +27,7 @@
 	<cfset reqCheck = APPLICATION.utils.checkRequired(
 		fields = {
 			email 		= saniForm.email,
+			vPassword	= saniForm.vPassword,
 			password 	= saniForm.password,
 			fName 		= saniForm.fName,
 			lName 		= saniForm.lName,
@@ -72,6 +73,19 @@
 		<!--- user already exists, set an error message to display --->
 		<cfset errorMsg = '<p>We&apos;re sorry, but you&apos;re email is already in use on our system. If you already have an account, please <a href="login.cfm">log in</a>. If you have forgotten your password, you can <a href="reset.cfm">reset your password</a>. If you suspect your information has been used without your knowledge, please <a href="abuse.cfm">report abuse</a>.</p>' />
 	</cfif> 
+	
+	<!--- check if the password and verification password match --->
+	<cfif NOT saniForm.password EQ saniForm.vPassword>
+		<!--- password mismatch, set an error message to display --->
+		<cfset errorMsg = '<p>We&apos;re sorry, but your password and verification password do not match. Please try again.</p>' />
+	</cfif> 
+	
+	<!--- check the password meets complexity requirements --->
+	<cfif NOT ReFind('[a-z]',saniForm.password) OR NOT ReFind('[A-Z]',saniForm.password) OR NOT ReFind('[0-9]',saniForm.password) OR NOT Len(saniForm.password) GTE 8>
+		<!--- password doesn't meet complexity requirements, set an error message to display --->
+		<cfset errorMsg = '<p>We&apos;re sorry, but your password does not meet complexity requirements for this system. Your password must be at least eight (8) characters long, and contain at least one lowercase (a through z), uppercase (A through Z) and number (0 through 9) to be accepted. Please try again.</p>' />
+	</cfif> 
+	
 	
 	<!--- ensure we have no errors --->
 	<cfif NOT Len(errorMsg)>	
@@ -218,7 +232,14 @@
 		  <label class="col-md-4 control-label" for="password">Password</label>
 		  <div class="col-md-4">
 			<input id="password" name="password" placeholder="Min 8 chars using each of a-z, A-Z and 0-9" class="form-control input-md" required type="password">
-			
+		  </div>
+		</div>
+		
+		<!--- Password input--->
+		<div class="form-group">
+		  <label class="col-md-4 control-label" for="vPassword">Verify Password</label>
+		  <div class="col-md-4">
+			<input id="vPassword" name="vPassword" placeholder="As entered above" class="form-control input-md" required type="password">
 		  </div>
 		</div>
 		
