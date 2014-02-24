@@ -96,7 +96,7 @@
     <meta name="author" content="">
     <!----<link rel="shortcut icon" href="../../assets/ico/favicon.ico">---->
 
-    <title>UGS List &raquo; Password Reset</title>
+    <title><cfoutput>#APPLICATION.siteName#</cfoutput> &raquo; Password Reset</title>
 
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="css/signin.css" rel="stylesheet">

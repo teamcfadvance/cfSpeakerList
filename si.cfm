@@ -23,7 +23,7 @@
     <meta name="author" content="">
     <!-----<link rel="shortcut icon" href="../../assets/ico/favicon.ico">----->
 
-    <title>UGS List &raquo; Speaker Information</title>
+    <title><cfoutput>#APPLICATION.siteName#</cfoutput> &raquo; Speaker Information</title>
 
     <link href="../css/bootstrap.min.css" rel="stylesheet">
     <link href="../css/jumbotron.css" rel="stylesheet">
@@ -98,7 +98,7 @@
 
 			</div><!---- /panel ---->	
 			
-			<cfoutput><div class="text-right"><a href="../abuse.cfm?v#Hash('speakerKey','SHA-256')#=#speakerObj.getSpeakerKey()#">Report abuse</a></div></cfoutput>
+			<cfoutput><div class="text-right"><small><a href="../abuse.cfm?v#Hash('speakerKey','SHA-256')#=#speakerObj.getSpeakerKey()#">Report abuse</a></small></div></cfoutput>
 			  
 		  <br />
 		  
