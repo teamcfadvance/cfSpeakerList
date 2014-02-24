@@ -146,7 +146,7 @@
 			  <label class="col-md-4 control-label" for="eventDate">Date</label>  
 			  <div class="col-md-2">  
 			    <div class="input-group date">
-				  <input id="eventDate" name="eventDate" placeholder="#DateFormat(DateAdd('d',30,Now()),'mm/dd/yyyy')#" class="form-control input-md" required type="date">
+				  <input id="eventDate" name="eventDate" placeholder="#DateFormat(DateAdd('d',30,Now()),'mm/dd/yyyy')#" class="form-control input-md" required type="text">
 			  	  <span class="help-block">Enter the date of your event</span>  
 				</div>
 			  </div>
