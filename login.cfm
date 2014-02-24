@@ -43,10 +43,12 @@
 		<!--- user doesn't exist, set an error message to be displayed --->
 		<cfset errorMsg = '<p>We&apos;re sorry but we could not validate your login based on the information you provided. Please try again.</p>' />
 	
-	<!--- otherwise --->	
-	<cfelse>
+	</cfif>
 	
-		<!--- user exists, get the user object by the provided email --->
+	<!--- ensure we don't have any errors --->
+	<cfif NOT Len(errorMsg)>
+	
+		<!--- no errors, get the user object by the provided email --->
 		<cfset userObj = getUserByEmail(saniForm.email) />
 		<!--- create a hash of the stored password plus the seed value provided by the form --->
 		<cfset passHash = LCase(Hash(userObj.getPassword() & FORM['ff' & LCase(Hash('seedId','SHA-256'))],'SHA-384')) />

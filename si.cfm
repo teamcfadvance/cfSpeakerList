@@ -97,6 +97,8 @@
 			  </table>
 
 			</div><!---- /panel ---->	
+			
+			<cfoutput><div class="text-right"><a href="../abuse.cfm?v#Hash('speakerKey','SHA-256')#=#speakerObj.getSpeakerKey()#">Report abuse</a></div></cfoutput>
 			  
 		  <br />
 		  

@@ -70,13 +70,13 @@
 	<!--- check if the user already exists --->
 	<cfif userExists>
 		<!--- user already exists, set an error message to display --->
-		<cfset errorMsg = '<p>We&apos;re sorry, but you&apos;re email is already in use on our system. If you already have an account, please log in from the <a href="index.cfm">home page</a>. If you have forgotten your password, you can reset your password instead. If you suspect your information has been used without your knowledge, please <a href="abuse.cfm">report abuse</a>.</p>' />
+		<cfset errorMsg = '<p>We&apos;re sorry, but you&apos;re email is already in use on our system. If you already have an account, please <a href="login.cfm">log in</a>. If you have forgotten your password, you can <a href="reset.cfm">reset your password</a>. If you suspect your information has been used without your knowledge, please <a href="abuse.cfm">report abuse</a>.</p>' />
 	</cfif> 
 	
-	<!--- check if we've passed required fields, new user and capcha checks --->
-	<cfif reqCheck.result AND validCapcha AND NOT userExists>	
+	<!--- ensure we have no errors --->
+	<cfif NOT Len(errorMsg)>	
 		
-		<!--- required fields provided and new user, create and populate a user object --->
+		<!--- no errors, create and populate a user object --->
 		<cfset userObj = createObject('component','core.beans.User').init(
 			userId  	= 0,
 			username	= saniForm.email,
@@ -128,7 +128,7 @@
 		<!--- redirect to verification form --->
 		<cflocation url="vid.cfm" addtoken="false" />
 	
-	<!--- end checking if we've passed required fields, new user and capcha checks --->	
+	<!--- end ensuring we have no errors --->	
 	</cfif>
 
 <!--- end checking if the form was submitted --->	

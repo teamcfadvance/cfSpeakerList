@@ -69,8 +69,11 @@
 		<cfset errorMsg = '<p>We&apos;re sorry, but we did not receive the values we expected in your request. Please try your request again.</p>' />
 	</cfif>	
 	
-	<!--- check if we've passed required fields, valid speaker and capcha checks --->
-	<cfif reqCheck.result AND validCapcha AND Len(speakerObj.getSpeakerId())>	
+	<!--- ensure we have no errors --->
+	<cfif NOT Len(errorMsg)>	
+	
+		<!--- carriage return --->
+		<cfset cR = Chr(10) & Chr(13) />
 	
 		<!--- we have, send a request email to the speaker --->
 		<cfmail to="#speakerObj.getEmail()#" from="#saniForm.email#" subject="#APPLICATION.siteName# Speaker Request" bcc="#APPLICATION.bccEmail#" charset="utf-8">
@@ -111,7 +114,7 @@
 		 </cfmailpart>
 		</cfmail>	
 		
-	<!--- end checking if we've passed required fields, valid speaker and capcha checks --->	
+	<!--- end ensuring we have no errors --->	
 	</cfif>
 
 <!--- end checking if the form was submitted --->	

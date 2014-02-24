@@ -35,6 +35,7 @@ THIS.scriptprotect="all";
 		APPLICATION.iusColumn = 'speakerKey';
 		APPLICATION.fromEmail = 'nospam@ugslist.tld';
 		APPLICATION.bccEmail = '';
+		APPLICATION.abuseEmail = 'abuse@ugslist.tld';
 		APPLICATION.verificationTimeout = 12;
 		APPLICATION.cookieName = 'cfslid';
 		APPLICATION.sessionTimeout = 30;

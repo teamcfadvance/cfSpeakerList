@@ -41,10 +41,12 @@
 		<!--- user doesn't exist, set an error message to be displayed --->
 		<cfset errorMsg = '<p>We&apos;re sorry but we could not validate your email based on the information you provided. Please try again.</p>' />
 	
-	<!--- otherwise --->	
-	<cfelse>
+	</cfif>
 	
-		<!--- user exists, get the user object by the provided email --->
+	<!--- ensure we have no errors --->	
+	<cfif NOT Len(errorMsg)>
+	
+		<!--- no errors, get the user object by the provided email --->
 		<cfset userObj = getUserByEmail(saniForm.email) />
 		<!--- generate a password --->
 		<cfset newPass  = APPLICATION.util.generatePassword() />
@@ -52,6 +54,9 @@
 		<cfset userObj.setPassword(LCase(Hash(newPass,'SHA-384'))) />
 		<!--- and save the user to persist the value to the database --->
 		<cfset APPLICATION.userDAO.saveUser(userObj) />
+		
+		<!--- carriage return --->
+		<cfset cR = Chr(10) & Chr(13) />
 
 		<!--- email the new password to the user --->
 		<cfmail to="#saniForm.email#" from="#APPLICATION.fromEmail#" subject="#APPLICATION.siteName# Password Reset" bcc="#APPLICATION.bccEmail#" charset="utf-8">
