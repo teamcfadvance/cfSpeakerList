@@ -19,8 +19,7 @@
 	<!--- process required fields --->
 	<cfset reqCheck = APPLICATION.utils.checkRequired(
 		fields = {
-			email 		= saniForm.email,
-			password 	= saniForm.password
+			email 		= saniForm.email
 		}
 	) />
 	

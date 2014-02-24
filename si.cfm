@@ -78,6 +78,7 @@
 						<cfif speakerObj.getIsAEL()><li>Adobe E-Learning Professional (AEL)</li></cfif>
 						<cfif speakerObj.getIsUGM()><li>Adobe User Group Manager (UGM)</li></cfif>
 						<cfif speakerObj.getIsOther()><li>Other design/development program member</li></cfif>
+						<cfif NOT speakerObj.getIsACP() AND NOT speakerObj.getIsAEL() AND NOT speakerObj.getIsUGM() AND NOT speakerObj.getIsOther()><li>Not in any program</li></cfif>
 						</ul>
 					</td>
 				  </tr>
@@ -87,6 +88,7 @@
 						<ul>
 						<cfif speakerObj.getShowPhone() AND Len(speakerObj.getPhone())><li>Phone: #speakerObj.getPhone()#</li></cfif>
 						<cfif speakerObj.getShowTwitter() AND Len(speakerObj.getTwitter())><li>Twitter: #speakerObj.getTwitter()#</li></cfif>
+						<cfif (NOT apeakerObj.getShowPhone() OR NOT Len(speakerObj.getPhone()) AND (NOT speakerObj.getShowTwitter() OR NOT Len(speakerObj.getTwitter))><li>No details published, use contact form below</li></cfif>
 						</ul>
 					</td>
 				  </tr>

@@ -287,7 +287,7 @@
 		  <div class="col-md-4">
 			<select id="states" name="states" class="form-control" multiple="multiple">
 			<cfloop query="qGetStates">
-				<option value="#qGetStates.state#"<cfif ListFindNoCase(FORM.countries,qGetStates.state)> selected="selected"</cfif>>#qGetStates.state#</option>
+				<option value="#qGetStates.state#"<cfif ListFindNoCase(FORM.states,qGetStates.state)> selected="selected"</cfif>>#qGetStates.state#</option>
 			</cfloop>
 			</select>
 			<p class="help-block">Select primary states where you can present</p>
