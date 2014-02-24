@@ -14,6 +14,21 @@
 <cfparam name="FORM.capcha" default="999" type="numeric" />
 <cfparam name="FORM['ff' & Hash('capcha')]" default="#APPLICATION.formZero#" type="string" />
 
+<!--- check for the existence of the session cookie --->
+<cfif IsDefined('COOKIE.#APPLICATION.cookieName#')>
+	<!--- cookie exists, get this speaker object --->
+	<cfset speakerObj = APPLICATION.speakerDAO.getSpeakerByUserId(APPLICATION.userDAO.getUserIdFromSession(COOKIE[APPLICATION.cookieName])) />
+<!--- otherwise, check if we're in debug mode --->
+<cfelseif APPLICATION.debugOn>	
+	<!--- we are, get the first available speaker for test --->
+	<cfset speakerObj = APPLICATION.speakerDAO.getSpeakerById(1) />
+<!--- otherwise --->
+<cfelse>	
+	<!--- cookie does not exist and we're not in debug mode, redirect to the login page --->
+	<cflocation url="../login.cfm" addtoken="false" />
+<!--- end checking for the existence of the session cookie --->
+</cfif>
+
 <!--- set a null error message to check for later --->
 <cfset errorMsg = '' />
 
@@ -27,7 +42,6 @@
 	<cfset reqCheck = APPLICATION.utils.checkRequired(
 		fields = {
 			email 		= saniForm.email,
-			password 	= saniForm.password,
 			fName 		= saniForm.fName,
 			lName 		= saniForm.lName,
 			countries 	= saniForm.countries,
@@ -64,69 +78,32 @@
 		<cfset errorMsg = '<p>We&apos;re sorry, but you did not enter the correct sum of the two numbers. You may have added the numbers incorrectly, typo&apos;d the answer, or at worst... you may not be human. Please try again.</p>' />
 	</cfif> 
 	
-	<!--- check if this username (email) already exists --->
-	<cfset userExists = APPLICATION.userDAO.checkIfUserExists(saniForm.email) />
-	
-	<!--- check if the user already exists --->
-	<cfif userExists>
-		<!--- user already exists, set an error message to display --->
-		<cfset errorMsg = '<p>We&apos;re sorry, but you&apos;re email is already in use on our system. If you already have an account, please <a href="login.cfm">log in</a>. If you have forgotten your password, you can <a href="reset.cfm">reset your password</a>. If you suspect your information has been used without your knowledge, please <a href="abuse.cfm">report abuse</a>.</p>' />
-	</cfif> 
-	
 	<!--- ensure we have no errors --->
 	<cfif NOT Len(errorMsg)>	
-		
-		<!--- no errors, create and populate a user object --->
-		<cfset userObj = createObject('component','core.beans.User').init(
-			userId  	= 0,
-			username	= saniForm.email,
-			password	= LCase(Hash(saniForm.password,'SHA-384')),
-			role    	= 'speaker',
-			isActive	= 0
-		) />
-		
-		<!--- and save the user --->
-		<cfset userObj.setUserId(APPLICATION.userDAO.saveUser(userObj)) />
-		
-		<!--- get a new key for the speaker --->
-		<cfset thisSpeakerKey = APPLICATION.iusUtil.getShortUrl(
-			table		= APPLICATION.iusTable,
-			column		= APPLICATION.iusColumn,
-			keyLength	= 8,
-			mode		= 'alphanum'
-		) />
-		
+				
 		<!--- concatenate and sort locations --->
 		<cfset thisSpeakerLocs = ListSort(ListAppend(ListAppend(saniForm.countries, saniForm.states),saniForm.otherLocations),'textnocase') />
 		
-		<!--- create and populate a speaker object --->
-		<cfset speakerObj = createObject('component','core.beans.Speaker').init(
-			speakerId  	= 0,
-			speakerKey	= thisSpeakerKey,
-			userId     	= userObj.getUserId(),
-			firstName  	= saniForm.Name,
-			lastName   	= saniForm.lName,
-			email      	= saniForm.email,
-			phone      	= saniForm.phone,
-			showPhone	= saniForm.showPhone,
-			twitter    	= saniForm.twitter,
-			showTwitter	= saniForm.showTwitter,
-			specialties	= saniForm.specialties,
-			locations  	= thisSpeakerLocs,
-			isACP      	= (ListFindNoCase(saniForm.programs,'acp') ? 1 : 0),
-			isAEL      	= (ListFindNoCase(saniForm.programs,'ael') ? 1 : 0),
-			isUGM      	= (ListFindNoCase(saniForm.programs,'ugm') ? 1 : 0),
-			isOther    	= (ListFindNoCase(saniForm.programs,'other') ? 1 : 0)
-		) />
+		<!--- update the speaker object --->
+		<cfset speakerObj.setFirstName(saniForm.fName) />
+		<cfset speakerObj.setLastName(saniForm.lName) />
+		<cfset speakerObj.setEmail(saniForm.email) />
+		<cfset speakerObj.setPhone(saniForm.phone) />
+		<cfset speakerObj.setShowPhone(saniForm.showPhone) />
+		<cfset speakerObj.setTwitter(saniForm.twitter) />
+		<cfset speakerObj.setShowTwitter(saniForm.showTwitter) />
+		<cfset speakerObj.setSpecialties(saniForm.specialties) />
+		<cfset speakerObj.setLocation(thisSpeakerLocs) />
+		<cfset speakerObj.setIsACP((ListFindNoCase(saniForm.programs,'acp') ? 1 : 0)) />
+		<cfset speakerObj.setIsAEL((ListFindNoCase(saniForm.programs,'ael') ? 1 : 0)) />
+		<cfset speakerObj.setIsUGM((ListFindNoCase(saniForm.programs,'ugm') ? 1 : 0)) />
+		<cfset speakerObj.setIsOther((ListFindNoCase(saniForm.programs,'other') ? 1 : 0)) />
 		
 		<!--- and save the speaker object --->	
 		<cfset speakerObj.setSpeakerId(APPLICATION.speakerDAO.saveSpeaker(speakerObj)) />
 		
-		<!--- send verification email --->
-		<cfset APPLICATION.utils.emailVerification(email = saniForm.email, key = thisSpeakerKey) />
-		
-		<!--- redirect to verification form --->
-		<cflocation url="vid.cfm" addtoken="false" />
+		<!--- redirect to dashboard --->
+		<cflocation url="index.cfm" addtoken="false" />
 	
 	<!--- end ensuring we have no errors --->	
 	</cfif>
@@ -149,10 +126,10 @@
     <meta name="author" content="">
     <!----<link rel="shortcut icon" href="../../assets/ico/favicon.ico">---->
 
-    <title><cfoutput>#APPLICATION.siteName#</cfoutput> &raquo; Speaker Sign-Up</title>
+    <title><cfoutput>#APPLICATION.siteName#</cfoutput> &raquo; Edit Speaker Profile</title>
 
-    <link href="css/bootstrap.min.css" rel="stylesheet">
-    <link href="css/jumbotron.css" rel="stylesheet">
+    <link href="../css/bootstrap.min.css" rel="stylesheet">
+    <link href="../css/jumbotron.css" rel="stylesheet">
 
     <!--- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries --->
     <!--[if lt IE 9]>
@@ -164,9 +141,16 @@
   <body>
 
     <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
-      <div class="container">
+      <div class="container-fluid">
         <div class="navbar-header">
-          <a class="navbar-brand" href="index.cfm">User Group Speaker List</a>
+          <a class="navbar-brand" href="../index.cfm">User Group Speaker List</a>
+        </div>
+        <div class="navbar-collapse collapse">
+          <ul class="nav navbar-nav navbar-right">
+		  	<li><a href="index.cfm">Dashboard</a></li>
+            <li><a href="profile.cfm">Edit Profile</a></li>
+            <li><a href="change.cfm">Change Password</a></li>
+          </ul>
         </div>
       </div>
     </div>
@@ -181,7 +165,7 @@
 	  	<cfif Len(errorMsg)>
 		
 		<div class="panel panel-danger">
-		  <div class="panel-heading">An Error Occurred Processing Your Sign Up</div>
+		  <div class="panel-heading">An Error Occurred Editing Your Profile</div>
 		  <div class="panel-body">
 			#errorMsg#
 		  </div>
@@ -190,9 +174,9 @@
 		<cfelse>
 		
 		<div class="panel panel-primary">
-		  <div class="panel-heading">Speaker Sign Up Form</div>
+		  <div class="panel-heading">Edit Speaker Profile Form</div>
 		  <div class="panel-body">
-			<p>To add your information to our database, simply fill out and submit the following form providing information about you, locations you can present at and your specialties or general speaking topics.</p> 
+			<p>To modify your information in our database, simply edit and submit the following form providing information about you, locations you can present at and your specialties or general speaking topics.</p> 
 		  </div>
 		</div>
 		
@@ -202,13 +186,13 @@
 		<fieldset>
 		
 		<!--- Form Name --->
-		<legend>Speaker Sign Up Form</legend>
+		<legend>Edit Speaker Profile Form</legend>
 		
 		<!--- Text input--->
 		<div class="form-group">
 		  <label class="col-md-4 control-label" for="email">Email</label>  
 		  <div class="col-md-4">
-		  <input id="email" name="email" placeholder="someone@someplace.com" class="form-control input-md" required autofocus type="email" value="#FORM.email#">
+		  <input id="email" name="email" placeholder="someone@someplace.com" class="form-control input-md" required autofocus type="email" value="#speakerObj.getEmail()#">
 		  <span class="help-block">Used to login and receive contacts, never shared publicly</span>  
 		  </div>
 		</div>
@@ -217,8 +201,7 @@
 		<div class="form-group">
 		  <label class="col-md-4 control-label" for="password">Password</label>
 		  <div class="col-md-4">
-			<input id="password" name="password" placeholder="Min 8 chars using each of a-z, A-Z and 0-9" class="form-control input-md" required type="password">
-			
+			<a href="change.cfm">Change Password</a>			
 		  </div>
 		</div>
 		
@@ -226,7 +209,7 @@
 		<div class="form-group">
 		  <label class="col-md-4 control-label" for="fName">First Name</label>  
 		  <div class="col-md-4">
-		  <input id="fName" name="fName" placeholder="John" class="form-control input-md" required type="text" value="#FORM.fName#">
+		  <input id="fName" name="fName" placeholder="John" class="form-control input-md" required type="text" value="#speakerObj.getFirstName()#">
 			
 		  </div>
 		</div>
@@ -235,7 +218,7 @@
 		<div class="form-group">
 		  <label class="col-md-4 control-label" for="lName">Last Name</label>  
 		  <div class="col-md-4">
-		  <input id="lName" name="lName" placeholder="Doe" class="form-control input-md" required type="text" value="#FORM.lName#">
+		  <input id="lName" name="lName" placeholder="Doe" class="form-control input-md" required type="text" value="#speakerObj.getLastName()#">
 			
 		  </div>
 		</div>
@@ -246,9 +229,9 @@
 		  <div class="col-md-4">
 			<div class="input-group">
 			  <span class="input-group-addon">     
-				  <input type="checkbox" name="pubPhone" value="1"<cfif FORM.pubPhone> checked="checked"</cfif>>     
+				  <input type="checkbox" name="pubPhone" value="1"<cfif speakerObj.getShowPhone()> checked="checked"</cfif>>     
 			  </span>
-			  <input id="phone" name="phone" class="form-control" placeholder="(999) 999-9999" type="tel" value="#FORM.phone#">
+			  <input id="phone" name="phone" class="form-control" placeholder="(999) 999-9999" type="tel" value="#speakerObj.getPhone()#">
 			</div>
 			<p class="help-block">Optional, check box to show publicly</p>
 		  </div>
@@ -260,46 +243,20 @@
 		  <div class="col-md-4">
 			<div class="input-group">
 			  <span class="input-group-addon">     
-				  <input checked="checked" type="checkbox" name="pubTwitter" value="1">     
+				  <input type="checkbox" name="pubTwitter" value="1"<cfif speakerObj.getShowTwitter()> checked="checked"</cfif>>     
 			  </span>
-			  <input id="twitter" name="twitter" class="form-control" placeholder="@myhandle" type="text" value="#FORM.twitter#">
+			  <input id="twitter" name="twitter" class="form-control" placeholder="@myhandle" type="text" value="#speakerObj.getTwitter()#">
 			</div>
 			<p class="help-block">Optional, check box to show publicly</p>
 		  </div>
 		</div>
 		
-		<!--- Select Multiple --->
-		<div class="form-group">
-		  <label class="col-md-4 control-label" for="country">Countries</label>
-		  <div class="col-md-4">
-			<select id="countries" name="countries" class="form-control" multiple="multiple">
-			<cfloop query="qGetCountries">
-				<option value="#qGetCountries.country#"<cfif (ListFindNoCase(FORM.countries,qGetCountries.country)) OR (NOT ListLen(FORM.countries) AND FindNoCase('united states',qGetCountries.country) AND NOT FindNoCase('united states minor',qGetCountries.country))> selected="selected"</cfif>>#qGetCountries.country#</option>
-			</cfloop>
-			</select>
-			<p class="help-block">Select primary countries where you can present</p>
-		  </div>
-		</div>
-		
-		<!--- Select Multiple --->
-		<div class="form-group">
-		  <label class="col-md-4 control-label" for="states">If US, Select State(s)</label>
-		  <div class="col-md-4">
-			<select id="states" name="states" class="form-control" multiple="multiple">
-			<cfloop query="qGetStates">
-				<option value="#qGetStates.state#"<cfif ListFindNoCase(FORM.states,qGetStates.state)> selected="selected"</cfif>>#qGetStates.state#</option>
-			</cfloop>
-			</select>
-			<p class="help-block">Select primary states where you can present</p>
-		  </div>
-		</div>
-		
 		<!--- Text input--->
 		<div class="form-group">
-		  <label class="col-md-4 control-label" for="otherLocations">Other Locations</label>  
+		  <label class="col-md-4 control-label" for="otherLocations">Locations</label>  
 		  <div class="col-md-4">
-		  <input id="otherLocations" name="otherLocations" placeholder="Online, Toronto, Paris" class="form-control input-md" type="text" value="#FORM.otherLocations#">
-		  <span class="help-block">Enter other location(s) seperated by commas</span>  
+		  <input id="otherLocations" name="otherLocations" placeholder="Online, Toronto, Paris" class="form-control input-md" type="text" value="#speakerObj.getLocations()#">
+		  <span class="help-block">Enter location(s) seperated by commas</span>  
 		  </div>
 		</div>
 		
@@ -307,7 +264,7 @@
 		<div class="form-group">
 		  <label class="col-md-4 control-label" for="specialties">Specialties/Speaking Topics</label>
 		  <div class="col-md-4">                     
-			<textarea class="form-control" id="specialties" name="specialties"><cfif Len(FORM.specialties)>#FORM.specialties#<cfelse>HTML5, CSS3, CFML, Web Design</cfif></textarea>
+			<textarea class="form-control" id="specialties" name="specialties"><cfif Len(speakerObj.getSpecialties())>#speakerObj.getSpecialties()#<cfelse>HTML5, CSS3, CFML, Web Design</cfif></textarea>
 		  <span class="help-block">Enter your specialties seperated by commas</span>  
 		  </div>
 		</div>
@@ -318,25 +275,25 @@
 		  <div class="col-md-4">
 		  <div class="checkbox">
 			<label for="programs-0">
-			  <input name="programs" id="programs-0" value="ACP" type="checkbox"<cfif ListFindNoCase(FORM.programs,'acp')> checked="checked"</cfif>>
+			  <input name="programs" id="programs-0" value="ACP" type="checkbox"<cfif speakerObj.getIsACP()> checked="checked"</cfif>>
 			  Adobe Community Professional (ACP)
 			</label>
 			</div>
 		  <div class="checkbox">
 			<label for="programs-1">
-			  <input name="programs" id="programs-1" value="AEL" type="checkbox"<cfif ListFindNoCase(FORM.programs,'ael')> checked="checked"</cfif>>
+			  <input name="programs" id="programs-1" value="AEL" type="checkbox"<cfif speakerObj.getIsAEL()> checked="checked"</cfif>>
 			  Adobe E-Learning Professional (AEL)
 			</label>
 			</div>
 		  <div class="checkbox">
 			<label for="programs-2">
-			  <input name="programs" id="programs-2" value="UGM" type="checkbox"<cfif ListFindNoCase(FORM.programs,'ugm')> checked="checked"</cfif>>
+			  <input name="programs" id="programs-2" value="UGM" type="checkbox"<cfif speakerObj.getIsUGM()> checked="checked"</cfif>>
 			  Adobe User Group Manager (UGM)
 			</label>
 			</div>
 		  <div class="checkbox">
 			<label for="programs-3">
-			  <input name="programs" id="programs-3" value="Other" type="checkbox"<cfif ListFindNoCase(FORM.programs,'other')> checked="checked"</cfif>>
+			  <input name="programs" id="programs-3" value="Other" type="checkbox"<cfif speakerObj.getIsOther()> checked="checked"</cfif>>
 			  Other design/development program member
 			</label>
 			</div>
@@ -376,10 +333,10 @@
 
       <hr>
 
-      <cfinclude template="includes/footer.cfm" />
+      <cfinclude template="../includes/footer.cfm" />
     </div> <!--- /container --->
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
+    <script src="../js/bootstrap.min.js"></script>
   </body>
 </html>

@@ -148,6 +148,47 @@
   </cfif>
 </cffunction>
 
+<!--- RETRIEVE - BY USER ID --->
+<cffunction name="getSpeakerByUserId" access="public" output="false" returntype="any" hint="I return a Speaker bean populated with the details of a specific speaker record.">
+  <cfargument name="id" type="numeric" required="true" hint="I am the numeric auto-increment id of the speaker to search for." />
+  <cfset var qGetSpeaker = '' />
+  <cfset var speakerObject = '' />
+  <cftry>
+  <cfquery name="qGetSpeaker" datasource="#variables.instance.datasource.getDSN()#" username="#variables.instance.datasource.getUsername()#" password="#variables.instance.datasource.getPassword()#">
+	SELECT speakerId, speakerKey, userId, firstName, lastName, email, phone, showPhone, twitter, showTwitter, specialties, locations, isACP, isAEL, isUGM, isOther
+	FROM speakers
+	WHERE userId = <cfqueryparam value="#ARGUMENTS.id#" cfsqltype="cf_sql_integer" />
+  </cfquery>
+  <!--- catch any errors --->
+  <cfcatch type="any">
+	<cfset APPLICATION.utils.errorHandler(cfcatch) />
+	<cfreturn createObject('component','core.beans.Speaker').init() />
+  </cfcatch>
+  </cftry>
+  <cfif qGetSpeaker.RecordCount>
+    <cfreturn createObject('component','core.beans.Speaker').init(
+		speakerId  	= qGetSpeaker.speakerId,
+		speakerKey	= qGetSpeaker.speakerKey,
+		userId     	= qGetSpeaker.userId,
+		firstName  	= qGetSpeaker.firstName,
+		lastName   	= qGetSpeaker.lastName,
+		email      	= APPLICATION.utils.dataDec(qGetSpeaker.email),
+		phone      	= APPLICATION.utils.dataDec(qGetSpeaker.phone),
+		showPhone	= qGetSpeaker.showPhone,
+		twitter    	= APPLICATION.utils.dataDec(qGetSpeaker.twitter),
+		showTwitter	= qGetSpeaker.showTwitter,
+		specialties	= qGetSpeaker.specialties,
+		locations  	= qGetSpeaker.locations,
+		isACP      	= qGetSpeaker.isACP,
+		isAEL      	= qGetSpeaker.isAEL,
+		isUGM      	= qGetSpeaker.isUGM,
+		isOther    	= qGetSpeaker.isOther
+    ) />
+  <cfelse>
+    <cfreturn createObject('component','core.beans.Speaker').init() />
+  </cfif>
+</cffunction>
+
 <!--- UPDATE --->
 <cffunction name="updateSpeaker" access="public" output="false" returntype="numeric" hint="I update this speaker record in the speakers table of the database.">
   <cfargument name="speaker" type="any" required="true" hint="I am the Speaker bean." />

@@ -8,16 +8,25 @@ THIS.sessionmanagement="True";
 THIS.sessiontimeout="#createtimespan(0,15,0,0)#";
 THIS.applicationtimeout="#createtimespan(0,0,0,0)#";
 THIS.scriptprotect="all";
+THIS.mappings["/core"]=ExpandPath('core');
 </cfscript>
 <!---                    --->
 <!--- onApplicationStart --->
 <!---                    --->
 <cffunction name="onApplicationStart">
 	<!--- set application variables --->
-	<!--- NOTE: You must set up the datasource and three encryption keys --->
-	<!--- (create keys: http://www.dvdmenubacks.com/key.cfm), algorithms --->
-	<!--- (e.g. AES/CBC/PKCS5Padding) and encodings (e.g. BASE64, HEX)   --->
-	<!--- before you run this application.                               --->
+	<!--- NOTE: You must set up the datasource and three encryption keys  --->
+	<!--- (create keys: http://www.dvdmenubacks.com/key.cfm), algorithms  --->
+	<!--- (e.g. AES/CBC/PKCS5Padding) and encodings (e.g. BASE64, HEX)    --->
+	<!--- before you run this application.                                --->
+	<!---                                                                 --->
+	<!--- NOTE: This application uses mappings to ensure access to core   --->
+	<!--- components. You will need to check the Enable Per App Settings  --->
+	<!--- option on the Settings page of the ColdFusion Administrator for --->
+	<!--- this to work properly. Some (shared) hosting providers do not   --->
+	<!--- allow per-application settings. In this case, you will need to  --->
+	<!--- run this application in a root domain or sub-domain for access  --->
+	<!--- to the private area to work.                                    --->
 	<cfscript>
         APPLICATION.ds = "<datasource>";
 		APPLICATION.dbkey1 = '<key1>';

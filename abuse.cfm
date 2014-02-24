@@ -62,6 +62,9 @@
 			Hello #speakerObject.getFirstName()#,#cR##cR#
 			Abuse has been reported in the system by a user. Details of the abuse provided by the user is:#cR##cR##cR#
 			#saniForm.abuse##cR##cR##cR#
+			<cfif speakerAbuse>
+				<cfdump var="#speakerObj.getMemento()#" label="Speaker Reported For Abuse" format="text" />
+			</cfif>
 			Sincerely,#cR#
 			The #APPLICATION.siteName# Team#cR##cR#
 		 </cfmailpart>

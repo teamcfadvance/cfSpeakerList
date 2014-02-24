@@ -2,8 +2,10 @@
 <cfset errorMsg = '' />
 <!--- check if the path equals the script name --->
 <cfif NOT CGI.PATH_INFO EQ CGI.SCRIPT_NAME>
-	<!--- it doesn't, ensure the path passed has two values --->
-	<cfif ListLen(CGI.PATH_INFO,'/') NEQ 2>
+	<!--- it doesn't, determine the length of the path passed --->
+	<cfset pathLen = ListLen(CGI.PATH_INFO,'/') />
+	<!--- ensure the path passed has two values --->
+	<cfif pathLen NEQ 2>
 		<!--- it doesn't, set an error message --->
 		<cfset errorMsg = '<p>We&apos;re sorry, but we did not receive the values we expected in your request. Please try your request again. If you continue to experience issues, please try to copy and paste the provided URL into your browser, ensure there are no line breaks.</p>' />
 	<!--- otherwise --->
@@ -24,6 +26,7 @@
 				<cfset errorMsg = errorMsg & ' We have sent another verification email to you at the email address you provided when you signed up. Please be sure to click the link in this newer email before the verification expiration in #APPLICATION.verificationTimeout# hours.</p>' />
 			<!--- otherwise --->
 			<cfelse>
+				<!--- verification timestamp exceeds 7 days, notify the user to contact the list admins directly --->
 				<cfset errorMsg = errorMsg & ' We are unable to resend another verification email at this time. Please contact us at <a href="mailto:#APPLICATION.emailFrom#">#APPLICATION.emailFrom#</a> to let us know you&apos;re having difficulties and we can assist in getting your account verified and your information published.</p>' />
 			<!--- end checking if we have a valid speaker object, and the previous mail timestamp is less than 7 days old --->
 			</cfif>			
@@ -65,9 +68,8 @@
     <!----<link rel="shortcut icon" href="../../assets/ico/favicon.ico">---->
 
     <title><cfoutput>#APPLICATION.siteName#</cfoutput> &raquo; Verify Email Result</title>
-
-    <link href="css/bootstrap.min.css" rel="stylesheet">
-    <link href="css/jumbotron.css" rel="stylesheet">
+    <link href="<cfoutput>#RepeatString('../',pathLen)#</cfoutput>css/bootstrap.min.css" rel="stylesheet">
+    <link href="<cfoutput>#RepeatString('../',pathLen)#</cfoutput>css/jumbotron.css" rel="stylesheet">
 
     <!--- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries --->
     <!--[if lt IE 9]>
@@ -126,6 +128,6 @@
     </div> <!--- /container --->
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
+    <script src="<cfoutput>#RepeatString('../',pathLen)#</cfoutput>js/bootstrap.min.js"></script>
   </body>
 </html>

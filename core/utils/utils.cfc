@@ -1,8 +1,8 @@
 <cfcomponent displayname="utils">
 
-	<!---                          --->
-	<!--- DATABASE DATA ENCRYPTION --->
-	<!---                          --->
+	<!---                 --->
+	<!--- DATA ENCRYPTION --->
+	<!---                 --->
 	<cffunction name="dataEnc" access="public" returntype="string">
 		<cfargument name="value" type="string" required="yes" hint="I am the value to encrypt for the database." />
 		<cfargument name="mode" type="string" required="false" default="db" />
@@ -54,9 +54,9 @@
 		<cfreturn lastPass>
 	</cffunction>
 
-	<!---                          --->
-	<!--- DATABASE DATA DECRYPTION --->
-	<!---                          --->
+	<!---                 --->
+	<!--- DATA DECRYPTION --->
+	<!---                 --->
 	<cffunction name="dataDec" access="public" returntype="string">
 		<cfargument name="value" type="string" required="yes" hint="I am the value to decrypt for the database.">
 		<cfargument name="mode" type="string" required="false" default="db" />
@@ -115,6 +115,17 @@
 		<cfargument name="errorData" type="any" required="true" hint="I am the struct returned by cfcatch." />
 		<cfargument name="debug" type="boolean" required="false" default="#APPLICATION.debugOn#" hint="I determine whether to fail gracefully or output debug." />
 		
+		<!--- var scope --->
+		<cfset var errorDetail = '' />
+		
+		<!--- dump the error as text to a variable --->
+		<cfsavecontent variable="errorDetail">
+			<cfdump var="#errorData#" format="text" />
+		</cfsavecontent>
+		
+		<!--- log the error --->
+		<cflog text="ERROR: #errorDetail#" type="Information" file="#APPLICATION.applicationName#" thread="yes" date="yes" time="yes" application="yes">
+		
 		<!--- check if we're failing gracefully --->
 		<cfif NOT ARGUMENTS.debug>
 		
@@ -127,7 +138,7 @@
 		<!--- otherwise --->
 		<cfelse>
 		
-			<!--- dump there error to the screen --->
+			<!--- dump the error to the screen --->
 			<cfdump var="#ARGUMENTS.errorData#" label="ERROR DATA (CFCATCH)" />
 			<!--- and abort --->
 			<cfabort>
