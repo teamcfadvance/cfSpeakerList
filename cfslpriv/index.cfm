@@ -13,6 +13,15 @@
 <!--- end checking for the existence of the session cookie --->
 </cfif>
 
+<!--- get this user object --->
+<cfset userObj = APPLICATION.userDAO.getUserById(speakerObj.getUserId()) />
+
+<!--- check if this user is an administrator --->
+<cfif FindNoCase('admin',userObj.getRole())>
+	<!--- it is, redirect to the admin dashboard --->
+	<cflocation url="admin.cfm" addtoken="false" />
+</cfif>
+
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -104,13 +113,13 @@
 			<cfoutput><div class="text-right"><small><a href="profile.cfm">Edit Profile</a></small></div></cfoutput>			          
         </div>
       </div>
+	  
+      <hr>
+
+      <cfinclude template="../includes/footer.cfm" />
     </div>
 
-    <!-- Bootstrap core JavaScript
-    ================================================== -->
-    <!-- Placed at the end of the document so the pages load faster -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
     <script src="../js/bootstrap.min.js"></script>
-    <script src="../js/docs.min.js"></script>
   </body>
 </html>

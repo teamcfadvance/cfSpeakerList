@@ -29,6 +29,9 @@
 <!--- end checking for the existence of the session cookie --->
 </cfif>
 
+<!--- get this user object --->
+<cfset userObj = APPLICATION.userDAO.getUserById(speakerObj.getUserId()) />
+
 <!--- set a null error message to check for later --->
 <cfset errorMsg = '' />
 
@@ -80,6 +83,12 @@
 	
 	<!--- ensure we have no errors --->
 	<cfif NOT Len(errorMsg)>	
+	
+		<!--- update the username in the user object --->
+		<cfset userObj.setUsername(saniForm.email) />
+		
+		<!--- and save the user object --->
+		<cfset userObj.setUserId(APPLICATION.userDAO.saveUser(userObj)) />
 				
 		<!--- concatenate and sort locations --->
 		<cfset thisSpeakerLocs = ListSort(ListAppend(ListAppend(saniForm.countries, saniForm.states),saniForm.otherLocations),'textnocase') />
@@ -102,8 +111,8 @@
 		<!--- and save the speaker object --->	
 		<cfset speakerObj.setSpeakerId(APPLICATION.speakerDAO.saveSpeaker(speakerObj)) />
 		
-		<!--- redirect to dashboard --->
-		<cflocation url="index.cfm" addtoken="false" />
+		<!--- redirect to success --->
+		<cflocation url="success.cfm?v#Hash('mode','SHA-256')#=#Hash('profile')#" addtoken="false" />
 	
 	<!--- end ensuring we have no errors --->	
 	</cfif>

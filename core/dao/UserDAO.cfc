@@ -30,7 +30,7 @@
 		) VALUES (
 		  <cfqueryparam value="#APPLICATION.utils.dataEnc(ARGUMENTS.user.getUsername())#" cfsqltype="cf_sql_varchar" />,
 		  <cfqueryparam value="#APPLICATION.utils.dataEnc(ARGUMENTS.user.getPassword())#" cfsqltype="cf_sql_varchar" />,
-		  <cfqueryparam value="#APPLICATION.utils.dataEnc(ARGUMENTS.user.getRole())#" cfsqltype="cf_sql_varchar" />,
+		  <cfqueryparam value="#ARGUMENTS.user.getRole()#" cfsqltype="cf_sql_varchar" />,
 		  <cfqueryparam value="#ARGUMENTS.user.getIsActive()#" cfsqltype="cf_sql_bit" />
 		)
   </cfquery>
@@ -66,7 +66,7 @@
 	userId  	= qGetUser.userId,
 	username	= APPLICATION.utils.dataDec(qGetUser.username),
 	password	= APPLICATION.utils.dataDec(qGetUser.password),
-	role    	= APPLICATION.utils.dataDec(qGetUser.role),
+	role    	= qGetUser.role,
 	isActive	= qGetUser.isActive
     ) />
   <cfelse>
@@ -83,7 +83,7 @@
 	UPDATE users SET
 	  username = <cfqueryparam value="#APPLICATION.utils.dataEnc(ARGUMENTS.user.getUsername())#" cfsqltype="cf_sql_varchar" />,
 	  password = <cfqueryparam value="#APPLICATION.utils.dataEnc(ARGUMENTS.user.getPassword())#" cfsqltype="cf_sql_varchar" />,
-	  role = <cfqueryparam value="#APPLICATION.utils.dataEnc(ARGUMENTS.user.getRole())#" cfsqltype="cf_sql_varchar" />,
+	  role = <cfqueryparam value="#ARGUMENTS.user.getRole()#" cfsqltype="cf_sql_varchar" />,
 	  isActive = <cfqueryparam value="#ARGUMENTS.user.getIsActive()#" cfsqltype="cf_sql_bit" />
 	WHERE userId = <cfqueryparam value="#ARGUMENTS.user.getUserId()#" cfsqltype="cf_sql_integer" />
   </cfquery>
