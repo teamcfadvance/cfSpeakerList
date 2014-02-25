@@ -20,7 +20,7 @@
     <meta name="author" content="">
     <!----<link rel="shortcut icon" href="../../assets/ico/favicon.ico">---->
 
-    <title><cfoutput>#APPLICATION.siteName#</cfoutput> &raquo; Dashboard</title>
+    <title><cfoutput>#APPLICATION.siteName#</cfoutput> &raquo; Dashboard &raquo; Success</title>
 
     <link href="../css/bootstrap.min.css" rel="stylesheet">
     <link href="../css/jumbotron.css" rel="stylesheet">
@@ -37,7 +37,7 @@
     <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
       <div class="container-fluid">
         <div class="navbar-header">
-          <a class="navbar-brand" href="../index.cfm">User Group Speaker List</a>
+          <a class="navbar-brand" href="../index.cfm"><cfoutput>#APPLICATION.siteLongName#</cfoutput></a> <a class="navbar-brand" href="index.cfm">&raquo; Dashboard</a> <span class="navbar-brand">&raquo; Success</span>
         </div>
         <div class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">

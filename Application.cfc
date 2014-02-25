@@ -39,6 +39,7 @@ THIS.mappings["/core"]=ExpandPath('core');
 		APPLICATION.dbalg3 = '<alg3>';
 		APPLICATION.dbenc3 = '<enc3>';
 		APPLICATION.siteName = 'UGS List';
+		APPLICATION.siteLongName = 'User Group Speaker List';
 		APPLICATION.debugOn = true;
 		APPLICATION.iusTable = 'speakers';
 		APPLICATION.iusColumn = 'speakerKey';

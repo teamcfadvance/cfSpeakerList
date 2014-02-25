@@ -69,7 +69,7 @@
     <meta name="author" content="">
     <!----<link rel="shortcut icon" href="../../assets/ico/favicon.ico">---->
 
-    <title><cfoutput>#APPLICATION.siteName#</cfoutput> &raquo; Verify Email Result</title>
+    <title><cfoutput>#APPLICATION.siteName#</cfoutput> &raquo; Email Verification</title>
     <link href="<cfoutput>#RepeatString('../',pathLen)#</cfoutput>css/bootstrap.min.css" rel="stylesheet">
     <link href="<cfoutput>#RepeatString('../',pathLen)#</cfoutput>css/jumbotron.css" rel="stylesheet">
 
@@ -85,7 +85,7 @@
     <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
       <div class="container">
         <div class="navbar-header">
-          <a class="navbar-brand" href="index.cfm">User Group Speaker List</a>
+          <a class="navbar-brand" href="index.cfm"><cfoutput>#APPLICATION.siteLongName#</cfoutput></a> <span class="navbar-brand">&raquo; Email Verification</span>
         </div>
       </div>
     </div>

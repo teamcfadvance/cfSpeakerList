@@ -36,7 +36,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="index.cfm">User Group Speaker List</a>
+          <a class="navbar-brand" href="index.cfm"><cfoutput>#APPLICATION.siteLongName#</cfoutput></a>
         </div>
         <div class="navbar-collapse collapse">
           <form class="navbar-form navbar-right" role="form" method="post" action="login.cfm" onSubmit="hashIt();">
@@ -55,7 +55,7 @@
 
     <div class="jumbotron">
       <div class="container">
-        <h1>User Group Speaker List</h1>
+        <h1><cfoutput>#APPLICATION.siteLongName#</cfoutput></h1>
         <p>This site is designed to allow development and design professionals who speak at user groups and conferences to add their information to our database, and those seeking speakers for their events to search our database to find suitable speakers and contact them.</p>
       </div>
     </div>
@@ -79,7 +79,7 @@
        </div>
         <div class="col-md-4">
           <h2>Speaker Sign Up</h2>
-          <p>Are you a devlopment or design professional with experience and interest in speaking to user groups and at conferences? Use our easy sign-up form to add your information to our database!</p>
+          <p>Are you a development or design professional with experience and interest in speaking to user groups and at conferences? Use our easy sign-up form to add your information to our database!</p>
 		  <p>&nbsp;</p>
           <p><a class="btn btn-success" href="signup.cfm" role="button">Sign Up Now</a></p>
         </div>

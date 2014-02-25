@@ -98,7 +98,7 @@
     <meta name="author" content="">
     <!----<link rel="shortcut icon" href="../../assets/ico/favicon.ico">---->
 
-    <title><cfoutput>#APPLICATION.siteName#</cfoutput> &raquo; Sign-In</title>
+    <title><cfoutput>#APPLICATION.siteName#</cfoutput> &raquo; Sign In</title>
 
     <link href="css/bootstrap.min.css" rel="stylesheet">
     <link href="css/signin.css" rel="stylesheet">
@@ -115,7 +115,7 @@
     <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
       <div class="container">
         <div class="navbar-header">
-          <a class="navbar-brand" href="index.cfm">User Group Speaker List</a>
+          <a class="navbar-brand" href="index.cfm"><cfoutput>#APPLICATION.siteLongName#</cfoutput></a> <span class="navbar-brand">&raquo; Sign In</span>
         </div>
       </div>
     </div>
