@@ -256,7 +256,6 @@
 			to be published in our database by clicking on the following link within the next #APPLICATION.verificationTimeout# hours:#cR##cR#
 			http://#CGI.HTTP_HOST#/vid.cfm/#ARGUMENTS.key#/#ts##cR##cR#
 			If you did not wish your information to be published, you do not need to take any action.#cR##cR#
-			&nbsp;
 			Sincerely,#cR#
 			The #APPLICATION.siteName# Team#cR##cR#
 		 </cfmailpart>
