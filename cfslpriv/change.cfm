@@ -54,7 +54,7 @@
 	</cfif> 
 		
 	<!--- check if the new password and verification password match --->
-	<cfif NOT saniForm.nPassword EQ saniForm.vPassword>
+	<cfif NOT Find(saniForm.nPassword,saniForm.vPassword)>
 		<!--- password mismatch, set an error message to display --->
 		<cfset errorMsg = '<p>We&apos;re sorry, but your password and verification password do not match. Please try again.</p>' />
 	</cfif> 

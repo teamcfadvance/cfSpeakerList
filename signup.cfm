@@ -11,7 +11,7 @@
 <cfparam name="FORM.otherLocations" default="" type="string" />
 <cfparam name="FORM.specialties" default="" type="string" />
 <cfparam name="FORM.programs" default="" type="string" />
-<cfparam name="FORM.capcha" default="999" type="numeric" />
+<cfparam name="FORM.capcha" default="999" />
 <cfparam name="FORM['ff' & Hash('capcha')]" default="#APPLICATION.formZero#" type="string" />
 
 <!--- set a null error message to check for later --->
@@ -75,7 +75,7 @@
 	</cfif> 
 	
 	<!--- check if the password and verification password match --->
-	<cfif NOT saniForm.password EQ saniForm.vPassword>
+	<cfif NOT Find(saniForm.password,saniForm.vPassword)>
 		<!--- password mismatch, set an error message to display --->
 		<cfset errorMsg = '<p>We&apos;re sorry, but your password and verification password do not match. Please try again.</p>' />
 	</cfif> 

@@ -2,16 +2,16 @@
 <cfparam name="FORM.password" default="" type="string" />
 <cfparam name="FORM.fName" default="" type="string" />
 <cfparam name="FORM.lName" default="" type="string" />
-<cfparam name="FORM.pubPhone" default="0" type="boolean" />
+<cfparam name="FORM.showPhone" default="0" type="boolean" />
 <cfparam name="FORM.phone" default="" type="string" />
-<cfparam name="FORM.pubTwitter" default="0" type="boolean" />
+<cfparam name="FORM.showTwitter" default="0" type="boolean" />
 <cfparam name="FORM.twitter" default="" type="string" />
 <cfparam name="FORM.countries" default="" type="string" />
 <cfparam name="FORM.states" default="" type="string" />
 <cfparam name="FORM.otherLocations" default="" type="string" />
 <cfparam name="FORM.specialties" default="" type="string" />
 <cfparam name="FORM.programs" default="" type="string" />
-<cfparam name="FORM.capcha" default="999" type="numeric" />
+<cfparam name="FORM.capcha" default="999" />
 <cfparam name="FORM['ff' & Hash('capcha')]" default="#APPLICATION.formZero#" type="string" />
 
 <!--- check for the existence of the session cookie --->
