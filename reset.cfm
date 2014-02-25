@@ -131,12 +131,11 @@
 		</div>
 		
 		</cfif>
-
-      <form class="form-signin" role="form" method="post" action="#CGI.SCRIPT_NAME#" >
 	  <cfoutput>
+      <form class="form-signin" role="form" method="post" action="#CGI.SCRIPT_NAME#" >
         <h2 class="form-signin-heading">Password Reset</h2>
 	  </cfoutput>
-        <input type="email" class="form-control" placeholder="Email address" required autofocus>
+        <input type="email" name="email" class="form-control" placeholder="Email address" required autofocus>
 		<br />
         <button name="btn_Submit" class="btn btn-lg btn-success btn-block" type="submit">Reset Password</button>
       </form>
