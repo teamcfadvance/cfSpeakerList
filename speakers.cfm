@@ -16,9 +16,9 @@
 	<cfset searchList = '' />
 	
 	<!--- loop through search terms by ' AND ' --->
-	<cfloop from="1" to="#ListLen(HTMLEditFormat(FORM.search),' AND ')#" index="iX">
+	<cfloop from="1" to="#ListLen(HTMLEditFormat(LCase(FORM.search)),' and ')#" index="iX">
 		<!--- set individual search terms into a list --->
-		<cfset searchList = ListAppend(searchList,ListGetAt(HTMLEditFormat(FORM.search),iX,' AND ')) />
+		<cfset searchList = ListAppend(searchList,ListGetAt(HTMLEditFormat(LCase(FORM.search)),iX,' and ')) />
 	</cfloop>
 
 	<!--- perform complex search on the list of terms --->

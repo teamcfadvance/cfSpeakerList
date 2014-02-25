@@ -123,28 +123,28 @@
 		AND (  
 		<!--- first name loop --->
 		<cfloop from="1" to="#ListLen(ARGUMENTS.searchTerm,' ')#" index="iX">
-			s.firstName LIKE <cfqueryparam value="%#ListGetAt(ARGUMENTS.searchTerm,iX,' ')#%" cfsqltype="cf_sql_varchar" />
+			LOWER(s.firstName) LIKE <cfqueryparam value="%#LCase(ListGetAt(ARGUMENTS.searchTerm,iX,' '))#%" cfsqltype="cf_sql_varchar" />
 			<cfif NOT iX EQ ListLen(ARGUMENTS.searchTerm,' ')> OR </cfif>
 		</cfloop>
 		)
 		OR (
 		<!--- last name loop --->
 		<cfloop from="1" to="#ListLen(ARGUMENTS.searchTerm,' ')#" index="iX">
-			s.lastName LIKE <cfqueryparam value="%#ListGetAt(ARGUMENTS.searchTerm,iX,' ')#%" cfsqltype="cf_sql_varchar" />
+			LOWER(s.lastName) LIKE <cfqueryparam value="%#LCase(ListGetAt(ARGUMENTS.searchTerm,iX,' '))#%" cfsqltype="cf_sql_varchar" />
 			<cfif NOT iX EQ ListLen(ARGUMENTS.searchTerm,' ')> OR </cfif>
 		</cfloop>
 		)
 		OR ( 
 		<!--- specialties loop --->
 		<cfloop from="1" to="#ListLen(ARGUMENTS.searchTerm,' ')#" index="iX">
-			s.specialties LIKE <cfqueryparam value="%#ListGetAt(ARGUMENTS.searchTerm,iX,' ')#%" cfsqltype="cf_sql_varchar" />
+			LOWER(s.specialties) LIKE <cfqueryparam value="%#LCase(ListGetAt(ARGUMENTS.searchTerm,iX,' '))#%" cfsqltype="cf_sql_varchar" />
 			<cfif NOT iX EQ ListLen(ARGUMENTS.searchTerm,' ')> OR </cfif>
 		</cfloop>
 		)
 		OR ( 
 		<!--- locations loop --->
 		<cfloop from="1" to="#ListLen(ARGUMENTS.searchTerm,' ')#" index="iX">
-			s.locations LIKE <cfqueryparam value="%#ListGetAt(ARGUMENTS.searchTerm,iX,' ')#%" cfsqltype="cf_sql_varchar" />
+			LOWER(s.locations) LIKE <cfqueryparam value="%#LCase(ListGetAt(ARGUMENTS.searchTerm,iX,' '))#%" cfsqltype="cf_sql_varchar" />
 			<cfif NOT iX EQ ListLen(ARGUMENTS.searchTerm,' ')> OR </cfif>
 		</cfloop>
 		)
@@ -189,28 +189,28 @@
 			AND ((  
 			<!--- first name loop --->
 			<cfloop from="1" to="#ListLen(ListGetAt(ARGUMENTS.searchTerms,iY),' ')#" index="iX">
-				s.firstName LIKE <cfqueryparam value="%#ListGetAt(ListGetAt(ARGUMENTS.searchTerms,iY),iX,' ')#%" cfsqltype="cf_sql_varchar" />
+				LOWER(s.firstName) LIKE <cfqueryparam value="%#LCase(ListGetAt(ListGetAt(ARGUMENTS.searchTerms,iY),iX,' '))#%" cfsqltype="cf_sql_varchar" />
 				<cfif NOT iX EQ ListLen(ListGetAt(ARGUMENTS.searchTerms,iY),' ')> OR </cfif>
 			</cfloop>
 			)
 			OR (
 			<!--- last name loop --->
 			<cfloop from="1" to="#ListLen(ListGetAt(ARGUMENTS.searchTerms,iY),' ')#" index="iX">
-				s.lastName LIKE <cfqueryparam value="%#ListGetAt(ListGetAt(ARGUMENTS.searchTerms,iY),iX,' ')#%" cfsqltype="cf_sql_varchar" />
+				LOWER(s.lastName) LIKE <cfqueryparam value="%#LCase(ListGetAt(ListGetAt(ARGUMENTS.searchTerms,iY),iX,' '))#%" cfsqltype="cf_sql_varchar" />
 				<cfif NOT iX EQ ListLen(ListGetAt(ARGUMENTS.searchTerms,iY),' ')> OR </cfif>
 			</cfloop>
 			)
 			OR ( 
 			<!--- specialties loop --->
 			<cfloop from="1" to="#ListLen(ListGetAt(ARGUMENTS.searchTerms,iY),' ')#" index="iX">
-				s.specialties LIKE <cfqueryparam value="%#ListGetAt(ListGetAt(ARGUMENTS.searchTerms,iY),iX,' ')#%" cfsqltype="cf_sql_varchar" />
+				LOWER(s.specialties) LIKE <cfqueryparam value="%#LCase(ListGetAt(ListGetAt(ARGUMENTS.searchTerms,iY),iX,' '))#%" cfsqltype="cf_sql_varchar" />
 				<cfif NOT iX EQ ListLen(ListGetAt(ARGUMENTS.searchTerms,iY),' ')> OR </cfif>
 			</cfloop>
 			)
 			OR ( 
 			<!--- locations loop --->
 			<cfloop from="1" to="#ListLen(ListGetAt(ARGUMENTS.searchTerms,iY),' ')#" index="iX">
-				s.locations LIKE <cfqueryparam value="%#ListGetAt(ListGetAt(ARGUMENTS.searchTerms,iY),iX,' ')#%" cfsqltype="cf_sql_varchar" />
+				LOWER(s.locations) LIKE <cfqueryparam value="%#LCase(ListGetAt(ListGetAt(ARGUMENTS.searchTerms,iY),iX,' '))#%" cfsqltype="cf_sql_varchar" />
 				<cfif NOT iX EQ ListLen(ListGetAt(ARGUMENTS.searchTerms,iY),' ')> OR </cfif>
 			</cfloop>
 			))
