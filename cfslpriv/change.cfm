@@ -60,7 +60,7 @@
 	</cfif> 
 	
 	<!--- check the password meets complexity requirements --->
-	<cfif NOT ReFind('[a-z]',saniForm.password) OR NOT ReFind('[A-Z]',saniForm.password) OR NOT ReFind('[0-9]',saniForm.password) OR NOT Len(saniForm.password) GTE 8>
+	<cfif NOT ReFind('[a-z]',saniForm.nPassword) OR NOT ReFind('[A-Z]',saniForm.nPassword) OR NOT ReFind('[0-9]',saniForm.nPassword) OR NOT Len(saniForm.nPassword) GTE 8>
 		<!--- password doesn't meet complexity requirements, set an error message to display --->
 		<cfset errorMsg = '<p>We&apos;re sorry, but your password does not meet complexity requirements for this system. Your password must be at least eight (8) characters long, and contain at least one lowercase (a through z), uppercase (A through Z) and number (0 through 9) to be accepted. Please try again.</p>' />
 	</cfif>
@@ -119,6 +119,7 @@
 		  	<li><a href="index.cfm">Dashboard</a></li>
             <li><a href="profile.cfm">Edit Profile</a></li>
             <li><a href="change.cfm">Change Password</a></li>
+            <li><a href="../login.cfm">Logout</a></li>
           </ul>
         </div>
       </div>

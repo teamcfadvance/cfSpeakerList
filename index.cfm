@@ -100,7 +100,7 @@
 			
 		function hashIt() {
 			$pwd.val(CryptoJS.SHA384($pwd.val()));
-			//$pwd.val(CryptoJS.SHA384(pwd.val() + $sd.val()));
+			$pwd.val(CryptoJS.SHA384($pwd.val() + $sd.val()));
 		};
 	</script>
 	</cfoutput>

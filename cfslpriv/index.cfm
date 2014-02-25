@@ -55,6 +55,7 @@
           <ul class="nav navbar-nav navbar-right">
             <li><a href="profile.cfm">Edit Profile</a></li>
             <li><a href="change.cfm">Change Password</a></li>
+            <li><a href="../login.cfm">Logout</a></li>
           </ul>
         </div>
       </div>

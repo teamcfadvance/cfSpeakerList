@@ -49,7 +49,7 @@
 	<cfif NOT Len(errorMsg)>
 	
 		<!--- no errors, get the user object by the provided email --->
-		<cfset userObj = getUserByEmail(saniForm.email) />
+		<cfset userObj = APPLICATION.UserDAO.getUserByEmail(saniForm.email) />
 		<!--- create a hash of the stored password plus the seed value provided by the form --->
 		<cfset passHash = LCase(Hash(userObj.getPassword() & FORM['ff' & LCase(Hash('seedId','SHA-256'))],'SHA-384')) />
 		
@@ -130,8 +130,12 @@
 	  	<input type="hidden" id="#seedId#" name="ff#LCase(Hash('seedId','SHA-256'))#" value="#seedVal#" />
         <h2 class="form-signin-heading">#APPLICATION.siteName# Sign In</h2>
 	  </cfoutput>
-        <input type="email" class="form-control" placeholder="Email address" required autofocus>
-        <input type="password" class="form-control" placeholder="Password" id="password" required>
+	  <div class="form-group">
+        <input type="email" name="email" class="form-control" placeholder="Email address" required autofocus>
+	  </div>
+	  <div class="form-group">
+        <input type="password" name="password" class="form-control" placeholder="Password" id="password" required>
+	  </div>
         <button name="btn_Submit" class="btn btn-lg btn-success btn-block" type="submit">Sign in</button>
 		<br />
 		
@@ -152,7 +156,7 @@
 			
 		function hashIt() {
 			$pwd.val(CryptoJS.SHA384($pwd.val()));
-			$pwd.val(CryptoJS.SHA384(pwd.val() + $sd.val()));
+			$pwd.val(CryptoJS.SHA384($pwd.val() + $sd.val()));
 		};
 	</script>
 	</cfoutput>

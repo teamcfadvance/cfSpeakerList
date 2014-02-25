@@ -5,6 +5,8 @@
 <cfset errorMsg = '' />
 <!--- set a default flag for abuse in a speaker listing to false --->
 <cfset speakerAbuse = false />
+<!--- set default abuse reported flag to false --->
+<cfset abuseReported = false />
 
 <!--- check if the form was submitted --->
 <cfif IsDefined('FORM.btn_Submit')>
@@ -42,6 +44,9 @@
 	<!--- ensure we have no errors --->
 	<cfif NOT Len(errorMsg)>
 	
+		<!--- set abuse reported to true --->
+		<cfset abuseReported = true />
+	
 		<!--- carriage return --->
 		<cfset cR = Chr(10) & Chr(13) />
 	
@@ -59,7 +64,6 @@
 		 </cfmailpart>
 		 <cfmailpart type="plain">
 			#APPLICATION.siteName# Abuse Reported#cR##cR#
-			Hello #speakerObject.getFirstName()#,#cR##cR#
 			Abuse has been reported in the system by a user. Details of the abuse provided by the user is:#cR##cR##cR#
 			#saniForm.abuse##cR##cR##cR#
 			<cfif speakerAbuse>
@@ -111,9 +115,12 @@
 
 
     <div class="container">
-	<form role="form" method="post" action="#CGI.SCRIPT_NAME#">
+	<cfoutput><form role="form" method="post" action="#CGI.SCRIPT_NAME#"></cfoutput>
 	  <div class="row">
 	  	<div class="col-md-12">
+		
+			<cfif NOT abuseReported>
+		
 			<div class="panel panel-danger">
 			  <div class="panel-heading">Report Abuse</div>
 				<div class="panel-body">
@@ -123,14 +130,30 @@
 					<p>To report abuse, please enter a description of why you feel our system has been abused (e.g. &apos;Speaker listed is spam&apos;, &apos;I did not sign up with my email&apos;, etc.) and we will review your complaint and take appropriate action.</p>
 					<textarea class="form-control" id="abuse" name="abuse"></textarea>
 			  	</div>
-			</div>		
+			</div>	
+			
+			<cfelse>
+		
+			<div class="panel panel-info">
+			  <div class="panel-heading">Abuse Report Complete</div>
+				<div class="panel-body">
+					<p>Your abuse report has been sent to our abuse response team for investigation. Thank you for helping to ensure that our system remains abuse free.</p>
+			  	</div>
+			</div>	
+			
+			</cfif>
+			
+			
+				
 		</div>
 	  </div>
+	  <cfif NOT abuseReported>
 	  <div class="row">
 	  	<div class="col-md-12">
 			<button id="submit" name="btn_Submit" type="submit" class="btn btn-danger">Report Abuse</button>		
 		</div>
 	  </div>
+	  </cfif>
 	  
 	  </form>
 	  

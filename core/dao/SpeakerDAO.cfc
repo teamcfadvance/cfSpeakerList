@@ -211,7 +211,7 @@
 	  isAEL = <cfqueryparam value="#ARGUMENTS.speaker.getIsAEL()#" cfsqltype="cf_sql_bit" />,
 	  isUGM = <cfqueryparam value="#ARGUMENTS.speaker.getIsUGM()#" cfsqltype="cf_sql_bit" />,
 	  isOther = <cfqueryparam value="#ARGUMENTS.speaker.getIsOther()#" cfsqltype="cf_sql_bit" />
-	WHERE speakerId = <cfqueryparam value="#ARGUMENTS.speaker.getUniqueID()#" cfsqltype="cf_sql_integer" />
+	WHERE speakerId = <cfqueryparam value="#ARGUMENTS.speaker.getSpeakerId()#" cfsqltype="cf_sql_integer" />
   </cfquery>
   <!--- catch any errors --->
   <cfcatch type="any">
@@ -219,7 +219,7 @@
 	<cfreturn 0 />
   </cfcatch>
   </cftry>
-  <cfreturn ARGUMENTS.speaker.getUniqueID() />
+  <cfreturn ARGUMENTS.speaker.getSpeakerId() />
 </cffunction>
 
 <!--- DELETE --->

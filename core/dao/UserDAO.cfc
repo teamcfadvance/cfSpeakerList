@@ -267,7 +267,7 @@
 
 <!--- ADD SESSION --->
 <cffunction name="addSession" access="public" returntype="void" output="false" hint="I add a new session to the database.">
-	<cfargument name="sid" type="string" required="true" hint="I am the unencrypted session id generated for this session." />
+	<cfargument name="sessionId" type="string" required="true" hint="I am the unencrypted session id generated for this session." />
 	<cfargument name="user" type="any" required="true" hint="I am the user object for the user this session is beging added for." />
 
 	<!--- var scope --->
@@ -281,7 +281,7 @@
 			userId,
 			lastActionAt
 			) VALUES (
-			<cfqueryparam value="#Hash(ARGUMENTS.sid,'SHA-512')#" cfsqltype="cf_sql_varchar" />,
+			<cfqueryparam value="#Hash(ARGUMENTS.sessionId,'SHA-512')#" cfsqltype="cf_sql_varchar" />,
 			<cfqueryparam value="#ARGUMENTS.user.getUserId()#" cfsqltype="cf_sql_integer" />,
 			<cfqueryparam value="#Now()#" cfsqltype="cf_sql_timestamp" />
 			)

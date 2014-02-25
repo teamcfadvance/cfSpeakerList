@@ -44,12 +44,12 @@
 	<!--- process required fields --->
 	<cfset reqCheck = APPLICATION.utils.checkRequired(
 		fields = {
-			email 		= saniForm.email,
-			fName 		= saniForm.fName,
-			lName 		= saniForm.lName,
-			countries 	= saniForm.countries,
-			specialties = saniForm.specialties,
-			capcha 		= saniForm.capcha
+			email 			= saniForm.email,
+			fName 			= saniForm.fName,
+			lName 			= saniForm.lName,
+			otherLocations 	= saniForm.otherLocations,
+			specialties 	= saniForm.specialties,
+			capcha 			= saniForm.capcha
 		}
 	) />
 	
@@ -102,7 +102,7 @@
 		<cfset speakerObj.setTwitter(saniForm.twitter) />
 		<cfset speakerObj.setShowTwitter(saniForm.showTwitter) />
 		<cfset speakerObj.setSpecialties(saniForm.specialties) />
-		<cfset speakerObj.setLocation(thisSpeakerLocs) />
+		<cfset speakerObj.setLocations(thisSpeakerLocs) />
 		<cfset speakerObj.setIsACP((ListFindNoCase(saniForm.programs,'acp') ? 1 : 0)) />
 		<cfset speakerObj.setIsAEL((ListFindNoCase(saniForm.programs,'ael') ? 1 : 0)) />
 		<cfset speakerObj.setIsUGM((ListFindNoCase(saniForm.programs,'ugm') ? 1 : 0)) />
@@ -159,6 +159,7 @@
 		  	<li><a href="index.cfm">Dashboard</a></li>
             <li><a href="profile.cfm">Edit Profile</a></li>
             <li><a href="change.cfm">Change Password</a></li>
+            <li><a href="../login.cfm">Logout</a></li>
           </ul>
         </div>
       </div>
@@ -329,7 +330,7 @@
 		<div class="form-group">
 		  <label class="col-md-4 control-label" for="submit"></label>
 		  <div class="col-md-8">
-			<button id="submit" name="btn_Submit" type="submit" class="btn btn-success">Finish Sign Up</button>
+			<button id="submit" name="btn_Submit" type="submit" class="btn btn-success">Update Profile</button>
 			<button id="reset" name="btn_Reset" type="reset" class="btn btn-danger">Clear Form</button>
 		  </div>
 		</div>

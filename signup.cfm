@@ -2,9 +2,9 @@
 <cfparam name="FORM.password" default="" type="string" />
 <cfparam name="FORM.fName" default="" type="string" />
 <cfparam name="FORM.lName" default="" type="string" />
-<cfparam name="FORM.pubPhone" default="0" type="boolean" />
+<cfparam name="FORM.showPhone" default="0" type="boolean" />
 <cfparam name="FORM.phone" default="" type="string" />
-<cfparam name="FORM.pubTwitter" default="0" type="boolean" />
+<cfparam name="FORM.showTwitter" default="0" type="boolean" />
 <cfparam name="FORM.twitter" default="" type="string" />
 <cfparam name="FORM.countries" default="" type="string" />
 <cfparam name="FORM.states" default="" type="string" />
@@ -267,7 +267,7 @@
 		  <div class="col-md-4">
 			<div class="input-group">
 			  <span class="input-group-addon">     
-				  <input type="checkbox" name="showPhone" value="1"<cfif FORM.pubPhone> checked="checked"</cfif>>     
+				  <input type="checkbox" name="showPhone" value="1"<cfif FORM.showPhone> checked="checked"</cfif>>     
 			  </span>
 			  <input id="phone" name="phone" class="form-control" placeholder="(999) 999-9999" type="tel" value="#FORM.phone#">
 			</div>

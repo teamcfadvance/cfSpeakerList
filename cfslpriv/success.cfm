@@ -44,6 +44,7 @@
 		  	<li><a href="index.cfm">Dashboard</a></li>
             <li><a href="profile.cfm">Edit Profile</a></li>
             <li><a href="change.cfm">Change Password</a></li>
+            <li><a href="../login.cfm">Logout</a></li>
           </ul>
         </div>
       </div>
@@ -52,6 +53,7 @@
     <div class="container">
       <div class="row">
         <div class="col-md-12 main">
+			<br />
 			<div class="panel panel-success">
 			  <div class="panel-heading"><cfoutput>#heading#</cfoutput></div>
 			  <div class="panel-body">
