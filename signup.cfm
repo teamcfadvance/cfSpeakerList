@@ -107,7 +107,7 @@
 			table		= APPLICATION.iusTable,
 			column		= APPLICATION.iusColumn,
 			keyLength	= 8,
-			mode		= 'alphanum'
+			method		= 'alphanum'
 		) />
 		
 		<!--- concatenate and sort locations --->
