@@ -89,9 +89,21 @@
 		
 		<!--- and save the user object --->
 		<cfset userObj.setUserId(APPLICATION.userDAO.saveUser(userObj)) />
-				
+		
 		<!--- concatenate and sort locations --->
-		<cfset thisSpeakerLocs = ListSort(ListAppend(ListAppend(saniForm.countries, saniForm.states),saniForm.otherLocations),'textnocase') />
+		<cfset tempSpeakerLocs = ListSort(ListAppend(ListAppend(saniForm.countries, saniForm.states),saniForm.otherLocations),'textnocase') />
+		
+		<!--- set a blank list to populate --->
+		<cfset thisSpeakerLocs = '' />
+		
+		<!--- loop through temporary locations --->
+		<cfloop from="1" to="#ListLen(tempSpeakerLocs)#" index="iX">
+			<!--- check if this temporary location is in the perm location list --->
+			<cfif NOT ListFind(thisSpeakerLocs,ListGetAt(tempSpeakerLocs,iX))>
+				<!--- it isn't, add it to the perm location list --->
+				<cfset thisSpeakerLocs = ListAppend(thisSpeakerLocs,ListGetAt(tempSpeakerLocs,iX)) />
+			</cfif>
+		</cfloop>
 		
 		<!--- update the speaker object --->
 		<cfset speakerObj.setFirstName(saniForm.fName) />

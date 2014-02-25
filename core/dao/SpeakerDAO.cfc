@@ -204,7 +204,7 @@
 	  phone = <cfqueryparam value="#APPLICATION.utils.dataEnc(ARGUMENTS.speaker.getPhone())#" cfsqltype="cf_sql_varchar" />,
 	  showPhone = <cfqueryparam value="#ARGUMENTS.speaker.getShowPhone()#" cfsqltype="cf_sql_bit" />,
 	  twitter = <cfqueryparam value="#APPLICATION.utils.dataEnc(ARGUMENTS.speaker.getTwitter())#" cfsqltype="cf_sql_varchar" />,
-	  showPhone = <cfqueryparam value="#ARGUMENTS.speaker.getShowTwitter()#" cfsqltype="cf_sql_bit" />,
+	  showTwitter = <cfqueryparam value="#ARGUMENTS.speaker.getShowTwitter()#" cfsqltype="cf_sql_bit" />,
 	  specialties = <cfqueryparam value="#ARGUMENTS.speaker.getSpecialties()#" cfsqltype="cf_sql_varchar" />,
 	  locations = <cfqueryparam value="#ARGUMENTS.speaker.getLocations()#" cfsqltype="cf_sql_varchar" />,
 	  isACP = <cfqueryparam value="#ARGUMENTS.speaker.getIsACP()#" cfsqltype="cf_sql_bit" />,
