@@ -283,7 +283,7 @@
 		<!--- loop from 8 to 12 times --->
 		<cfloop from="1" to="#RandRange(8,12)#" index="iX">
 			<!--- add a random character from the alphaNum list to build the new password --->
-			<cfset newPass = newPass & ListGetAt(alphaNum,RandRange(1,Len(alphaNum))) />
+			<cfset newPass = newPass & ListGetAt(alphaNum,RandRange(1,ListLen(alphaNum))) />
 		</cfloop>
 		
 		<!--- return the new password --->

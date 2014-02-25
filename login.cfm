@@ -111,6 +111,16 @@
   </head>
 
   <body>
+  
+    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="index.cfm">User Group Speaker List</a>
+        </div>
+      </div>
+    </div>
+
+	<br />
 
     <div class="container">
 

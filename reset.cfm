@@ -1,6 +1,7 @@
 <cfparam name="FORM.email" default="" type="string" />
 
 <cfset errorMsg = '' />
+<cfset passwordReset = false />
 
 <!--- check if there is an existing session cookie in this request --->
 <cfif IsDefined('COOKIE.#APPLICATION.cookieName#')>
@@ -47,13 +48,15 @@
 	<cfif NOT Len(errorMsg)>
 	
 		<!--- no errors, get the user object by the provided email --->
-		<cfset userObj = getUserByEmail(saniForm.email) />
+		<cfset userObj = APPLICATION.userDAO.getUserByEmail(saniForm.email) />
 		<!--- generate a password --->
-		<cfset newPass  = APPLICATION.util.generatePassword() />
+		<cfset newPass  = APPLICATION.utils.generatePassword() />
 		<!--- set the new password for this user --->
 		<cfset userObj.setPassword(LCase(Hash(newPass,'SHA-384'))) />
 		<!--- and save the user to persist the value to the database --->
 		<cfset APPLICATION.userDAO.saveUser(userObj) />
+		
+		<cfset passwordReset = true />
 		
 		<!--- carriage return --->
 		<cfset cR = Chr(10) & Chr(13) />
@@ -110,6 +113,16 @@
 
   <body>
 
+    <div class="navbar navbar-inverse navbar-fixed-top" role="navigation">
+      <div class="container">
+        <div class="navbar-header">
+          <a class="navbar-brand" href="index.cfm">User Group Speaker List</a>
+        </div>
+      </div>
+    </div>
+
+	<br />
+	
     <div class="container">
 
 		<cfif Len(errorMsg)>
@@ -121,7 +134,7 @@
 		  </div>
 		</div>
 		
-		<cfelse>
+		<cfelseif NOT passwordReset>
 		
 		<div class="panel panel-primary">
 		  <div class="panel-heading">Password Reset</div>
@@ -130,15 +143,29 @@
 		  </div>
 		</div>
 		
+		<cfelseif passwordReset>
+		
+		<div class="panel panel-success">
+		  <div class="panel-heading">Password Reset Complete</div>
+		  	<div class="panel-body">
+		  	<p>Your password has been reset and an email has been sent to your email address with your new password. Please use this new password to log in to <cfoutput>#APPLICATION.siteName#</cfoutput> in the future. You may change your password after you have logged in using the 'Change Password' link.</p>
+		  </div>
+			  <div class="panel-footer">
+			  	<a class="btn btn-info" href="login.cfm" role="button">Click here to log in</a>
+			  </div>
+		</div>
+		
 		</cfif>
+	  <cfif NOT passwordReset>
 	  <cfoutput>
-      <form class="form-signin" role="form" method="post" action="#CGI.SCRIPT_NAME#" >
-        <h2 class="form-signin-heading">Password Reset</h2>
+      <form class="form-signin" role="form" method="post" action="#CGI.SCRIPT_NAME#">
 	  </cfoutput>
+        <h2 class="form-signin-heading">Password Reset</h2>
         <input type="email" name="email" class="form-control" placeholder="Email address" required autofocus>
 		<br />
         <button name="btn_Submit" class="btn btn-lg btn-success btn-block" type="submit">Reset Password</button>
       </form>
+	  </cfif>
 	  
     </div> <!--- /container --->
 
