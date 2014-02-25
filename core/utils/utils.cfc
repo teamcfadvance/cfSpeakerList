@@ -1,8 +1,6 @@
 <cfcomponent displayname="utils">
 
-	<!---                 --->
 	<!--- DATA ENCRYPTION --->
-	<!---                 --->
 	<cffunction name="dataEnc" access="public" returntype="string">
 		<cfargument name="value" type="string" required="yes" hint="I am the value to encrypt for the database." />
 		<cfargument name="mode" type="string" required="false" default="db" />
@@ -65,9 +63,7 @@
 		<cfreturn lastPass>
 	</cffunction>
 
-	<!---                 --->
 	<!--- DATA DECRYPTION --->
-	<!---                 --->
 	<cffunction name="dataDec" access="public" returntype="string">
 		<cfargument name="value" type="string" required="yes" hint="I am the value to decrypt for the database.">
 		<cfargument name="mode" type="string" required="false" default="db" />
@@ -130,9 +126,7 @@
 		<cfreturn lastPass>
 	</cffunction>
 	
-	<!---                      --->
 	<!--- GLOBAL ERROR HANDLER --->
-	<!---                      --->
 	<cffunction name="errorHandler" access="public" returntype="void" output="true">
 		<cfargument name="errorData" type="any" required="true" hint="I am the struct returned by cfcatch." />
 		<cfargument name="debug" type="boolean" required="false" default="#APPLICATION.debugOn#" hint="I determine whether to fail gracefully or output debug." />
@@ -170,9 +164,7 @@
 		
 	</cffunction>
 
-	<!---                      --->
 	<!--- SANITIZE FORM VALUES --->
-	<!---                      --->
 	<cffunction name="sanitize" access="public" returntype="struct" output="false" hint="I sanitize data passed in a FORM scope using either ESAPI or HTMLEditFormat().">
 		<cfargument name="formData" type="struct" required="true" hint="I am the FORM struct." />
 		
@@ -208,9 +200,7 @@
 		
 	</cffunction>
 	
-	<!---                       --->
 	<!--- CHECK REQUIRED FIELDS --->
-	<!---                       --->
 	<cffunction name="checkRequired" access="public" returntype="struct" output="false" hint="I take a struct of fields and values and ensure they are not blank (null).">
 		<cfargument name="fields" type="struct" required="true" hint="I am a struct of the fields to check." />
 		
@@ -279,6 +269,25 @@
 	
 		<!--- return a triple hash of CreateUUID() --->
 		<cfreturn Hash(Hash(Hash(CreateUUID(),'SHA-512'),'SHA-384'),'SHA-256') />
+		
+	</cffunction>
+	
+	<!--- GENERATE PASSWORD --->
+	<cffunction name="generatePassword" access="public" returntype="string" output="false" hint="I generate a random password.">
+	
+		<!--- var scope --->
+		<cfset var alphaNum = 'a,b,c,d,e,f,g,h,i,j,k,l,m,n,o,p,q,r,s,t,u,v,w,x,y,z,A,B,C,D,E,F,G,H,I,J,K,L,M,N,O,P,Q,R,S,T,U,V,W,X,Y,Z,0,1,2,3,4,5,6,7,8,9' />
+		<cfset var newPass = '' />
+		<cfset var iX = 0 />
+		
+		<!--- loop from 8 to 12 times --->
+		<cfloop from="1" to="#RandRange(8,12)#" index="iX">
+			<!--- add a random character from the alphaNum list to build the new password --->
+			<cfset newPass = newPass & ListGetAt(alphaNum,RandRange(1,Len(alphaNum))) />
+		</cfloop>
+		
+		<!--- return the new password --->
+		<cfreturn newPass />
 		
 	</cffunction>
 		
