@@ -186,7 +186,7 @@
 		AND u.role = <cfqueryparam value="speaker" cfsqltype="cf_sql_varchar" /> )
 		<!--- loop through 'AND' terms --->
 		<cfloop from="1" to="#ListLen(ARGUMENTS.searchTerms)#" index="iY">
-			AND (  
+			AND ((  
 			<!--- first name loop --->
 			<cfloop from="1" to="#ListLen(ListGetAt(ARGUMENTS.searchTerms,iY),' ')#" index="iX">
 				s.firstName LIKE <cfqueryparam value="%#ListGetAt(ListGetAt(ARGUMENTS.searchTerms,iY),iX,' ')#%" cfsqltype="cf_sql_varchar" />
@@ -213,7 +213,7 @@
 				s.locations LIKE <cfqueryparam value="%#ListGetAt(ListGetAt(ARGUMENTS.searchTerms,iY),iX,' ')#%" cfsqltype="cf_sql_varchar" />
 				<cfif NOT iX EQ ListLen(ListGetAt(ARGUMENTS.searchTerms,iY),' ')> OR </cfif>
 			</cfloop>
-			)
+			))
 		<!--- end looping through 'AND' terms --->
 		</cfloop>
 		ORDER BY #ARGUMENTS.orderBy#
