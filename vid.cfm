@@ -52,6 +52,8 @@
 	</cfif>
 <!--- otherwise --->
 <cfelse>
+	<!--- set the pathLen to zero --->
+	<cfset pathLen = 0 />
 	<!--- the path equals the script name, so notify user to check their email --->
 	<cfset errorMsg = '<p>An email has been sent to you at the email address you provided during sign-up. You must click the link within that email within the next #APPLICATION.verificationTimeout# hours to have your speaker information published in our database.</p>' />
 <!--- end checking if the path equals the script name --->
@@ -113,7 +115,7 @@
 				<p>Congratulations! You have now verified your email address and your speaker information is now published in our database. To make changes to your speaker profile in the future, simply log in from our home page with your email address and the password you chose during sign up.</p>
 			  </div>
 			  <div class="panel-footer">
-			  	<cfoutput><a class="btn btn-info" href="si.cfm/#ListGetAt(CGI.PATH_INFO,1,'/')#" role="button">Click here to view your information</a></cfoutput>
+			  	<cfoutput><a class="btn btn-info" href="#RepeatString('../',pathLen)#si.cfm/#ListGetAt(CGI.PATH_INFO,1,'/')#" role="button">Click here to view your information</a></cfoutput>
 			  </div>
 			</div>
 			

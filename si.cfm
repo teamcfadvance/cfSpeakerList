@@ -10,7 +10,7 @@
 <!--- check if the speaker object returned has a valid speaker key --->
 <cfif NOT Len(speakerObj.getSpeakerKey())>
 	<!--- invalid key passed, redirect to the home page --->
-	<cflocation url="index.cfm" addtoken="false" />
+	<cflocation url="../index.cfm" addtoken="false" />
 </cfif>
 
 <!DOCTYPE html>
@@ -102,7 +102,7 @@
 			  
 		  <br />
 		  
-		  <form class="form-horizontal" role="form" method="post" action="request.cfm">
+		  <form class="form-horizontal" role="form" method="post" action="../request.cfm">
 		  <cfoutput>
 			<input type="hidden" name="ff#Hash('speakerKey','SHA-384')#" value="#speakerObj.getSpeakerKey()#" />
 			<fieldset>

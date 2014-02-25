@@ -5,20 +5,17 @@
 <!--- check for the existence of the session cookie --->
 <cfif IsDefined('COOKIE.#APPLICATION.cookieName#')>
 	<!--- cookie exists, get this speaker object --->
-	<cfset speakerObj = APPLICATION.speakerDAO.getSpeakerByUserId(APPLICATION.userDAO.getUserIdFromSession(COOKIE[APPLICATION.cookieName])) />
+	<cfset userObj = APPLICATION.userDAO.getUserById(APPLICATION.userDAO.getUserIdFromSession(COOKIE[APPLICATION.cookieName])) />
 <!--- otherwise, check if we're in debug mode --->
 <cfelseif APPLICATION.debugOn>	
 	<!--- we are, get the first available speaker for test --->
-	<cfset speakerObj = APPLICATION.speakerDAO.getSpeakerById(1) />
+	<cfset userObj = APPLICATION.userDAO.getUserById(1) />
 <!--- otherwise --->
 <cfelse>	
 	<!--- cookie does not exist and we're not in debug mode, redirect to the login page --->
 	<cflocation url="../login.cfm" addtoken="false" />
 <!--- end checking for the existence of the session cookie --->
 </cfif>
-
-<!--- get this user object --->
-<cfset userObj = APPLICATION.userDAO.getUserById(speakerObj.getUserId()) />
 
 <!--- set a null error message to check for later --->
 <cfset errorMsg = '' />

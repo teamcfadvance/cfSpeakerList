@@ -25,6 +25,17 @@
 				<!--- and again with the third set of keys and algorithm --->
 				<cfset lastPass = Encrypt(twopass,APPLICATION.dbkey3,APPLICATION.dbalg3,APPLICATION.dbenc3) />
 				<!--- NOTE: Add additional passes here for greater security --->
+				
+			<!--- otherwise, check if the mode of the encryption is 'repeatable' --->
+			<cfelseif FindNoCase('repeatable',ARGUMENTS.mode)>
+			
+				<!--- using database encryption, encrypt with the first set of keys and algorithm --->
+				<cfset onepass = Encrypt(ARGUMENTS.value,APPLICATION.dbkey1,'AES',APPLICATION.dbenc1) />
+				<!--- and again with the second set of keys and algorithm --->
+				<cfset twopass = Encrypt(onepass,APPLICATION.dbkey2,'BLOWFISH',APPLICATION.dbenc2) />
+				<!--- and again with the third set of keys and algorithm --->
+				<cfset lastPass = Encrypt(twopass,APPLICATION.dbkey3,'AES',APPLICATION.dbenc3) />
+				<!--- NOTE: Add additional passes here for greater security --->
 			
 			<!--- otherwise, check if the mode of the encryption is 'url' --->
 			<cfelseif FindNoCase('url',ARGUMENTS.mode)>
@@ -79,6 +90,17 @@
 				<cfset var twoPass = Decrypt(onepass,APPLICATION.dbkey2,APPLICATION.dbalg2,APPLICATION.dbenc2) />
 				<!--- and again with the first set of keys and algorithm --->
 				<cfset var lastPass = Decrypt(twopass,APPLICATION.dbkey1,APPLICATION.dbalg1,APPLICATION.dbenc1) />
+		
+			<!--- otherwise, check if the mode of the encryption is 'repeatable' --->
+			<cfelseif FindNoCase('repeatable',ARGUMENTS.mode)>
+	
+				<!--- NOTE: Add additional passes here for greater security --->
+				<!--- using database encryption, decrypt with the third set of keys and algorithm --->
+				<cfset var onePass = Decrypt(ARGUMENTS.value,APPLICATION.dbkey3,'AES',APPLICATION.dbenc3) />
+				<!--- and again with the second set of keys and algorithm --->
+				<cfset var twoPass = Decrypt(onepass,APPLICATION.dbkey2,'BLOWFISH',APPLICATION.dbenc2) />
+				<!--- and again with the first set of keys and algorithm --->
+				<cfset var lastPass = Decrypt(twopass,APPLICATION.dbkey1,'AES',APPLICATION.dbenc1) />
 			
 			<!--- otherwise, check if the mode of the encryption is 'url' --->
 			<cfelseif FindNoCase('url',ARGUMENTS.mode)>
@@ -160,8 +182,8 @@
 		
 		<!--- loop through the FORM fields provided --->
 		<cfloop collection="#ARGUMENTS.formData#" item="formField">
-			<!--- check if this is a boolean or numeric value --->
-			<cfif IsBoolean(formField) OR IsNumeric(formField)>
+			<!--- check if this is a known value (boolean, numeric, date, email or password) --->
+			<cfif IsBoolean(ARGUMENTS.formData[formfield]) OR IsNumeric(ARGUMENTS.formData[formfield]) OR IsDate(ARGUMENTS.formData[formfield]) OR ReFindNoCase('^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,12}$',ARGUMENTS.formData[formField]) OR FindNoCase('password',formField)>
 				<!--- it is, so just add it to the return struct --->
 				<cfset returnStruct[formfield] = ARGUMENTS.formData[formfield] />
 			<!--- otherwise --->

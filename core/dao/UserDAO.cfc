@@ -28,7 +28,7 @@
 		  role,
 		  isActive
 		) VALUES (
-		  <cfqueryparam value="#APPLICATION.utils.dataEnc(ARGUMENTS.user.getUsername())#" cfsqltype="cf_sql_varchar" />,
+		  <cfqueryparam value="#APPLICATION.utils.dataEnc(ARGUMENTS.user.getUsername(), 'repeatable')#" cfsqltype="cf_sql_varchar" />,
 		  <cfqueryparam value="#APPLICATION.utils.dataEnc(ARGUMENTS.user.getPassword())#" cfsqltype="cf_sql_varchar" />,
 		  <cfqueryparam value="#ARGUMENTS.user.getRole()#" cfsqltype="cf_sql_varchar" />,
 		  <cfqueryparam value="#ARGUMENTS.user.getIsActive()#" cfsqltype="cf_sql_bit" />
@@ -64,7 +64,37 @@
   <cfif qGetUser.RecordCount>
     <cfreturn createObject('component','core.beans.User').init(
 	userId  	= qGetUser.userId,
-	username	= APPLICATION.utils.dataDec(qGetUser.username),
+	username	= APPLICATION.utils.dataDec(qGetUser.username, 'repeatable'),
+	password	= APPLICATION.utils.dataDec(qGetUser.password),
+	role    	= qGetUser.role,
+	isActive	= qGetUser.isActive
+    ) />
+  <cfelse>
+    <cfreturn createObject('component','core.beans.User').init() />
+  </cfif>
+</cffunction>
+
+<!--- RETRIEVE - BY EMAIL --->
+<cffunction name="getUserByEmail" access="public" output="false" returntype="any" hint="I return a User bean populated with the details of a specific user record.">
+  <cfargument name="email" type="string" required="true" hint="I am the email address of the user to search for." />
+  <cfset var qGetUser = '' />
+  <cfset var userObject = '' />
+  <cftry>
+  <cfquery name="qGetUser" datasource="#variables.instance.datasource.getDSN()#" username="#variables.instance.datasource.getUsername()#" password="#variables.instance.datasource.getPassword()#">
+	SELECT userId, username, password, role, isActive
+	FROM users
+	WHERE username = <cfqueryparam value="#APPLICATION.utils.dataEnc(ARGUMENTS.email, 'repeatable')#" cfsqltype="cf_sql_varchar" />
+  </cfquery>
+  <!--- catch any errors --->
+  <cfcatch type="any">
+	<cfset APPLICATION.utils.errorHandler(cfcatch) />
+	<cfreturn createObject('component','core.beans.User').init() />
+  </cfcatch>
+  </cftry>
+  <cfif qGetUser.RecordCount>
+    <cfreturn createObject('component','core.beans.User').init(
+	userId  	= qGetUser.userId,
+	username	= APPLICATION.utils.dataDec(qGetUser.username, 'repeatable'),
 	password	= APPLICATION.utils.dataDec(qGetUser.password),
 	role    	= qGetUser.role,
 	isActive	= qGetUser.isActive
@@ -81,7 +111,7 @@
   <cftry>
   <cfquery name="qUpdUser" datasource="#variables.instance.datasource.getDSN()#" username="#variables.instance.datasource.getUsername()#" password="#variables.instance.datasource.getPassword()#">
 	UPDATE users SET
-	  username = <cfqueryparam value="#APPLICATION.utils.dataEnc(ARGUMENTS.user.getUsername())#" cfsqltype="cf_sql_varchar" />,
+	  username = <cfqueryparam value="#APPLICATION.utils.dataEnc(ARGUMENTS.user.getUsername(), 'repeatable')#" cfsqltype="cf_sql_varchar" />,
 	  password = <cfqueryparam value="#APPLICATION.utils.dataEnc(ARGUMENTS.user.getPassword())#" cfsqltype="cf_sql_varchar" />,
 	  role = <cfqueryparam value="#ARGUMENTS.user.getRole()#" cfsqltype="cf_sql_varchar" />,
 	  isActive = <cfqueryparam value="#ARGUMENTS.user.getIsActive()#" cfsqltype="cf_sql_bit" />
@@ -144,7 +174,7 @@
   <cfset var qGetUser = '' />
   <cfquery name="qGetUser" datasource="#variables.instance.datasource.getDSN()#" username="#variables.instance.datasource.getUsername()#" password="#variables.instance.datasource.getPassword()#">
 	SELECT userId FROM users
-	WHERE username = <cfqueryparam value="#APPLICATION.utils.dataEnc(ARGUMENTS.email)#" cfsqltype="cf_sql_varchar" />
+	WHERE username = <cfqueryparam value="#APPLICATION.utils.dataEnc(ARGUMENTS.email, 'repeatable')#" cfsqltype="cf_sql_varchar" />
   </cfquery>
   <cfif qGetUser.RecordCount>
 	<cfreturn true />

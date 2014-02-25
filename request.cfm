@@ -61,7 +61,7 @@
 	</cfif>
 	
 	<!--- get the speaker object from the passed in speaker key --->
-	<cfset speakerObj.getSpeakerByKey(FORM['ff' & Hash('speakerKey','SHA-384')]) />
+	<cfset speakerObj = APPLICATION.speakerDAO.getSpeakerByKey(FORM['ff' & Hash('speakerKey','SHA-384')]) />
 	
 	<!--- check if the speaker key provided returns a valid speaker --->
 	<cfif NOT Len(speakerObj.getSpeakerId())>
@@ -79,7 +79,7 @@
 		<cfmail to="#speakerObj.getEmail()#" from="#saniForm.email#" subject="#APPLICATION.siteName# Speaker Request" bcc="#APPLICATION.bccEmail#" charset="utf-8">
 		 <cfmailpart type="html">
 		 	<h4>#APPLICATION.siteName# Speaker Request</h4>
-			<p>Hello #speakerObject.getFirstName()#,</p>
+			<p>Hello #speakerObj.getFirstName()#,</p>
 			<p>#saniForm.cName# (#saniForm.email#) from #saniForm.orgName# has sent the following speaker request to you from #APPLICATION.siteName#:</p>
 			<table>
 				<tr>
@@ -88,7 +88,7 @@
 				</tr>
 				<tr>
 					<td><strong>Date and Time</strong></td>
-					<td>#DateFormat(saniForm.eventDate,'mm/dd/yyyy')# #saniForm.eventTime#</td>
+					<td>#saniForm.eventDate# #saniForm.eventTime#</td>
 				</tr>
 				<tr>
 					<td><strong>Requested Topic/Specialty</strong></td>
@@ -102,11 +102,11 @@
 		 </cfmailpart>
 		 <cfmailpart type="plain">
 			#APPLICATION.siteName# Speaker Request#cR##cR#
-			Hello #speakerObject.getFirstName()#,#cR##cR#
+			Hello #speakerObj.getFirstName()#,#cR##cR#
 			#saniForm.cName# (#saniForm.email#) from #saniForm.orgName# has sent the following#cR#
 			speaker request to you from #APPLICATION.siteName#:#cR##cR##cR#
 			Venue/Location#chr(9)##chr(9)##saniForm.venue##cR##cR#
-			Date and Time#chr(9)##chr(9)##DateFormat(saniForm.eventDate,'mm/dd/yyyy')# #saniForm.eventTime##cR##cR#
+			Date and Time#chr(9)##chr(9)##saniForm.eventDate# #saniForm.eventTime##cR##cR#
 			Requested Topic/Specialty#chr(9)##saniForm.specialty##cR##cR##cR#
 			Please reply to this email to contact #saniForm.cName# directly about this request.#cR##cR#
 			Sincerely,#cR#
@@ -177,7 +177,7 @@
 			<div class="panel panel-success">
 			  <div class="panel-heading">Speaker Request Complete</div>
 			  <div class="panel-body">
-				<p>Congratulations! You have sent a speaking request for your event to #speakerObj.getFirstName()# #speakerObj.getLastName()#. This speaker has been notified via email and you should receive a response from the speaker soon. Thank you for using #APPLICATION.siteName# to contact speaker(s) for your event(s).</p>
+				<cfoutput><p>Congratulations! You have sent a speaking request for your event to #speakerObj.getFirstName()# #speakerObj.getLastName()#. This speaker has been notified via email and you should receive a response from the speaker soon. Thank you for using #APPLICATION.siteName# to contact speaker(s) for your event(s).</p></cfoutput>
 			  </div>
 			</div>
 			

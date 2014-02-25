@@ -238,7 +238,7 @@
 		  <div class="col-md-4">
 			<div class="input-group">
 			  <span class="input-group-addon">     
-				  <input type="checkbox" name="pubPhone" value="1"<cfif speakerObj.getShowPhone()> checked="checked"</cfif>>     
+				  <input type="checkbox" name="showPhone" value="1"<cfif speakerObj.getShowPhone()> checked="checked"</cfif>>     
 			  </span>
 			  <input id="phone" name="phone" class="form-control" placeholder="(999) 999-9999" type="tel" value="#speakerObj.getPhone()#">
 			</div>
@@ -252,7 +252,7 @@
 		  <div class="col-md-4">
 			<div class="input-group">
 			  <span class="input-group-addon">     
-				  <input type="checkbox" name="pubTwitter" value="1"<cfif speakerObj.getShowTwitter()> checked="checked"</cfif>>     
+				  <input type="checkbox" name="showTwitter" value="1"<cfif speakerObj.getShowTwitter()> checked="checked"</cfif>>     
 			  </span>
 			  <input id="twitter" name="twitter" class="form-control" placeholder="@myhandle" type="text" value="#speakerObj.getTwitter()#">
 			</div>
