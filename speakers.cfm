@@ -81,7 +81,7 @@
 				<p>The following list of speakers matched your <cfif FindNoCase(Hash('browse','SHA-512'),FORM.mode)>browse request<cfelse>search request for &apos;<cfoutput><abbr title="Submitted Search Terms" class="initialism">#FORM.search#</abbr></cfoutput>&apos;</cfif> . Click on the name of any speaker to see more info and to request them to speak at your event.</p>
 			  </div>
 			
-			  <table class="table sortable">
+			  <table class="table sortable table-striped">
 				<thead>
 				  <tr>
 					<th>Speaker Name</th>
@@ -92,8 +92,8 @@
 				<tbody>
 				<cfoutput query="qGetResults">
 				  <tr>
-					<td><strong><a href="si.cfm/#qGetResults.speakerKey#">#qGetResults.firstName# #qGetResults.lastName#</a></strong></td>
-					<td>#qGetResults.locations#</td>
+					<td class="col-md-2"><strong><a href="si.cfm/#qGetResults.speakerKey#">#qGetResults.firstName# #qGetResults.lastName#</a></strong></td>
+					<td class="col-md-3">#qGetResults.locations#</td>
 					<td>#qGetResults.specialties#</td>
 				  </tr>
 				</cfoutput>
