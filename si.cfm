@@ -190,8 +190,8 @@
 			<div class="form-group">
 			  <label class="col-md-4 control-label" for="btn_Submit"></label>
 			  <div class="col-md-8">
-				<button id="btn_Submit" name="btn_Submit" class="btn btn-success">Request Speaker</button>
-				<button id="btn_Reset" name="btn_Reset" class="btn btn-danger">Clear Form</button>
+				<button type="submit" id="btn_Submit" name="btn_Submit" class="btn btn-success">Request Speaker</button>
+				<button type="reset" id="btn_Reset" name="btn_Reset" class="btn btn-danger">Clear Form</button>
 			  </div>
 			</div>
 			
