@@ -60,7 +60,7 @@
 		<!--- loop through the missing fields --->
 		<cfloop from="1" to="#ListLen(reqCheck.fields)#" index="iX">
 			<!--- add this field as a list item --->
-			<cfset errorMsg = errorMsg & '<li>#ListGetAt(reqCheck.fields,iX)#</li>' />
+			<cfset errorMsg = errorMsg & '<li>#LCase(ListGetAt(reqCheck.fields,iX))#</li>' />
 		</cfloop>
 		<cfset errorMsg = errorMsg & '</ul>' />
 	</cfif>
