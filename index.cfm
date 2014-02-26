@@ -42,7 +42,7 @@
           <form class="navbar-form navbar-right" role="form" method="post" action="login.cfm" onSubmit="hashIt();">
 		  	<cfoutput><input type="hidden" id="#seedId#" name="ff#LCase(Hash('seedId','SHA-256'))#" value="#seedVal#" /></cfoutput>
             <div class="form-group">
-              <input type="text" placeholder="Email" class="form-control" name="email" id="email" required>
+              <input type="email" placeholder="Email" class="form-control" name="email" id="email" required>
             </div>
             <div class="form-group">
               <input type="password" placeholder="Password" class="form-control" name="password" id="password" required>

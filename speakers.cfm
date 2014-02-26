@@ -2,7 +2,7 @@
 <cfparam name="FORM.mode" default="#Hash('browse','SHA-512')#" />
 
 <!--- check if the user is requesting a simple search --->
-<cfif NOT FindNoCase(' AND ',FORM.search) AND Len(FORM.search)>
+<cfif NOT FindNoCase(' AND ',FORM.search) AND Len(Trim(FORM.search))>
 
 	<!--- user requested simple search, get simple results --->
 	<cfset qGetResults = APPLICATION.speakerGateway.simpleSearch(
