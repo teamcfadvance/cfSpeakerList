@@ -53,6 +53,7 @@
         </div>
         <div class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
+            <li><a href="index.cfm">Dashboard</a></li>
             <li><a href="profile.cfm">Edit Profile</a></li>
             <li><a href="change.cfm">Change Password</a></li>
             <li><a href="../login.cfm">Logout</a></li>

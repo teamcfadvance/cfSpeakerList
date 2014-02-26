@@ -50,7 +50,7 @@
 	<!--- check that the stored password matches the current password --->
 	<cfif NOT LCase(Hash(saniForm.oPassword,'SHA-384')) EQ userObj.getPassword()>
 		<!--- password mismatch, set an error message to display --->
-		<cfset errorMsg = '<p>We&apos;re sorry, but your current password could not be verified. Please ensure you&pos;ve typed the password correctly, and try again.</p>' />
+		<cfset errorMsg = '<p>We&apos;re sorry, but your current password could not be verified. Please ensure you&apos;ve typed the password correctly, and try again.</p>' />
 	</cfif> 
 		
 	<!--- check if the new password and verification password match --->
