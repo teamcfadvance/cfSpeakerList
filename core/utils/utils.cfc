@@ -174,8 +174,12 @@
 		
 		<!--- loop through the FORM fields provided --->
 		<cfloop collection="#ARGUMENTS.formData#" item="formField">
+			<!--- check if any script tags were provided in this form value --->
+			<cfif ReFindNoCase('(\<invalidtag|\<script)',ARGUMENTS.formData[formfield])>
+				<!--- invalid tags found, clear this field completely --->
+				<cfset returnStruct[formfield] = '' />				
 			<!--- check if this is a known value (boolean, numeric, date, email or password) --->
-			<cfif IsBoolean(ARGUMENTS.formData[formfield]) OR IsNumeric(ARGUMENTS.formData[formfield]) OR IsDate(ARGUMENTS.formData[formfield]) OR ReFindNoCase('^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,12}$',ARGUMENTS.formData[formField]) OR FindNoCase('password',formField)>
+			<cfelseif IsBoolean(ARGUMENTS.formData[formfield]) OR IsNumeric(ARGUMENTS.formData[formfield]) OR IsDate(ARGUMENTS.formData[formfield]) OR ReFindNoCase('^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,12}$',ARGUMENTS.formData[formField]) OR FindNoCase('password',formField)>
 				<!--- it is, so just add it to the return struct --->
 				<cfset returnStruct[formfield] = ARGUMENTS.formData[formfield] />
 			<!--- otherwise --->
