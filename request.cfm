@@ -102,13 +102,13 @@
 		 </cfmailpart>
 		 <cfmailpart type="plain">
 			#APPLICATION.siteName# Speaker Request#cR##cR#
-			Hello #speakerObj.getFirstName()#,#cR##cR#
-			#saniForm.cName# (#saniForm.email#) from #saniForm.orgName# has sent the following#cR#
+			Hello #APPLICATION.utils.decodeVal(speakerObj.getFirstName())#,#cR##cR#
+			#APPLICATION.utils.decodeVal(saniForm.cName)# (#APPLICATION.utils.decodeVal(saniForm.email#)) from #APPLICATION.utils.decodeVal(saniForm.orgName)# has sent the following#cR#
 			speaker request to you from #APPLICATION.siteName#:#cR##cR##cR#
-			Venue/Location#chr(9)##chr(9)##saniForm.venue##cR##cR#
-			Date and Time#chr(9)##chr(9)##saniForm.eventDate# #saniForm.eventTime##cR##cR#
-			Requested Topic/Specialty#chr(9)##saniForm.specialty##cR##cR##cR#
-			Please reply to this email to contact #saniForm.cName# directly about this request.#cR##cR#
+			Venue/Location#chr(9)##chr(9)##APPLICATION.utils.decodeVal(saniForm.venue)##cR##cR#
+			Date and Time#chr(9)##chr(9)##APPLICATION.utils.decodeVal(saniForm.eventDate)# #APPLICATION.utils.decodeVal(saniForm.eventTime)##cR##cR#
+			Requested Topic/Specialty#chr(9)##APPLICATION.utils.decodeVal(saniForm.specialty)##cR##cR##cR#
+			Please reply to this email to contact #APPLICATION.utils.decodeVal(saniForm.cName)# directly about this request.#cR##cR#
 			Sincerely,#cR#
 			The #APPLICATION.siteName# Team#cR##cR#
 		 </cfmailpart>

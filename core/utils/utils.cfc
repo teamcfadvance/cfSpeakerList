@@ -200,6 +200,29 @@
 		
 	</cffunction>
 	
+	<!--- DECODE STORED VALUES --->
+	<cffunction name="decodeVal" access="public" returntype="string" output="false" hint="I decode HTML encoded with ESAPI.">
+		<cfargument name="value" type="string" required="true" hint="I am the string to decode." />
+		
+			<!--- var scope --->
+			<cfset var decodedValue = '' />
+		
+			<!--- check if we're using ESAPI --->
+			<cfif APPLICATION.useESAPI>
+				<!--- we are, decode the value through ESAPI --->
+				<cfset decodedValue = APPLICATION.esapiEncoder.decodeForHTML(ARGUMENTS.value) />
+			<!--- otherwise --->
+			<cfelse>
+				<!--- we're not using ESAPI, simply return the value --->
+				<cfset decodedValue = ARGUMENTS.value />
+			<!--- end checking if we're using ESAPI --->
+			</cfif>
+		
+		<!--- return the sanitzed form values --->
+		<cfreturn decodedValue />
+		
+	</cffunction>	
+	
 	<!--- CHECK REQUIRED FIELDS --->
 	<cffunction name="checkRequired" access="public" returntype="struct" output="false" hint="I take a struct of fields and values and ensure they are not blank (null).">
 		<cfargument name="fields" type="struct" required="true" hint="I am a struct of the fields to check." />
