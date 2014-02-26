@@ -103,7 +103,7 @@
 		 <cfmailpart type="plain">
 			#APPLICATION.siteName# Speaker Request#cR##cR#
 			Hello #APPLICATION.utils.decodeVal(speakerObj.getFirstName())#,#cR##cR#
-			#APPLICATION.utils.decodeVal(saniForm.cName)# (#APPLICATION.utils.decodeVal(saniForm.email#)) from #APPLICATION.utils.decodeVal(saniForm.orgName)# has sent the following#cR#
+			#APPLICATION.utils.decodeVal(saniForm.cName)# (#APPLICATION.utils.decodeVal(saniForm.email)#) from #APPLICATION.utils.decodeVal(saniForm.orgName)# has sent the following#cR#
 			speaker request to you from #APPLICATION.siteName#:#cR##cR##cR#
 			Venue/Location#chr(9)##chr(9)##APPLICATION.utils.decodeVal(saniForm.venue)##cR##cR#
 			Date and Time#chr(9)##chr(9)##APPLICATION.utils.decodeVal(saniForm.eventDate)# #APPLICATION.utils.decodeVal(saniForm.eventTime)##cR##cR#
