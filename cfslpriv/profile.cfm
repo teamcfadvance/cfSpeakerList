@@ -287,7 +287,7 @@
 		  <label class="col-md-4 control-label" for="otherLocations">Locations</label>  
 		  <div class="col-md-4">
 		  <input id="otherLocations" name="otherLocations" placeholder="Online, Toronto, Paris" class="form-control input-md" type="text" value="#speakerObj.getLocations()#">
-		  <span class="help-block">Enter location(s) seperated by commas</span>  
+		  <span class="help-block">Enter location(s) separated by commas</span>  
 		  </div>
 		</div>
 		
@@ -296,7 +296,7 @@
 		  <label class="col-md-4 control-label" for="specialties">Specialties/Speaking Topics</label>
 		  <div class="col-md-4">                     
 			<textarea class="form-control" id="specialties" name="specialties"><cfif Len(speakerObj.getSpecialties())>#speakerObj.getSpecialties()#<cfelse>HTML5, CSS3, CFML, Web Design</cfif></textarea>
-		  <span class="help-block">Enter your specialties seperated by commas</span>  
+		  <span class="help-block">Enter your specialties separated by commas</span>  
 		  </div>
 		</div>
 		
