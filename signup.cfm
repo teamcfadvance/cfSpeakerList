@@ -124,7 +124,9 @@
 				<cfset thisSpeakerLocs = ListAppend(thisSpeakerLocs,ListGetAt(tempSpeakerLocs,iX)) />
 			</cfif>
 		</cfloop>
-			
+		
+		<!--- format the phone number based on digit length --->	
+		<cfset formattedPhone = APPLICATION.utils.formatPhone(saniForm.phone) />
 		
 		<!--- create and populate a speaker object --->
 		<cfset speakerObj = createObject('component','core.beans.Speaker').init(
@@ -134,7 +136,7 @@
 			firstName  	= saniForm.fName,
 			lastName   	= saniForm.lName,
 			email      	= saniForm.email,
-			phone      	= saniForm.phone,
+			phone      	= formattedPhone,
 			showPhone	= saniForm.showPhone,
 			twitter    	= saniForm.twitter,
 			showTwitter	= saniForm.showTwitter,

@@ -316,5 +316,39 @@
 		<cfreturn newPass />
 		
 	</cffunction>
+	
+	<!--- FORMAT PHONE --->
+	<cffunction name="formatPhone" access="public" returntype="string" output="false" hint="I format a phone number for various country formats.">
+		<cfargument name="phone" type="string" required="true" hint="I am the phone number as input by the user.">
+		
+		<!--- var scope --->
+		<cfset var phoneDigits = ReReplace(ARGUMENTS.phone,'[^0-9]','','ALL') />
+		<cfset var returnPhone = '' />
+		
+		<!--- switch on the length of the phone number digits (0-9) --->
+		<cfswitch expression="#Len(phoneDigits)#">
+		
+			<!--- United States --->
+			<cfcase value="10">
+			
+				<!--- format phone as (XXX) XXX-XXXX --->
+				<cfset returnPhone = '(' & Left(phoneDigits,3) & ') ' & Mid(phoneDigits,4,3) & '-' & Right(phoneDigits,4) />
+				
+			</cfcase>
+			
+			<!--- DEFAULT (UNKNOWN) --->
+			<cfdefaultcase>
+			
+				<!--- no formatting, return value sent to function --->
+				<cfset returnPhone = ARGUMENTS.phone />
+				
+			</cfdefaultcase>
+		
+		</cfswitch>
+		
+		<!--- return the formatted phone number --->
+		<cfreturn returnPhone />
+		
+	</cffunction>
 		
 </cfcomponent>

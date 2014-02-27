@@ -105,11 +105,14 @@
 			</cfif>
 		</cfloop>
 		
+		<!--- format the phone number based on digit length --->	
+		<cfset formattedPhone = APPLICATION.utils.formatPhone(saniForm.phone) />
+		
 		<!--- update the speaker object --->
 		<cfset speakerObj.setFirstName(saniForm.fName) />
 		<cfset speakerObj.setLastName(saniForm.lName) />
 		<cfset speakerObj.setEmail(saniForm.email) />
-		<cfset speakerObj.setPhone(saniForm.phone) />
+		<cfset speakerObj.setPhone(formattedPhone) />
 		<cfset speakerObj.setShowPhone(saniForm.showPhone) />
 		<cfset speakerObj.setTwitter(saniForm.twitter) />
 		<cfset speakerObj.setShowTwitter(saniForm.showTwitter) />

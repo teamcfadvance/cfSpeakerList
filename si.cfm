@@ -86,7 +86,7 @@
 				    <td><strong>Contact Details:</strong></td>
 					<td>
 						<ul>
-						<cfif speakerObj.getShowPhone() AND Len(speakerObj.getPhone())><li>Phone: #speakerObj.getPhone()#</li></cfif>
+						<cfif speakerObj.getShowPhone() AND Len(speakerObj.getPhone())><li>Phone: #APPLICATION.utils.formatPhone(speakerObj.getPhone())#</li></cfif>
 						<cfif speakerObj.getShowTwitter() AND Len(speakerObj.getTwitter())><li>Twitter: <a href="https://twitter.com/#speakerObj.getTwitter()#" target="_blank">#speakerObj.getTwitter()#</a></li></cfif>
 						<cfif (NOT speakerObj.getShowPhone() OR NOT Len(speakerObj.getPhone())) AND (NOT speakerObj.getShowTwitter() OR NOT Len(speakerObj.getTwitter()))><li>No details published, use contact form below</li></cfif>
 						</ul>
