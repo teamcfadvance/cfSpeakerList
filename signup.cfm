@@ -86,6 +86,11 @@
 		<cfset errorMsg = '<p>We&apos;re sorry, but your password does not meet complexity requirements for this system. Your password must be at least eight (8) characters long, and contain at least one lowercase (a through z), uppercase (A through Z) and number (0 through 9) to be accepted. Please try again.</p>' />
 	</cfif> 
 	
+	<!--- check if phone was provided, if it is numeric after filtering out non-numeric chars and is at least 10 digits long --->
+	<cfif Len(saniForm.phone) AND (NOT IsNumeric(ReReplace(saniForm.phone,'[^0-9]','','ALL')) OR NOT Len(ReReplace(saniForm.phone,'[^0-9]','','ALL')) GTE 10)>
+		<!--- password doesn't meet complexity requirements, set an error message to display --->
+		<cfset errorMsg = '<p>We&apos;re sorry, but your phone number must contain only (, ), +, -, [space] and 0-9 characters and must contain at least 10 digits. Please try again.</p>' />
+	</cfif> 
 	
 	<!--- ensure we have no errors --->
 	<cfif NOT Len(errorMsg)>	

@@ -81,6 +81,12 @@
 		<cfset errorMsg = '<p>We&apos;re sorry, but you did not enter the correct sum of the two numbers. You may have added the numbers incorrectly, typo&apos;d the answer, or at worst... you may not be human. Please try again.</p>' />
 	</cfif> 
 	
+	<!--- check if phone was provided, if it is numeric after filtering out non-numeric chars and is at least 10 digits long --->
+	<cfif Len(saniForm.phone) AND (NOT IsNumeric(ReReplace(saniForm.phone,'[^0-9]','','ALL')) OR NOT Len(ReReplace(saniForm.phone,'[^0-9]','','ALL')) GTE 10)>
+		<!--- password doesn't meet complexity requirements, set an error message to display --->
+		<cfset errorMsg = '<p>We&apos;re sorry, but your phone number must contain only (, ), +, -, [space] and 0-9 characters and must contain at least 10 digits. Please try again.</p>' />
+	</cfif> 
+	
 	<!--- ensure we have no errors --->
 	<cfif NOT Len(errorMsg)>	
 	
