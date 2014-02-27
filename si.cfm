@@ -102,7 +102,7 @@
 			  
 		  <br />
 		  
-		  <form class="form-horizontal" role="form" method="post" action="../request.cfm">
+		  <form class="form-horizontal" role="form" id="request" method="post" action="../request.cfm">
 		  <cfoutput>
 			<input type="hidden" name="ff#Hash('speakerKey','SHA-384')#" value="#speakerObj.getSpeakerKey()#" />
 			<fieldset>
@@ -207,11 +207,95 @@
     </div> <!---- /container ---->
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+	<script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.min.js"></script>
     <script src="../js/bootstrap.min.js"></script>
 	<script src="../js/bootstrap-datepicker.js"></script>
 	<script type="text/javascript">
 		$(function() {
 			$('#eventDate').datepicker({ autoclose: true });
+			
+			$('#request').validate({
+				errorClass: 'text-danger',
+				rules: {
+					cName: {
+						required: true,
+						minlength: 2,
+						maxlength: 150
+					},
+					orgName: {
+						required: true,
+						minlength: 2,
+						maxlength: 150
+					},
+					email: {
+						required: true,
+						email: true	
+					},
+					venue: {
+						required: true,
+						minLength: 2,
+						maxlength: 150
+					},
+					eventDate: {
+						required: true,
+						date: true	
+					},
+					eventTime: {
+						required: true,
+						maxlength: 12
+					},
+					specialty: {
+						required: true,
+						minlength: 2,
+						maxlength: 150
+					},
+					capcha: {
+						required: true,
+						digits: true,
+						maxlength: 2
+					}
+				},
+				messages: {
+					cName: {
+						required: 'Please specify your name.',
+						minlength: 'Your name must be at least 2 characters.',
+						maxlength: 'Your name must not exceed 150 characters.'
+					},
+					orgName: {
+						required: 'Please specify your organization name.',
+						minlength: 'Your organization name must be at least 2 characters.',
+						maxlength: 'Your organization name must not exceed 150 characters.'
+					},
+					email: {
+						required: 'Please specify your email address',
+						email: 'Your email address should be in the format: someone@someplace.tld.'	
+					},
+					venue: {
+						required: 'Please specify a venue/location for this event.',
+						minlength: 'Your venue/location must be at least 2 characters.',
+						maxlength: 'Your venue/location must not exceed 150 characters.'
+					},
+					eventDate: {
+						required: 'Please specify the date of your event.',
+						date: 'You must enter a valid date in MM/DD/YYYY format.'	
+					},
+					eventTime: {
+						required: 'Please specify the time of your event in HH:MM AM/PM TZ format.',
+						maxlength: 'Your event time must not exceed 12 characters.'
+					},
+					specialty: {
+						required: 'Please specity the topic/specialty for this event.',
+						minlength: 'Your name must be at least 2 characters.',
+						maxlength: 'Your name must not exceed 150 characters.'
+					},
+					capcha: {
+						required: 'Please add the two numbers and enter the sum in this field.',
+						digits: 'You must only enter the digits 0 through 9.',
+						maxlength: 'The sum should not exceed two digits.'
+					}
+				}
+				
+			});
 		});
 	</script>
   </body>

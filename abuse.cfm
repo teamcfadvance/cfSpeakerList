@@ -1,4 +1,5 @@
 <cfparam name="URL['v' & Hash('speakerKey','SHA-256')]" default="" type="string" />
+<cfparam name="FORM['ff' & Hash('speakerKey','SHA-384')]" default="" type="string" />
 <cfparam name="FORM.abuse" default="" type="string" />
 
 <!--- set a null error message to check for later --->
@@ -34,9 +35,9 @@
 	</cfif>
 	
 	<!--- check if a speaker key was provided --->
-	<cfif Len(URL['v' & Hash('speakerKey','SHA-256')])>
+	<cfif Len(FORM['ff' & Hash('speakerKey','SHA-384')])>
 		<!--- it was, get the data for the speaker --->
-		<cfset speakerObj = APPLICATION.speakerDAO.getSpeakerByKey(URL['v' & Hash('speakerKey','SHA-256')]) />
+		<cfset speakerObj = APPLICATION.speakerDAO.getSpeakerByKey(FORM['ff' & Hash('speakerKey','SHA-384')]) />
 		<!--- set the speaker abuse flag to true --->
 		<cfset speakerAbuse = true />
 	</cfif>
@@ -115,7 +116,12 @@
 
 
     <div class="container">
-	<cfoutput><form role="form" method="post" action="#CGI.SCRIPT_NAME#"></cfoutput>
+	<cfoutput>
+		<form role="form" method="post" action="#CGI.SCRIPT_NAME#">
+		<cfif Len(URL['v' & Hash('speakerKey','SHA-256')])>
+			<input type="hidden" name="ff#Hash('speakerKey','SHA-384')#" value="#URL['v' & Hash('speakerKey','SHA-256')]#" />
+		</cfif>
+	</cfoutput>
 	  <div class="row">
 	  	<div class="col-md-12">
 		

@@ -225,7 +225,7 @@
 		
 		</cfif>
 			
-		<form class="form-horizontal" role="form" method="post" action="#CGI.SCRIPT_NAME#">
+		<form class="form-horizontal" role="form" id="signup" method="post" action="#CGI.SCRIPT_NAME#">
 		<fieldset>
 		
 		<!--- Form Name --->
@@ -414,6 +414,90 @@
     </div> <!--- /container --->
 
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
+	<script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.min.js"></script>
+    <script src="js/bootstrap.min.js"></script>	
+	<script type="text/javascript">
+		$(function() {
+			
+			$('#signup').validate({
+				errorClass: 'text-danger',
+				rules: {
+					fName: {
+						required: true,
+						minlength: 2,
+						maxlength: 75
+					},
+					lName: {
+						required: true,
+						minlength: 2,
+						maxlength: 75
+					},
+					password: {
+						required: true,
+						minlength: 8,
+						maxlength: 20
+					},
+					vPassword: {
+						equalTo: '#password'
+					},
+					email: {
+						required: true,
+						email: true	
+					},
+					otherLocations: {
+						maxlength: 255
+					},
+					specialties: {
+						required: true,
+						minlength: 5,
+						maxlength: 512
+					},
+					capcha: {
+						required: true,
+						digits: true,
+						maxlength: 2
+					}
+				},
+				messages: {
+					fName: {
+						required: 'Please specify your first name.',
+						minlength: 'Your first name must be at least 2 characters.',
+						maxlength: 'Your first name must not exceed 75 characters.'
+					},
+					lName: {
+						required: 'Please specify your last name.',
+						minlength: 'Your last name must be at least 2 characters.',
+						maxlength: 'Your last name must not exceed 75 characters.'
+					},
+					password: {
+						required: 'Please specify a password.',
+						minlength: 'Your password must be at least 8 characters.',
+						maxlength: 'Your password must not exceed 20 characters.'
+					},
+					vPassword: {
+						equalTo: 'Your verification password does not match.'
+					},
+					email: {
+						required: 'Please specify your email address',
+						email: 'Your email address should be in the format: someone@someplace.tld.'	
+					},
+					otherLocations: {
+						maxlength: 'Your other locations must not exceed 255 characters.'
+					},
+					specialties: {
+						required: 'Please specity your specialties/speaking topics.',
+						minlength: 'Your specialties must be at least 5 characters.',
+						maxlength: 'Your specialties must not exceed 512 characters.'
+					},
+					capcha: {
+						required: 'Please add the two numbers and enter the sum in this field.',
+						digits: 'You must only enter the digits 0 through 9.',
+						maxlength: 'The sum should not exceed two digits.'
+					}
+				}
+				
+			});
+		});
+	</script>
   </body>
 </html>
