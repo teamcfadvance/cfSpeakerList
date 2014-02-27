@@ -1,11 +1,3 @@
-<!---
-$HeadURL: https://dev.vsgcom.net:8080/svn/missiontix_kiosk/trunk/core/beans/Datasource.cfc $
-$Rev: 14 $
-$Author: ddspringle1 $
-$Date: 2013-03-07 17:16:43 -0500 (Thu, 07 Mar 2013) $
-$Id: Datasource.cfc 14 2013-03-07 22:16:43Z ddspringle1 $
---->
-
 <cfcomponent displayname="Datasource" output="false" hint="I am the Datasource class.">
 <cfproperty name="DSN" type="string" default="" />
 <cfproperty name="username" type="string" default="" />
