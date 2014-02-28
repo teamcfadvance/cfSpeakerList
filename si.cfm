@@ -131,6 +131,7 @@
 			  <label class="col-md-4 control-label" for="email">Your Email</label>  
 			  <div class="col-md-4">
 			  <input id="email" name="email" placeholder="someone@someplace.com" class="form-control input-md" required type="email">
+				  <span class="help-block">Shared only with the speaker you&apos;re requesting</span>  
 			  </div>
 			</div>
 			
@@ -285,8 +286,8 @@
 					},
 					specialty: {
 						required: 'Please specity the topic/specialty for this event.',
-						minlength: 'Your name must be at least 2 characters.',
-						maxlength: 'Your name must not exceed 150 characters.'
+						minlength: 'Your topic request must be at least 2 characters.',
+						maxlength: 'Your topic request must not exceed 150 characters.'
 					},
 					capcha: {
 						required: 'Please add the two numbers and enter the sum in this field.',

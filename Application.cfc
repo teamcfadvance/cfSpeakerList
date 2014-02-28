@@ -1,5 +1,5 @@
 <cfcomponent>
-<!--- configure this Application.cfm options --->
+<!--- configure this Application.cfc options --->
 <cfscript>
 THIS.name = "cfSpeakerList_v1";
 THIS.clientmanagement="True";
