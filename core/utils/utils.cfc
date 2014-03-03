@@ -37,9 +37,23 @@
 			
 			<!--- otherwise, check if the mode of the encryption is 'url' --->
 			<cfelseif FindNoCase('url',ARGUMENTS.mode)>
-			
-				<!--- using url encryption, encrypt with the first set of keys and algorithm --->
-				<cfset lastPass = Encrypt(ARGUMENTS.value,APPLICATION.dbkey1,APPLICATION.dbalg1,APPLICATION.dbenc1) />
+				
+				<!--- using url encryption, check if useing BASE64 encoding on the URL key --->
+				<cfif FindNoCase('BASE64',APPLICATION.dbenc1)>
+				
+					<!--- decrypt with the first set of keys and repeatable algorithm --->
+					<cfset lastPass = Encrypt(ARGUMENTS.value,APPLICATION.dbkey1,'AES',APPLICATION.dbenc1) />
+					<!--- using BASE64 encoding, URL decode the value --->
+					<cfset lastPass = URLEncodedFormat(lastPass) />
+				
+				<!--- otherwise --->
+				<cfelse>
+				
+					<!--- not BASE64 encoded, decrypt with the first set of keys and algorithm --->
+					<cfset lastPass = Encrypt(ARGUMENTS.value,APPLICATION.dbkey1,APPLICATION.dbalg1,APPLICATION.dbenc1) />
+				
+				<!--- end checking if useing BASE64 encoding on the URL key --->	
+				</cfif>	
 				
 			<!--- otherwise, check if the mode of the encryption is 'form' --->
 			<cfelseif FindNoCase('form',ARGUMENTS.mode)>
@@ -100,9 +114,23 @@
 			
 			<!--- otherwise, check if the mode of the encryption is 'url' --->
 			<cfelseif FindNoCase('url',ARGUMENTS.mode)>
-			
-				<!--- using url encryption, decrypt with the first set of keys and algorithm --->
-				<cfset lastPass = Decrypt(ARGUMENTS.value,APPLICATION.dbkey1,APPLICATION.dbalg1,APPLICATION.dbenc1) />
+				
+				<!--- using url encryption, check if useing BASE64 encoding on the URL key --->
+				<cfif FindNoCase('BASE64',APPLICATION.dbenc1)>
+				
+					<!--- using BASE64 encoding, URL decode the value --->
+					<cfset ARGUMENTS.value = URLDecode(ARGUMENTS.value) />
+					<!--- decrypt with the first set of keys and repeatable algorithm --->
+					<cfset lastPass = Decrypt(ARGUMENTS.value,APPLICATION.dbkey1,'AES',APPLICATION.dbenc1) />
+				
+				<!--- otherwise --->
+				<cfelse>
+				
+					<!--- not BASE64 encoded, decrypt with the first set of keys and algorithm --->
+					<cfset lastPass = Decrypt(ARGUMENTS.value,APPLICATION.dbkey1,APPLICATION.dbalg1,APPLICATION.dbenc1) />
+				
+				<!--- end checking if useing BASE64 encoding on the URL key --->	
+				</cfif>			
 				
 			<!--- otherwise, check if the mode of the encryption is 'form' --->
 			<cfelseif FindNoCase('form',ARGUMENTS.mode)>

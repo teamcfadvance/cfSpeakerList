@@ -1,13 +1,26 @@
 <cfparam name="URL['v' & Hash('mode','SHA-256')]" default="#Hash('change')#" type="string">
+<cfparam name="URL['v' & Hash('name','SHA-256')]" default="#APPLICATION.formZero#" type="string">
 
 <cfset thisMode = URL['v' & Hash('mode','SHA-256')] />
 
 <cfif thisMode EQ Hash('change')>
 	<cfset heading = 'Password Change Complete' />
 	<cfset body = '<p>You have successfully changed your password. Please use this new password the next time you login.</p>' />
+	<cfset returnLink = 'index.cfm' />
 <cfelseif thisMode EQ Hash('profile')>
 	<cfset heading = 'Profile Update Complete' />
 	<cfset body = '<p>You have successfully updated your profile.</p>' />
+	<cfset returnLink = 'index.cfm' />
+<cfelseif thisMode EQ Hash('delete')>
+	<cfset fullName = APPLICATION.utils.dataDec(URL['v' & Hash('name','SHA-256')], 'url') />
+	<cfset heading = 'Speaker Removal Complete' />
+	<cfset body = '<p>You have successfully removed <strong>#fullName#</strong> from the database.</p>' />
+	<cfset returnLink = 'admin.cfm' />
+<cfelseif thisMode EQ Hash('edit')>
+	<cfset fullName = APPLICATION.utils.dataDec(URL['v' & Hash('name','SHA-256')], 'url') />
+	<cfset heading = 'Speaker Update Complete' />
+	<cfset body = '<p>You have successfully the profile of <strong>#fullName#</strong> in the database.</p>' />
+	<cfset returnLink = 'admin.cfm' />
 </cfif>
 
 <!DOCTYPE html>
@@ -60,7 +73,7 @@
 				<cfoutput>#body#</cfoutput>
 			  </div>
 			  <div class="panel-footer">
-			  	<cfoutput><a class="btn btn-info" href="index.cfm" role="button">Click here to return to the dashboard</a></cfoutput>
+			  	<cfoutput><a class="btn btn-info" href="#returnLink#" role="button">Click here to return to the dashboard</a></cfoutput>
 			  </div>
 			</div>		          
         </div>

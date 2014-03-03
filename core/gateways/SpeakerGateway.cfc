@@ -39,6 +39,7 @@
   <cfargument name="orderBy" type="any" required="false" default="" hint="I am the column(s) (and optional ordinal ASC or DESC) that records should be ordered by." />
   <cfargument name="cache" type="any" required="false" default="false" hint="I am a flag to determine if this query should be cached." />
   <cfargument name="cacheTime" type="any" required="false" default="#CreateTimeSpan(0,1,0,0)#" hint="I am the timespan to cache this query (Use CreateTimeSpan() or use the default cache time of one hour by not passing this variable." />
+	<cfargument name="showActive" type="boolean" required="false" default="true" hint="I am a flag to determine if active or inactive users should be returned." />
     <cfset var thisFilter = StructNew() />
     <cfif IsDefined('ARGUMENTS.userId') AND ARGUMENTS.userId NEQ "">
 		<cfset thisFilter.userId = ARGUMENTS.userId />
@@ -86,9 +87,9 @@
 		<cfset thisFilter.cacheTime = ARGUMENTS.cacheTime />
     </cfif>
   <cfif NOT structIsEmpty(thisFilter) AND structKeyExists(thisFilter, 'cache') AND thisFilter.cache>
-    <cfreturn cacheAllSpeakers(thisFilter) />
+    <cfreturn cacheAllSpeakers(thisFilter, ARGUMENTS.showActive) />
   <cfelse>
-    <cfreturn filterAllSpeakers(thisFilter) />
+    <cfreturn filterAllSpeakers(thisFilter, ARGUMENTS.showActive) />
   </cfif>
 </cffunction>
 
@@ -98,6 +99,7 @@
 	<cfargument name="cache" type="boolean" required="false" default="false" hint="I am a flag to determine if this query should be cached." />
 	<cfargument name="cacheTime" type="any" required="false" default="#CreateTimeSpan(0,0,0,0)#" hint="I am the timespan to cache this query (Use CreateTimeSpan())." />
 	<cfargument name="orderBy" type="string" required="false" default="lastName, firstName" hint="I am the column(s) (and optional ordinal ASC or DESC) that records should be ordered by." />
+	<cfargument name="showActive" type="boolean" required="false" default="true" hint="I am a flag to determine if active or inactive users should be returned." />
 	
 	<!--- var scope --->
 	<cfset var variables.qGetSpeakers = '' />
@@ -118,9 +120,10 @@
 		SELECT s.speakerKey, s.firstName, s.lastName, s.specialties, s.locations
 		FROM speakers s
 		LEFT JOIN users u ON u.userId = s.userId
-		WHERE ( u.isActive = <cfqueryparam value="1" cfsqltype="cf_sql_bit" />
-		AND u.role = <cfqueryparam value="speaker" cfsqltype="cf_sql_varchar" /> )
-		AND (  
+		WHERE ( u.role = <cfqueryparam value="speaker" cfsqltype="cf_sql_varchar" />
+				AND u.isActive = <cfqueryparam value="1" cfsqltype="cf_sql_bit" />
+		)		
+		AND ((  
 		<!--- first name loop --->
 		<cfloop from="1" to="#ListLen(ARGUMENTS.searchTerm,' ')#" index="iX">
 			LOWER(s.firstName) LIKE <cfqueryparam value="%#LCase(ListGetAt(ARGUMENTS.searchTerm,iX,' '))#%" cfsqltype="cf_sql_varchar" />
@@ -147,7 +150,7 @@
 			LOWER(s.locations) LIKE <cfqueryparam value="%#LCase(ListGetAt(ARGUMENTS.searchTerm,iX,' '))#%" cfsqltype="cf_sql_varchar" />
 			<cfif NOT iX EQ ListLen(ARGUMENTS.searchTerm,' ')> OR </cfif>
 		</cfloop>
-		)
+		))
 		ORDER BY #ARGUMENTS.orderBy#
 	</cfquery>
 	
@@ -161,6 +164,7 @@
 	<cfargument name="cache" type="boolean" required="false" default="false" hint="I am a flag to determine if this query should be cached." />
 	<cfargument name="cacheTime" type="any" required="false" default="#CreateTimeSpan(0,0,0,0)#" hint="I am the timespan to cache this query (Use CreateTimeSpan())." />
 	<cfargument name="orderBy" type="string" required="false" default="lastName, firstName" hint="I am the column(s) (and optional ordinal ASC or DESC) that records should be ordered by." />
+	<cfargument name="showActive" type="boolean" required="false" default="true" hint="I am a flag to determine if active or inactive users should be returned." />
 	
 	<!--- var scope --->
 	<cfset var variables.qGetSpeakers = '' />
@@ -182,8 +186,9 @@
 		SELECT s.speakerKey, s.firstName, s.lastName, s.specialties, s.locations
 		FROM speakers s
 		LEFT JOIN users u ON u.userId = s.userId
-		WHERE ( u.isActive = <cfqueryparam value="1" cfsqltype="cf_sql_bit" />
-		AND u.role = <cfqueryparam value="speaker" cfsqltype="cf_sql_varchar" /> )
+		WHERE ( u.role = <cfqueryparam value="speaker" cfsqltype="cf_sql_varchar" />
+				AND u.isActive = <cfqueryparam value="1" cfsqltype="cf_sql_bit" />
+		)		
 		<!--- loop through 'AND' terms --->
 		<cfloop from="1" to="#ListLen(ARGUMENTS.searchTerms)#" index="iY">
 			AND ((  
@@ -218,7 +223,7 @@
 		</cfloop>
 		ORDER BY #ARGUMENTS.orderBy#
 	</cfquery>
-	
+		
 	<!--- return the query by name --->
 	<cfreturn variables[queryName] />
 </cffunction>	
@@ -227,6 +232,7 @@
 <!--- QUERY - CACHE ALL --->
 <cffunction name="cacheAllSpeakers" access="private" output="false" returntype="any" hint="I run a query and will return all speakers records. If a filter has been applied, I will refine results based on the filter.">
   <cfargument name="filter" type="struct" required="false" default="#StructNew()#" hint="I am a structure used to filter the query." />
+  <cfargument name="showActive" type="boolean" required="false" default="true" hint="I am a flag to determine if active or inactive users should be returned." />
   <cfset var cachedQueryName = '' />
 	<cfloop collection="#ARGUMENTS.filter#" item="thisFilter">
 		<cfset cachedQueryName = cachedQueryName & thisFilter & ARGUMENTS.filter[thisFilter] />
@@ -236,9 +242,10 @@
 		SELECT s.speakerKey, s.userId, s.firstName, s.lastName, s.email, s.phone, s.showPhone, s.twitter, s.showTwitter, s.specialties, s.locations, s.isACP, s.isAEL, s.isUGM, s.isOther
 		FROM speakers s
 		LEFT JOIN users u ON u.userId = s.userId
-		WHERE ( u.isActive = <cfqueryparam value="1" cfsqltype="cf_sql_bit" />
-		AND u.role = <cfqueryparam value="speaker" cfsqltype="cf_sql_varchar" /> )
-  <cfif NOT structIsEmpty(ARGUMENTS.filter)>
+		WHERE ( u.role = <cfqueryparam value="speaker" cfsqltype="cf_sql_varchar" />
+			AND u.isActive = <cfqueryparam value="#ARGUMENTS.showActive#" cfsqltype="cf_sql_bit" />
+		)  
+	<cfif NOT structIsEmpty(ARGUMENTS.filter)>
     <!--- filter is applied --->
     <cfif structKeyExists(ARGUMENTS.filter, 'userId')>
 		AND s.userId = <cfqueryparam value="#ARGUMENTS.filter.userId#" cfsqltype="cf_sql_integer" />
@@ -286,16 +293,18 @@
 
 <!--- QUERY - FILTER ALL --->
 <cffunction name="filterAllSpeakers" access="private" output="false" returntype="any" hint="I run a query and will return all speakers records. If a filter has been applied, I will refine results based on the filter.">
-  <cfargument name="filter" type="struct" required="false" default="#StructNew()#" hint="I am a structure used to filter the query." />
+  <cfargument name="filter" type="struct" required="false" default="#StructNew()#" hint="I am a structure used to filter the query." />  
+  <cfargument name="showActive" type="boolean" required="false" default="true" hint="I am a flag to determine if active or inactive users should be returned." />
   <cfset var qGetSpeakers = '' />
 
   <cfquery name="qGetSpeakers" datasource="#variables.instance.datasource.getDSN()#" username="#variables.instance.datasource.getUsername()#" password="#variables.instance.datasource.getPassword()#">
 		SELECT s.speakerKey, s.userId, s.firstName, s.lastName, s.email, s.phone, s.showPhone, s.twitter, s.showTwitter, s.specialties, s.locations, s.isACP, s.isAEL, s.isUGM, s.isOther
 		FROM speakers s
 		LEFT JOIN users u ON u.userId = s.userId
-		WHERE ( u.isActive = <cfqueryparam value="1" cfsqltype="cf_sql_bit" />
-		AND u.role = <cfqueryparam value="speaker" cfsqltype="cf_sql_varchar" /> )
-  <cfif NOT structIsEmpty(ARGUMENTS.filter)>
+		WHERE ( u.role = <cfqueryparam value="speaker" cfsqltype="cf_sql_varchar" />
+			AND u.isActive = <cfqueryparam value="#ARGUMENTS.showActive#" cfsqltype="cf_sql_bit" />
+		)  
+	<cfif NOT structIsEmpty(ARGUMENTS.filter)>
     <!--- filter is applied --->
     <cfif structKeyExists(ARGUMENTS.filter, 'userId')>
 		AND s.userId = <cfqueryparam value="#ARGUMENTS.filter.userId#" cfsqltype="cf_sql_integer" />

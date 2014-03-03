@@ -1,5 +1,5 @@
-<cfparam name="FORM.search" default="" />
-<cfparam name="FORM.mode" default="#Hash('browse','SHA-512')#" />
+<cfparam name="FORM.search" default="" type="string" />
+<cfparam name="FORM.mode" default="#Hash('browse','SHA-512')#" type="string" />
 
 <!--- check if the user is requesting a simple search --->
 <cfif NOT FindNoCase(' AND ',FORM.search) AND Len(Trim(FORM.search))>
@@ -78,7 +78,9 @@
 			<div class="panel panel-primary">
 			  <div class="panel-heading">Matching Speakers</div>
 			  <div class="panel-body">
-				<p>The following list of speakers matched your <cfif FindNoCase(Hash('browse','SHA-512'),FORM.mode)>browse request<cfelse>search request for &apos;<cfoutput><abbr title="Submitted Search Terms" class="initialism">#FORM.search#</abbr></cfoutput>&apos;</cfif> . Click on the name of any speaker to see more info and to request them to speak at your event.</p>
+				<p>The following list of speakers matched your <cfif FindNoCase(Hash('browse','SHA-512'),FORM.mode)>browse request<cfelse>search request for &apos;<cfoutput><abbr title="Submitted Search Terms" class="initialism">#FORM.search#</abbr></cfoutput>&apos;</cfif>.</p>
+				<p>To sort speakers, click on the header for the column you wish to sort by, click again to reverse the sort order.</p>
+				<p>Click on the name of any speaker to see their speaker profile, and to request them to speak at your event.</p>
 			  </div>
 			
 			  <table class="table sortable table-striped">
