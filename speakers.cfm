@@ -94,9 +94,9 @@
 				<tbody>
 				<cfoutput query="qGetResults">
 				  <tr>
-					<td class="col-md-2"><strong><a href="si.cfm/#qGetResults.speakerKey#">#qGetResults.firstName# #qGetResults.lastName#</a></strong></td>
-					<td class="col-md-3">#qGetResults.locations#</td>
-					<td>#qGetResults.specialties#</td>
+					<td class="col-md-3"><strong><a href="si.cfm/#qGetResults.speakerKey#">#qGetResults.firstName# #qGetResults.lastName#</a></strong></td>
+					<td class="col-md-4">#ListChangeDelims(qGetResults.locations,', ')#</td>
+					<td class="col-md-4">#ListChangeDelims(qGetResults.specialties,', ')#</td>
 				  </tr>
 				</cfoutput>
 				</tbody>

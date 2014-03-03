@@ -176,8 +176,8 @@
 					<cfset thisUser = APPLICATION.utils.dataEnc(qGetResults.speakerKey, 'url') />
 				  <tr>
 					<td class="col-md-2">#qGetResults.firstName# #qGetResults.lastName#</td>
-					<td class="col-md-3">#qGetResults.locations#</td>
-					<td class="col-md-3">#qGetResults.specialties#</td>
+					<td class="col-md-3">#ListChangeDelims(qGetResults.locations,', ')#</td>
+					<td class="col-md-3">#ListChangeDelims(qGetResults.specialties,', ')#</td>
 					<td class="col-md-1 text-center"><a href="editUser.cfm?v#Hash('speakerKey','SHA-256')#=#thisUser#" class="btn btn-info"><span class="glyphicon glyphicon-pencil"></span></a></td>
 					<td class="col-md-1 text-center"><a href="#CGI.SCRIPT_NAME#?v#Hash('delete','SHA-256')#=#thisUser#" class="btn btn-danger"><span class="glyphicon glyphicon-remove"></span></a></td>					
 				  </tr>
