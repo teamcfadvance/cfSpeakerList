@@ -64,11 +64,11 @@
 				  </tr>
 				  <tr>
 				    <td><strong>Specialties</strong></td>
-					<td>#speakerObj.getSpecialties()#</td>
+					<td>#ListChangeDelims(speakerObj.getSpecialties(),', ')#</td>
 				  </tr>
 				  <tr>
 				    <td><strong>Location(s)</strong></td>
-					<td>#speakerObj.getLocations()#</td>
+					<td>#ListChangeDelims(speakerObj.getLocations(),', ')#</td>
 				  </tr>
 				  <tr>
 				    <td><strong>Program(s)</strong></td>
