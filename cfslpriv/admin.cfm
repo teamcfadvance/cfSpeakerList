@@ -158,6 +158,7 @@
 						<cfoutput><a href="#CGI.SCRIPT_NAME#?v#Hash('inactive','SHA-256')#=1">Show Active Speakers</a></cfoutput>
 					</cfif>
 				</small></p>
+				<p class="text-right"><small><a href="../signup.cfm" target="_blank">Add New Speaker</a></small></p>
 			  </div>
 			
 			  <table class="table sortable table-striped">
