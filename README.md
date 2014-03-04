@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/TeamCFAdvance/cfSpeakerList.png?branch=master)](https://travis-ci.org/TeamCFAdvance/cfSpeakerList)
 cfSpeakerList (BETA)
 =====================
 
