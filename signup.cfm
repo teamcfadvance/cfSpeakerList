@@ -445,6 +445,7 @@
 						maxlength: 20
 					},
 					vPassword: {
+						required: true,
 						equalTo: '#password'
 					},
 					email: {
@@ -482,6 +483,7 @@
 						maxlength: 'Your password must not exceed 20 characters.'
 					},
 					vPassword: {
+						required: 'Please verify your password',
 						equalTo: 'Your verification password does not match.'
 					},
 					email: {
