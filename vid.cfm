@@ -67,7 +67,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
-    <!----<link rel="shortcut icon" href="../../assets/ico/favicon.ico">---->
+    <link rel="shortcut icon" href="<cfoutput>#RepeatString('../',pathLen)#</cfoutput>favicon.ico">
 
     <title><cfoutput>#APPLICATION.siteName#</cfoutput> &raquo; Email Verification</title>
     <link href="<cfoutput>#RepeatString('../',pathLen)#</cfoutput>css/bootstrap.min.css" rel="stylesheet">
