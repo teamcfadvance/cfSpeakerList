@@ -145,7 +145,7 @@
 			showPhone	= saniForm.showPhone,
 			twitter    	= saniForm.twitter,
 			showTwitter	= saniForm.showTwitter,
-			specialties	= saniForm.specialties,
+			specialties	= ListSort(saniForm.specialties,'textnocase'),
 			locations  	= thisSpeakerLocs,
 			isACP      	= (ListFindNoCase(saniForm.programs,'acp') ? 1 : 0),
 			isAEL      	= (ListFindNoCase(saniForm.programs,'ael') ? 1 : 0),

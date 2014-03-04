@@ -122,7 +122,7 @@
 		<cfset speakerObj.setShowPhone(saniForm.showPhone) />
 		<cfset speakerObj.setTwitter(saniForm.twitter) />
 		<cfset speakerObj.setShowTwitter(saniForm.showTwitter) />
-		<cfset speakerObj.setSpecialties(saniForm.specialties) />
+		<cfset speakerObj.setSpecialties(ListSort(saniForm.specialties,'textnocase')) />
 		<cfset speakerObj.setLocations(thisSpeakerLocs) />
 		<cfset speakerObj.setIsACP((ListFindNoCase(saniForm.programs,'acp') ? 1 : 0)) />
 		<cfset speakerObj.setIsAEL((ListFindNoCase(saniForm.programs,'ael') ? 1 : 0)) />
