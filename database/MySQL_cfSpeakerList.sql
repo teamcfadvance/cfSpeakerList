@@ -28,9 +28,9 @@ SET time_zone = "+00:00";
 
 CREATE TABLE `countries` (
   `countryId` int(11) NOT NULL AUTO_INCREMENT,
-  `country` varchar(255) COLLATE utf16_bin NOT NULL,
+  `country` varchar(255) NOT NULL,
   PRIMARY KEY (`countryId`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf16 COLLATE=utf16_bin AUTO_INCREMENT=240 ;
+) ENGINE=InnoDB  AUTO_INCREMENT=240 ;
 
 --
 -- Dumping data for table `countries`
@@ -311,9 +311,9 @@ CREATE TABLE `speakers` (
 
 CREATE TABLE `states` (
   `stateId` int(11) NOT NULL AUTO_INCREMENT,
-  `state` varchar(255) COLLATE utf16_bin NOT NULL,
+  `state` varchar(255)  NOT NULL,
   PRIMARY KEY (`stateId`)
-) ENGINE=InnoDB  DEFAULT CHARSET=utf16 COLLATE=utf16_bin AUTO_INCREMENT=52 ;
+) ENGINE=InnoDB   AUTO_INCREMENT=52 ;
 
 --
 -- Dumping data for table `states`
@@ -395,11 +395,11 @@ CREATE TABLE `users` (
 
 CREATE TABLE `sessions` (
   `uniqueId` int(11) NOT NULL AUTO_INCREMENT,
-  `sessionId` varchar(512) COLLATE utf16_bin NOT NULL,
+  `sessionId` varchar(512)  NOT NULL,
   `userId` int(11) NOT NULL,
   `lastActionAt` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
   PRIMARY KEY (`uniqueId`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf16 COLLATE=utf16_bin AUTO_INCREMENT=1 ;
+) ENGINE=InnoDB  AUTO_INCREMENT=1 ;
 
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
