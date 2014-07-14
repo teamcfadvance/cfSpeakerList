@@ -120,6 +120,8 @@
 				
 					<!--- using BASE64 encoding, URL decode the value --->
 					<cfset ARGUMENTS.value = URLDecode(ARGUMENTS.value) />
+					<!--- replace spaces with + --->
+					<cfset ARGUMENTS.value = Replace(ARGUMENTS.value,chr(32),'+','ALL') />
 					<!--- decrypt with the first set of keys and repeatable algorithm --->
 					<cfset lastPass = Decrypt(ARGUMENTS.value,APPLICATION.dbkey1,'AES',APPLICATION.dbenc1) />
 				
