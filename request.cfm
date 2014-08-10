@@ -5,6 +5,7 @@
 <cfparam name="FORM.venue" default="" type="string" />
 <cfparam name="FORM.eventDate" default="" type="string" />
 <cfparam name="FORM.eventTime" default="" type="string" />
+<cfparam name="FORM.attendees" default="" type="string" />
 <cfparam name="FORM.specialty" default="" type="string" />
 <cfparam name="FORM.capcha" default="" type="string" />
 <cfparam name="FORM['ff' & Hash('capcha')]" default="#APPLICATION.formZero#" type="string" />
@@ -27,6 +28,7 @@
 			venue 		= saniForm.venue,
 			eventDate 	= saniForm.eventDate,
 			eventTime	= saniForm.eventTime,
+			attendees 	= saniForm.attendees,
 			specialty	= saniForm.specialty,
 			capcha 		= saniForm.capcha
 		}
@@ -91,6 +93,10 @@
 					<td>#saniForm.eventDate# #saniForm.eventTime#</td>
 				</tr>
 				<tr>
+					<td><strong>Expected No. of Attendees</strong></td>
+					<td>#saniForm.attendees#</td>
+				</tr>
+				<tr>
 					<td><strong>Requested Topic/Specialty</strong></td>
 					<td>#saniForm.specialty#</td>
 				</tr>
@@ -107,6 +113,7 @@
 			speaker request to you from #APPLICATION.siteName#:#cR##cR##cR#
 			Venue/Location#chr(9)##chr(9)##APPLICATION.utils.decodeVal(saniForm.venue)##cR##cR#
 			Date and Time#chr(9)##chr(9)##APPLICATION.utils.decodeVal(saniForm.eventDate)# #APPLICATION.utils.decodeVal(saniForm.eventTime)##cR##cR#
+			Expected No. of Attendees#chr(9)##chr(9)##APPLICATION.utils.decodeVal(saniForm.attendees)##cR##cR#
 			Requested Topic/Specialty#chr(9)##APPLICATION.utils.decodeVal(saniForm.specialty)##cR##cR##cR#
 			Please reply to this email to contact #APPLICATION.utils.decodeVal(saniForm.cName)# directly about this request.#cR##cR#
 			Sincerely,#cR#

@@ -166,6 +166,15 @@
 			
 			<!--- Text input--->
 			<div class="form-group">
+			  <label class="col-md-4 control-label" for="venue">Expected Attendees</label>  
+			  <div class="col-md-4">
+				  <input id="attendees" name="attendees" placeholder="10" class="form-control input-md" required type="text">
+				  <span class="help-block">Enter the number of attendees expected at your event</span>  
+			  </div>
+			</div>
+			
+			<!--- Text input--->
+			<div class="form-group">
 			  <label class="col-md-4 control-label" for="specialty">Topic/Specialty</label>  
 			  <div class="col-md-4">
 				  <input id="specialty" name="specialty" placeholder="CFML" class="form-control input-md" required type="text">
@@ -245,6 +254,11 @@
 						required: true,
 						maxlength: 12
 					},
+					attendees: {
+						required: true,
+						digits: true,
+						maxlength: 4
+					},
 					specialty: {
 						required: true,
 						minlength: 2,
@@ -283,6 +297,11 @@
 					eventTime: {
 						required: 'Please specify the time of your event in HH:MM AM/PM TZ format.',
 						maxlength: 'Your event time must not exceed 12 characters.'
+					},
+					attendees: {
+						required: 'Please specify the expected number of attendees.',
+						digits: 'You must only enter the digits 0 through 9.',
+						maxlength: 'The number of attendees should not exceed four digits.'
 					},
 					specialty: {
 						required: 'Please specity the topic/specialty for this event.',
