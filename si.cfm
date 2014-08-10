@@ -167,7 +167,7 @@
 			<!--- Text input--->
 			<div class="form-group">
 			  <label class="col-md-4 control-label" for="venue">Expected Attendees</label>  
-			  <div class="col-md-4">
+			  <div class="col-md-2">
 				  <input id="attendees" name="attendees" placeholder="10" class="form-control input-md" required type="text">
 				  <span class="help-block">Enter the number of attendees expected at your event</span>  
 			  </div>
