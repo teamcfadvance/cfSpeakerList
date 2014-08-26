@@ -59,6 +59,10 @@
 				<tbody>
 				<cfoutput>
 				  <tr>
+				    <td><strong>Speaker Gravatar</strong></td>
+					<td><img src="http://www.gravatar.com/avatar/#lCase( hash( lCase( speakerObj.getEmail() ) ) )#?s=180&r=R&d=#UrlEncodedFormat('http://#CGI.HTTP_HOST#/img/blank_profile_180px.png')#" /></td>
+				  </tr>
+				  <tr>
 				    <td><strong>Speaker Name</strong></td>
 					<td>#speakerObj.getFirstName()# #speakerObj.getLastName()#</td>
 				  </tr>

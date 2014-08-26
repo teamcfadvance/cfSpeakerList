@@ -117,7 +117,7 @@
 	<!--- query (and possibly cache) the list of speakers by looping through the search term(s) --->
 	<!--- for each of the first name, last name, twitter handle, specialties and locations --->
 	<cfquery name="#queryName#" datasource="#variables.instance.datasource.getDSN()#" username="#variables.instance.datasource.getUsername()#" password="#variables.instance.datasource.getPassword()#" cachedwithin="#ARGUMENTS.cacheTime#">
-		SELECT s.speakerKey, s.firstName, s.lastName, s.specialties, s.locations
+		SELECT s.speakerKey, s.email, s.firstName, s.lastName, s.specialties, s.locations
 		FROM speakers s
 		LEFT JOIN users u ON u.userId = s.userId
 		WHERE ( u.role = <cfqueryparam value="speaker" cfsqltype="cf_sql_varchar" />
@@ -183,7 +183,7 @@
 	<!--- query (and possibly cache) the list of speakers by looping through the search term(s) --->
 	<!--- for each of the first name, last name, twitter handle, specialties and locations --->
 	<cfquery name="#queryName#" datasource="#variables.instance.datasource.getDSN()#" username="#variables.instance.datasource.getUsername()#" password="#variables.instance.datasource.getPassword()#" cachedwithin="#ARGUMENTS.cacheTime#">
-		SELECT s.speakerKey, s.firstName, s.lastName, s.specialties, s.locations
+		SELECT s.speakerKey, s.email, s.firstName, s.lastName, s.specialties, s.locations
 		FROM speakers s
 		LEFT JOIN users u ON u.userId = s.userId
 		WHERE ( u.role = <cfqueryparam value="speaker" cfsqltype="cf_sql_varchar" />

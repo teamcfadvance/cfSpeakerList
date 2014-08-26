@@ -86,6 +86,7 @@
 			  <table class="table sortable table-striped">
 				<thead>
 				  <tr>
+				  	<th>&nbsp;</th>
 					<th>Speaker Name</th>
 					<th>Location(s)</th>
 					<th>Specialties</th>
@@ -94,6 +95,7 @@
 				<tbody>
 				<cfoutput query="qGetResults">
 				  <tr>
+				  	<td class="col-md-1"><img src="http://www.gravatar.com/avatar/#lCase( hash( lCase( qGetResults.email ) ) )#?s=32&r=R&d=#UrlEncodedFormat('http://#CGI.HTTP_HOST#/img/blank_profile_32px.png')#" /></td>
 					<td class="col-md-3"><strong><a href="si.cfm/#qGetResults.speakerKey#">#qGetResults.firstName# #qGetResults.lastName#</a></strong></td>
 					<td class="col-md-4">#ListChangeDelims(qGetResults.locations,', ')#</td>
 					<td class="col-md-4">#ListChangeDelims(qGetResults.specialties,', ')#</td>
