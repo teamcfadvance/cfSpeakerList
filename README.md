@@ -4,7 +4,7 @@ cfSpeakerList (BETA2)
 
 A simple CFML application for managing a list of available speakers (e.g. for user groups, conferences, etc.). This application allows speakers to enter their information into a database, requires them to verify their email address and upon verification activates their listing in the database. The speaker can self-maintain their information to change details as needed, update their password, etc. Administrators can delete speakers and edit their information as needed. Any visitor to your site can then use the search or browse functions to search for speakers to contact about speaking at events.
 
-*NEW*
+**NEW**
 Speaker requests are now logged in three ways - the number of requests a speaker has received, the number of requests a speaker has accepted and the number of requests the speaker has completed. When a speaker request email is sent, a link to accept the speaker request is included. This is currently only for tracking purposes, but may gain further purpose later.
 
 X number of days (configurable) after an accepted request's event date has passed, the requestor can be sent a feedback request to give feedback about the speaker and the speaker can be sent a feedback request to give feedback about the event/venue.
@@ -102,6 +102,7 @@ Currently tested with:
 ```
 
 * Add an admin account (see [this gist](https://gist.github.com/ddspringle/9335942) for an example)
+* Configure a scheduled task for tasks/sendFeedbackRequests.cfm once per day if using feedback notifications
 * Start notifying speakers they can sign up!
 
 --------
