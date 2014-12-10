@@ -380,5 +380,34 @@
 		<cfreturn returnPhone />
 		
 	</cffunction>
+
+	<!--- Generate random hidden form field (security through obscurity) --->
+	<cffunction name="getRandomFormField" access="public" returntype="string" output="false" hint="I generate and return a random data hidden form field.">
+
+		<!--- var scope --->
+		<cfset var randomHTML = Rand() />
+		<cfset var dataList = 'randomData,randomSecure,secureData,obscureSecure,fakeToken' />
+		<cfset var hashList = 'SHA-256,SHA-384,SHA-512' />
+		<cfset var encList = 'url,form,cookie' />
+		<cfset var hashValue = Hash( ListGetAt( dataList, RandRange( 1, ListLen( dataList ) ) ), ListGetAt( hashList, RandRange( 1, ListLen( hashList ) ) ) ) />
+		<cfset var encValue = dataEnc( CreateUUID() & DateFormat( Now(), 'yymmdd' ) & TimeFormat( Now(), 'HHmmss' ), ListGetAt( encList, RandRange( 1, ListLen( encList ) ) ) ) />
+
+		<cfsavecontent variable="randomHTML">
+			<!-- lock access token -->			
+			<input type="hidden" name="ff#hashValue#" value="#encValue#" />			
+		</cfsavecontent>
+
+		<cfreturn randomHTML />
+		
+	</cffunction>
+
+	<!--- check the referrer matches --->
+	<cffunction name="checkReferer" access="public" returntype="boolean" output="false" hint="I validate the referrer comes from the same domain.">
+		<cfargument name="host" type="string" required="true" hint="I am the CGI.HTTP_HOST value to compare." />
+		<cfargument name="referer" type="string" required="true" hint="I am the CGI.HTTP_REFERER value to compare." />
+		
+		<cfreturn FindNoCase( ARGUMENTS.host, ARGUMENTS.referer ) />
+
+	</cffunction>
 		
 </cfcomponent>

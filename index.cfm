@@ -15,8 +15,8 @@
 
     <title><cfoutput>#APPLICATION.siteName#</cfoutput></title>
 
-    <link href="css/bootstrap.min.css" rel="stylesheet">
-    <link href="css/jumbotron.css" rel="stylesheet">
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <link href="//cdn.vsgcom.net/css/jumbotron.css" rel="stylesheet">
 
     <!--- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries --->
     <!--[if lt IE 9]>
@@ -56,7 +56,7 @@
     <div class="jumbotron">
       <div class="container">
         <h1><cfoutput>#APPLICATION.siteLongName#</cfoutput></h1>
-        <p>This site is designed to allow development and design professionals who speak at user groups and conferences to add their information to our database, and those seeking speakers for their events to search our database to find suitable speakers and contact them.</p>
+        <p>This site is designed to allow development, design and IT professionals who speak at user groups and conferences to add their information to our database, and those seeking speakers for their events to search our database to find suitable speakers and contact them.</p>
       </div>
     </div>
 
@@ -67,20 +67,28 @@
           <p>Enter your natural language search terms below to search for speakers by location, name, or specialty. Optionally, use AND to search multiple terms.</p>
 		  <form class="form-horizontal" role="form" method="post" action="speakers.cfm">
 		  	<cfoutput><input type="hidden" name="mode" value="#Hash('search','SHA-512')#" /></cfoutput>
-			<p><input type="search" class="form-control input-md" name="search" placeholder="Enter search term AND search term" required></p>
+			<p><input type="search" class="form-control input-md" name="search" placeholder="Enter search term AND search term" required>
+              <div class="checkbox">
+              <label for="onlineSearch">
+                <input name="onlineSearch" id="onlineSearch" value="1" type="checkbox">
+                Search Only Online Speakers
+              </label>
+              </div></p>
             <p><button type="submit" class="btn btn-primary">Search Speakers</button></p>
 		  </form>
         </div>
         <div class="col-md-4">
           <h2>Browse Speakers</h2>
           <p>If you would prefer to browse through available speakers by location instead of searching for them, use our convenient browse functions to list speakers available in your area.</p>
-		  <p>&nbsp;</p>
+		      <p>&nbsp;</p>
+          <p>&nbsp;</p>
           <p><a class="btn btn-info" href="browse.cfm" role="button">Browse Speakers</a></p>
        </div>
         <div class="col-md-4">
           <h2>Speaker Sign Up</h2>
-          <p>Are you a development or design professional with experience and interest in speaking to user groups and at conferences? Use our easy sign-up form to add your information to our database!</p>
-		  <p>&nbsp;</p>
+          <p>Are you a development, design or IT professional with experience and interest in speaking to user groups and at conferences? Use our easy sign-up form to add your information to our database!</p>
+    		  <p>&nbsp;</p>
+          <p>&nbsp;</p>
           <p><a class="btn btn-success" href="signup.cfm" role="button">Sign Up Now</a></p>
         </div>
       </div>
@@ -90,19 +98,19 @@
       <cfinclude template="includes/footer.cfm" />
     </div> <!--- /container --->
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
-	<script src="js/sha384.js"></script>
-	<cfoutput>
-	<script type="text/javascript">
-		var $pwd = $('##password');
-		var $sd = $('###seedId#');
-			
-		function hashIt() {
-			$pwd.val(CryptoJS.SHA384($pwd.val()));
-			$pwd.val(CryptoJS.SHA384($pwd.val() + $sd.val()));
-		};
-	</script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+  	<script src="//cdn.vsgcom.net/js/sha384.js"></script>
+  	<cfoutput>
+  	<script type="text/javascript">
+  		var $pwd = $('##password');
+  		var $sd = $('###seedId#');
+  			
+  		function hashIt() {
+  			$pwd.val(CryptoJS.SHA384($pwd.val()));
+  			$pwd.val(CryptoJS.SHA384($pwd.val() + $sd.val()));
+  		};
+  	</script>
 	</cfoutput>
   </body>
 </html>

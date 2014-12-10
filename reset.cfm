@@ -101,8 +101,8 @@
 
     <title><cfoutput>#APPLICATION.siteName#</cfoutput> &raquo; Password Reset</title>
 
-    <link href="css/bootstrap.min.css" rel="stylesheet">
-    <link href="css/signin.css" rel="stylesheet">
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <link href="//cdn.vsgcom.net/css/signin.css" rel="stylesheet">
 
     <!--- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries --->
     <!--[if lt IE 9]>
@@ -169,7 +169,7 @@
 	  
     </div> <!--- /container --->
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
   </body>
 </html>

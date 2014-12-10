@@ -49,6 +49,7 @@
 			lName 			= saniForm.lName,
 			otherLocations 	= saniForm.otherLocations,
 			specialties 	= saniForm.specialties,
+			bio 			= saniform.bio,
 			capcha 			= saniForm.capcha
 		}
 	) />
@@ -123,7 +124,11 @@
 		<cfset speakerObj.setTwitter(saniForm.twitter) />
 		<cfset speakerObj.setShowTwitter(saniForm.showTwitter) />
 		<cfset speakerObj.setSpecialties(ListSort(saniForm.specialties,'textnocase')) />
+		<cfset speakerObj.setBlog( saniForm.blog ) />
+		<cfset speakerObj.setBio( saniForm.bio ) />
 		<cfset speakerObj.setLocations(thisSpeakerLocs) />
+		<cfset speakerObj.setMajorCity( saniForm.majorCity ) />
+		<cfset speakerObj.setIsOnline( saniForm.online ) />
 		<cfset speakerObj.setIsACP((ListFindNoCase(saniForm.programs,'acp') ? 1 : 0)) />
 		<cfset speakerObj.setIsAEL((ListFindNoCase(saniForm.programs,'ael') ? 1 : 0)) />
 		<cfset speakerObj.setIsUGM((ListFindNoCase(saniForm.programs,'ugm') ? 1 : 0)) />
@@ -158,8 +163,9 @@
 
     <title><cfoutput>#APPLICATION.siteName#</cfoutput> &raquo; Dashboard &raquo; Edit Profile</title>
 
-    <link href="../css/bootstrap.min.css" rel="stylesheet">
-    <link href="../css/jumbotron.css" rel="stylesheet">
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <link href="//cdn.vsgcom.net/css/jumbotron.css" rel="stylesheet">
+    <link href="//cdn.vsgcom.net/css/bootstrap3-wysihtml5.min.css" rel="stylesheet">
 
     <!--- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries --->
     <!--[if lt IE 9]>
@@ -284,10 +290,41 @@
 		
 		<!--- Text input--->
 		<div class="form-group">
+		  <label class="col-md-4 control-label" for="blog">Website/Blog URL</label>  
+		  <div class="col-md-4">
+		  <input id="blog" name="blog" placeholder="http://blog.domain.tld" class="form-control input-md" type="text" value="#speakerObj.getBlog()#">
+		  <span class="help-block">Optional, shown publicly</span>  
+		  </div>
+		</div>
+		
+		<!--- Text input--->
+		<div class="form-group">
 		  <label class="col-md-4 control-label" for="otherLocations">Locations</label>  
 		  <div class="col-md-4">
 		  <input id="otherLocations" name="otherLocations" placeholder="Online, Toronto, Paris" class="form-control input-md" type="text" value="#speakerObj.getLocations()#">
 		  <span class="help-block">Enter location(s) separated by commas</span>  
+		  </div>
+		</div>
+		
+		<!--- Text input--->
+		<div class="form-group">
+		  <label class="col-md-4 control-label" for="majorCity">Closest Major City</label>  
+		  <div class="col-md-4">
+		  <input id="majorCity" name="majorCity" placeholder="Richmond" class="form-control input-md" type="text" value="#speakerObj.getMajorCity()#">
+		  <span class="help-block">Enter thclosest major city to you</span>  
+		  </div>
+		</div>
+		
+		<!--- Checkbox --->
+		<div class="form-group">
+		  <label class="col-md-4 control-label" for="programs">Present Online?</label>
+		  <div class="col-md-4">
+		  	<div class="checkbox">
+				<label for="online">
+				  <input name="online" id="online" value="1" type="checkbox"<cfif speakerObj.getIsOnline()> checked="checked"</cfif>>
+				  Yes, I present online
+				</label>
+			</div>
 		  </div>
 		</div>
 		
@@ -297,6 +334,15 @@
 		  <div class="col-md-4">                     
 			<textarea class="form-control" id="specialties" name="specialties"><cfif Len(speakerObj.getSpecialties())>#speakerObj.getSpecialties()#<cfelse>HTML5, CSS3, CFML, Web Design</cfif></textarea>
 		  <span class="help-block">Enter your specialties separated by commas</span>  
+		  </div>
+		</div>
+		
+		<!--- Textarea --->
+		<div class="form-group">
+		  <label class="col-md-4 control-label" for="bio">Biography</label>
+		  <div class="col-md-4">                     
+			<textarea class="form-control" id="bio" name="bio"><cfif Len(speakerObj.getBio())>#APPLICATION.utils.decodeVal(speakerObj.getBio())#<cfelse></cfif></textarea>
+		  <span class="help-block">Enter your biography</span>  
 		  </div>
 		</div>
 		
@@ -313,7 +359,7 @@
 		  <div class="checkbox">
 			<label for="programs-1">
 			  <input name="programs" id="programs-1" value="AEL" type="checkbox"<cfif speakerObj.getIsAEL()> checked="checked"</cfif>>
-			  Adobe E-Learning Professional (AEL)
+			  Adobe Education Leader (AEL)
 			</label>
 			</div>
 		  <div class="checkbox">
@@ -367,7 +413,23 @@
       <cfinclude template="../includes/footer.cfm" />
     </div> <!--- /container --->
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-    <script src="../js/bootstrap.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+    <script src="//cdn.vsgcom.net/js/bootstrap3-wysihtml5.all.min.js"></script>
+    <script>
+		$('#bio').wysihtml5({
+			toolbar: {
+			    "font-styles": true, //Font styling, e.g. h1, h2, etc. Default true
+			    "emphasis": true, //Italics, bold, etc. Default true
+			    "lists": true, //(Un)ordered lists, e.g. Bullets, Numbers. Default true
+			    "html": false, //Button which allows you to edit the generated HTML. Default false
+			    "link": false, //Button to insert a link. Default true
+			    "image": true, //Button to insert an image. Default true,
+			    "color": false, //Button to change color of font  
+			    "blockquote": false, //Blockquote  
+			    "size": 'sm' //default: none, other options are xs, sm, lg
+			}
+		});
+	</script>
   </body>
 </html>

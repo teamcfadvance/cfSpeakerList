@@ -29,26 +29,30 @@ THIS.mappings["/core"]=ExpandPath('core');
 	<!--- to the private area to work.                                    --->
 	<cfscript>
         APPLICATION.ds = "<datasource>";
-		APPLICATION.dbkey1 = '<key1>';
-		APPLICATION.dbalg1 = '<alg1>';
-		APPLICATION.dbenc1 = '<enc1>';
-		APPLICATION.dbkey2 = '<key2>';
-		APPLICATION.dbalg2 = '<alg2>';
-		APPLICATION.dbenc2 = '<enc2>';
-		APPLICATION.dbkey3 = '<key3>';
-		APPLICATION.dbalg3 = '<alg3>';
-		APPLICATION.dbenc3 = '<enc3>';
-		APPLICATION.siteName = 'UGS List';
-		APPLICATION.siteLongName = 'User Group Speaker List';
+		APPLICATION.dbkey1 = '<key>';
+		APPLICATION.dbalg1 = '<algorithm>';
+		APPLICATION.dbenc1 = '<encoding>';
+		APPLICATION.dbkey2 = '<key>';
+		APPLICATION.dbalg2 = '<algorithm>';
+		APPLICATION.dbenc2 = '<encoding>';
+		APPLICATION.dbkey3 = '<key>';
+		APPLICATION.dbalg3 = '<algorithm>';
+		APPLICATION.dbenc3 = '<encoding>';
+		APPLICATION.siteName = 'cfSpeakerList';
+		APPLICATION.siteLongName = 'cfSpeakerList';
 		APPLICATION.debugOn = true;
 		APPLICATION.iusTable = 'speakers';
 		APPLICATION.iusColumn = 'speakerKey';
-		APPLICATION.fromEmail = 'nospam@ugslist.tld';
+		APPLICATION.fromEmail = 'noreply@domain.tld';
 		APPLICATION.bccEmail = '';
-		APPLICATION.abuseEmail = 'abuse@ugslist.tld';
+		APPLICATION.abuseEmail = 'abuse@domain.tld';
 		APPLICATION.verificationTimeout = 12;
 		APPLICATION.cookieName = 'cfslid';
 		APPLICATION.sessionTimeout = 30;
+		APPLICATION.sendSpeakerFeedbackRequests = true;
+		APPLICATION.sendEventFeedbackRequests = true;
+		APPLICATION.daysToFeedbackRequest = 2;
+		APPLICATION.showRequestStats = true;
 		APPLICATION.utils = CreateObject('component','core.utils.utils');	
 		APPLICATION.urlZero = APPLICATION.utils.dataEnc(value = 0, mode = 'url');
 		APPLICATION.formZero = APPLICATION.utils.dataEnc(value = 0, mode = 'form');
@@ -57,9 +61,15 @@ THIS.mappings["/core"]=ExpandPath('core');
 	
 	<!--- INITIALIZE OBJECTS --->
   	<cfset datasourceObject = createObject('component','core.beans.Datasource').init(DSN = APPLICATION.ds) />
+	<cfset APPLICATION.eventFeedbackDAO = createObject('component','core.dao.EventFeedbackDAO').init(datasource = datasourceObject) /> 
 	<cfset APPLICATION.speakerDAO = createObject('component','core.dao.SpeakerDAO').init(datasource = datasourceObject) />
+	<cfset APPLICATION.speakerFeedbackDAO = createObject('component','core.dao.SpeakerFeedbackDAO').init(datasource = datasourceObject) />
+	<cfset APPLICATION.speakerRequestDAO = createObject('component','core.dao.SpeakerRequestDAO').init(datasource = datasourceObject) /> 
 	<cfset APPLICATION.userDAO = createObject('component','core.dao.UserDAO').init(datasource = datasourceObject) />
+	<cfset APPLICATION.eventFeedbackGateway = createObject('component','core.gateways.EventFeedbackGateway').init(datasource = datasourceObject) /> 
 	<cfset APPLICATION.speakerGateway = createObject('component','core.gateways.SpeakerGateway').init(datasource = datasourceObject) />
+	<cfset APPLICATION.speakerFeedbackGateway = createObject('component','core.gateways.SpeakerFeedbackGateway').init(datasource = datasourceObject) /> 
+	<cfset APPLICATION.speakerRequestGateway = createObject('component','core.gateways.SpeakerRequestGateway').init(datasource = datasourceObject) /> 
 	<cfset APPLICATION.userGateway = createObject('component','core.gateways.UserGateway').init(datasource = datasourceObject) /> 
 	<cfset APPLICATION.iusUtil = createObject('component','core.utils.IrreversibleURLShortener').init(datasource = datasourceObject) />
 	<cfset APPLICATION.countryGateway = createObject('component','core.gateways.CountryGateway').init(datasource = datasourceObject) /> 
@@ -148,10 +158,16 @@ THIS.mappings["/core"]=ExpandPath('core');
 	
 </cffunction>
 <cffunction name="onRequestEnd">
-	<!--- set up another tick counter --->
-	<cfset tickEnd = GetTickCount()>
-	<!--- calculate ticks it took to process this page --->
-	<cfset totalTicks = tickEnd - tickBegin>
+	<!--- check if debug is on --->
+	<cfif APPLICATION.debugOn>
+		<!--- it is, set up another tick counter --->
+		<cfset tickEnd = GetTickCount()>
+		<!--- calculate ticks it took to process this page --->
+		<cfset totalTicks = tickEnd - tickBegin>			
+		<!--- log the page execution time --->
+		<cflog text="#CGI.SCRIPT_NAME# took #totalTicks/1000# ms to execute." type="Information" file="#THIS.name#" thread="yes" date="yes" time="yes" application="yes">
+	<!--- end checking if debug is on --->
+	</cfif>
 </cffunction>
 <!---              --->
 <!--- onSessionEnd --->
@@ -159,9 +175,6 @@ THIS.mappings["/core"]=ExpandPath('core');
 <cffunction name="onSessionEnd" returnType="void">
 	<cfargument name="SessionScope" required=True/>
 	<cfargument name="ApplicationScope" required=False/>
-	<cflock scope="Application" timeout="5" type="Exclusive">
-		<cfset APPLICATION.Sessions = APPLICATION.Sessions - 1>
-	</cflock>
 </cffunction>
 <!---                  --->
 <!--- onApplicationEnd --->

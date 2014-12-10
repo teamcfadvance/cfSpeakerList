@@ -280,6 +280,24 @@ INSERT INTO `countries` (`countryId`, `country`) VALUES
 -- --------------------------------------------------------
 
 --
+-- Table structure for table `event_feedback`
+--
+
+CREATE TABLE IF NOT EXISTS `event_feedback` (
+`eventFeedbackId` int(11) NOT NULL,
+  `speakerId` int(11) NOT NULL,
+  `speakerRequestId` int(11) NOT NULL,
+  `venueQuality` tinyint(1) NOT NULL,
+  `difficulty` tinyint(1) NOT NULL,
+  `avQuality` tinyint(1) NOT NULL,
+  `applicability` tinyint(1) NOT NULL,
+  `recommend` tinyint(1) NOT NULL,
+  `review` text COLLATE utf8_bin NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
 -- Table structure for table `speakers`
 --
 
@@ -294,14 +312,62 @@ CREATE TABLE `speakers` (
   `showPhone` tinyint(1) NOT NULL DEFAULT '0',
   `twitter` varchar(2048) DEFAULT NULL,
   `showTwitter` tinyint(1) NOT NULL DEFAULT '0',
+  `blog` varchar(512) NULL,
+  `bio` text COLLATE utf8_bin,
   `specialties` varchar(2048) NOT NULL,
   `locations` varchar(2048) NOT NULL,
+  `majorCity` varchar(255) NULL,
+  `isOnline` tinyint(1) NOT NULL DEFAULT '0',
   `isACP` tinyint(1) NOT NULL DEFAULT '0',
   `isAEL` tinyint(1) NOT NULL DEFAULT '0',
   `isUGM` tinyint(1) NOT NULL DEFAULT '0',
   `isOther` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`speakerId`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `speaker_feedback`
+--
+
+CREATE TABLE IF NOT EXISTS `speaker_feedback` (
+  `speakerFeedbackId` int(11) NOT NULL AUTO_INCREMENT,
+  `speakerId` int(11) NOT NULL,
+  `speakerRequestId` int(11) NOT NULL,
+  `punctuality` tinyint(1) NOT NULL,
+  `preparedness` tinyint(1) NOT NULL,
+  `knowledge` tinyint(1) NOT NULL,
+  `quality` tinyint(1) NOT NULL,
+  `satisfaction` tinyint(1) NOT NULL,
+  `recommend` tinyint(1) NOT NULL,
+  `review` text COLLATE utf8_bin NOT NULL,
+  PRIMARY KEY (`speakerFeedbackId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1 ;
+
+-- --------------------------------------------------------
+
+--
+-- Table structure for table `speaker_requests`
+--
+
+CREATE TABLE IF NOT EXISTS `speaker_requests` (
+  `speakerRequestId` int(11) NOT NULL AUTO_INCREMENT,
+  `speakerId` int(11) NOT NULL,
+  `requestedBy` varchar(2048) COLLATE utf8_bin NOT NULL,
+  `organization` varchar(255) COLLATE utf8_bin NOT NULL,
+  `email` varchar(2048) COLLATE utf8_bin NOT NULL,
+  `eventName` varchar(255) COLLATE utf8_bin NOT NULL,
+  `venue` varchar(255) COLLATE utf8_bin NOT NULL,
+  `eventDate` date NOT NULL,
+  `eventTime` varchar(255) COLLATE utf8_bin NOT NULL,
+  `attendees` int(11) NOT NULL,
+  `topic` varchar(255) COLLATE utf8_bin NOT NULL,
+  `isAccepted` tinyint(1) NOT NULL DEFAULT '0',
+  `isCompleted` tinyint(1) NOT NULL DEFAULT '0',
+  `isActive` tinyint(1) NOT NULL DEFAULT '1',
+  PRIMARY KEY (`speakerRequestId`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_bin AUTO_INCREMENT=1;
 
 -- --------------------------------------------------------
 
@@ -385,7 +451,7 @@ CREATE TABLE `users` (
   `role` varchar(255) NOT NULL,
   `isActive` tinyint(1) NOT NULL,
   PRIMARY KEY (`userId`)
-) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=2 ;
+) ENGINE=InnoDB  DEFAULT CHARSET=latin1 AUTO_INCREMENT=1 ;
 
 -- --------------------------------------------------------
 

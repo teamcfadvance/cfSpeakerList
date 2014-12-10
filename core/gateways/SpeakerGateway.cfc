@@ -32,6 +32,8 @@
   <cfargument name="twitter" type="any" required="false" default="" hint="I am the twitter string to return records for." />
   <cfargument name="specialties" type="any" required="false" default="" hint="I am the specialties string to return records for." />
   <cfargument name="locations" type="any" required="false" default="" hint="I am the locations string to return records for." />
+  <cfargument name="majorCity" type="any" required="false" default="" hint="I am the major city string to return records for." />
+  <cfargument name="isOnline" type="any" required="false" default="" hint="I am the isOnline boolean to return records for." />
   <cfargument name="isACP" type="any" required="false" default="" hint="I am the isACP boolean to return records for." />
   <cfargument name="isAEL" type="any" required="false" default="" hint="I am the isAEL boolean to return records for." />
   <cfargument name="isUGM" type="any" required="false" default="" hint="I am the isUGM boolean to return records for." />
@@ -65,6 +67,12 @@
     <cfif IsDefined('ARGUMENTS.locations') AND ARGUMENTS.locations NEQ "">
 		<cfset thisFilter.locations = ARGUMENTS.locations />
     </cfif>
+    <cfif IsDefined('ARGUMENTS.majorCity') AND ARGUMENTS.majorCity NEQ "">
+		<cfset thisFilter.majorCity = ARGUMENTS.majorCity />
+    </cfif>
+    <cfif IsDefined('ARGUMENTS.isOnline') AND ARGUMENTS.isOnline NEQ "">
+		<cfset thisFilter.isOnline = ARGUMENTS.isOnline />
+    </cfif>
     <cfif IsDefined('ARGUMENTS.isACP') AND ARGUMENTS.isACP NEQ "">
 		<cfset thisFilter.isACP = ARGUMENTS.isACP />
     </cfif>
@@ -96,6 +104,7 @@
 <!--- SIMPLE SEARCH --->
 <cffunction name="simpleSearch" access="public" output="false" returntype="query" hint="I run a simple search of all terms provided across multiple speaker fields.">
 	<cfargument name="searchTerm" type="string" required="true" hint="I am the search term to use for this search.">
+	<cfargument name="isOnline" type="string" required="false" default="false" hint="I am a flag to determine if only online speakers are returned." />
 	<cfargument name="cache" type="boolean" required="false" default="false" hint="I am a flag to determine if this query should be cached." />
 	<cfargument name="cacheTime" type="any" required="false" default="#CreateTimeSpan(0,0,0,0)#" hint="I am the timespan to cache this query (Use CreateTimeSpan())." />
 	<cfargument name="orderBy" type="string" required="false" default="lastName, firstName" hint="I am the column(s) (and optional ordinal ASC or DESC) that records should be ordered by." />
@@ -117,7 +126,7 @@
 	<!--- query (and possibly cache) the list of speakers by looping through the search term(s) --->
 	<!--- for each of the first name, last name, twitter handle, specialties and locations --->
 	<cfquery name="#queryName#" datasource="#variables.instance.datasource.getDSN()#" username="#variables.instance.datasource.getUsername()#" password="#variables.instance.datasource.getPassword()#" cachedwithin="#ARGUMENTS.cacheTime#">
-		SELECT s.speakerKey, s.email, s.firstName, s.lastName, s.specialties, s.locations
+		SELECT s.speakerKey, s.email, s.firstName, s.lastName, s.specialties, s.locations, s.majorCity, s.isOnline
 		FROM speakers s
 		LEFT JOIN users u ON u.userId = s.userId
 		WHERE ( u.role = <cfqueryparam value="speaker" cfsqltype="cf_sql_varchar" />
@@ -145,12 +154,16 @@
 		</cfloop>
 		)
 		OR ( 
-		<!--- locations loop --->
-		<cfloop from="1" to="#ListLen(ARGUMENTS.searchTerm,' ')#" index="iX">
-			LOWER(s.locations) LIKE <cfqueryparam value="%#LCase(ListGetAt(ARGUMENTS.searchTerm,iX,' '))#%" cfsqltype="cf_sql_varchar" />
-			<cfif NOT iX EQ ListLen(ARGUMENTS.searchTerm,' ')> OR </cfif>
-		</cfloop>
+		<!--- locations --->
+			LOWER(s.locations) LIKE <cfqueryparam value="%#LCase(ARGUMENTS.searchTerm)#%" cfsqltype="cf_sql_varchar" />	
+		)
+		OR ( 
+		<!--- Major City --->
+			LOWER(s.majorCity) LIKE <cfqueryparam value="%#LCase(ARGUMENTS.searchTerm)#%" cfsqltype="cf_sql_varchar" />	
 		))
+		<cfif ARGUMENTS.isOnline>
+			AND s.isOnline = <cfqueryparam value="1" cfsqltype="cf_sql_tinyint" />
+		</cfif>
 		ORDER BY #ARGUMENTS.orderBy#
 	</cfquery>
 	
@@ -161,6 +174,7 @@
 <!--- COMPLEX SEARCH --->
 <cffunction name="complexSearch" access="public" output="false" returntype="query" hint="I run a complex AND search of all terms provided across multiple speaker fields.">
 	<cfargument name="searchTerms" type="string" required="true" hint="I am the search terms list to use for this search.">
+	<cfargument name="isOnline" type="string" required="false" default="false" hint="I am a flag to determine if only online speakers are returned." />
 	<cfargument name="cache" type="boolean" required="false" default="false" hint="I am a flag to determine if this query should be cached." />
 	<cfargument name="cacheTime" type="any" required="false" default="#CreateTimeSpan(0,0,0,0)#" hint="I am the timespan to cache this query (Use CreateTimeSpan())." />
 	<cfargument name="orderBy" type="string" required="false" default="lastName, firstName" hint="I am the column(s) (and optional ordinal ASC or DESC) that records should be ordered by." />
@@ -183,7 +197,7 @@
 	<!--- query (and possibly cache) the list of speakers by looping through the search term(s) --->
 	<!--- for each of the first name, last name, twitter handle, specialties and locations --->
 	<cfquery name="#queryName#" datasource="#variables.instance.datasource.getDSN()#" username="#variables.instance.datasource.getUsername()#" password="#variables.instance.datasource.getPassword()#" cachedwithin="#ARGUMENTS.cacheTime#">
-		SELECT s.speakerKey, s.email, s.firstName, s.lastName, s.specialties, s.locations
+		SELECT s.speakerKey, s.email, s.firstName, s.lastName, s.specialties, s.locations, s.isOnline
 		FROM speakers s
 		LEFT JOIN users u ON u.userId = s.userId
 		WHERE ( u.role = <cfqueryparam value="speaker" cfsqltype="cf_sql_varchar" />
@@ -213,14 +227,18 @@
 			</cfloop>
 			)
 			OR ( 
-			<!--- locations loop --->
-			<cfloop from="1" to="#ListLen(ListGetAt(ARGUMENTS.searchTerms,iY),' ')#" index="iX">
-				LOWER(s.locations) LIKE <cfqueryparam value="%#LCase(ListGetAt(ListGetAt(ARGUMENTS.searchTerms,iY),iX,' '))#%" cfsqltype="cf_sql_varchar" />
-				<cfif NOT iX EQ ListLen(ListGetAt(ARGUMENTS.searchTerms,iY),' ')> OR </cfif>
-			</cfloop>
+			<!--- locations --->
+				LOWER(s.locations) LIKE <cfqueryparam value="%#LCase(ARGUMENTS.searchTerm)#%" cfsqltype="cf_sql_varchar" />	
+			)
+			OR ( 
+			<!--- Major City --->
+				LOWER(s.majorCity) LIKE <cfqueryparam value="%#LCase(ARGUMENTS.searchTerm)#%" cfsqltype="cf_sql_varchar" />	
 			))
 		<!--- end looping through 'AND' terms --->
 		</cfloop>
+		<cfif ARGUMENTS.isOnline>
+			AND s.isOnline = <cfqueryparam value="1" cfsqltype="cf_sql_tinyint" />
+		</cfif>
 		ORDER BY #ARGUMENTS.orderBy#
 	</cfquery>
 		
@@ -239,7 +257,7 @@
 	</cfloop>
 	<cfset cachedQueryName = 'db' & Hash(cachedQueryName,'MD5') />
 	<cfquery name="#cachedQueryName#" datasource="#variables.instance.datasource.getDSN()#" username="#variables.instance.datasource.getUsername()#" password="#variables.instance.datasource.getPassword()#" cachedwithin="#ARGUMENTS.filter.cacheTime#">
-		SELECT s.speakerKey, s.userId, s.firstName, s.lastName, s.email, s.phone, s.showPhone, s.twitter, s.showTwitter, s.specialties, s.locations, s.isACP, s.isAEL, s.isUGM, s.isOther
+		SELECT s.speakerKey, s.userId, s.firstName, s.lastName, s.email, s.phone, s.showPhone, s.twitter, s.showTwitter, s.blog, s.bio, s.specialties, s.locations, s.majorCity, s.isOnline, s.isACP, s.isAEL, s.isUGM, s.isOther
 		FROM speakers s
 		LEFT JOIN users u ON u.userId = s.userId
 		WHERE ( u.role = <cfqueryparam value="speaker" cfsqltype="cf_sql_varchar" />
@@ -298,7 +316,7 @@
   <cfset var qGetSpeakers = '' />
 
   <cfquery name="qGetSpeakers" datasource="#variables.instance.datasource.getDSN()#" username="#variables.instance.datasource.getUsername()#" password="#variables.instance.datasource.getPassword()#">
-		SELECT s.speakerKey, s.userId, s.firstName, s.lastName, s.email, s.phone, s.showPhone, s.twitter, s.showTwitter, s.specialties, s.locations, s.isACP, s.isAEL, s.isUGM, s.isOther
+		SELECT s.speakerKey, s.userId, s.firstName, s.lastName, s.email, s.phone, s.showPhone, s.twitter, s.showTwitter, s.blog, s.bio, s.specialties, s.locations, s.majorCity, s.isOnline, s.isACP, s.isAEL, s.isUGM, s.isOther
 		FROM speakers s
 		LEFT JOIN users u ON u.userId = s.userId
 		WHERE ( u.role = <cfqueryparam value="speaker" cfsqltype="cf_sql_varchar" />

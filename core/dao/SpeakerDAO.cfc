@@ -32,8 +32,12 @@
 		  showPhone,
 		  twitter,
 		  showTwitter,
+		  blog,
+		  bio,
 		  specialties,
 		  locations,
+		  majorCity,
+		  isOnline,
 		  isACP,
 		  isAEL,
 		  isUGM,
@@ -48,8 +52,12 @@
 		  <cfqueryparam value="#ARGUMENTS.speaker.getShowPhone()#" cfsqltype="cf_sql_bit" />,
 		  <cfqueryparam value="#APPLICATION.utils.dataEnc(ARGUMENTS.speaker.getTwitter())#" cfsqltype="cf_sql_varchar" />,
 		  <cfqueryparam value="#ARGUMENTS.speaker.getShowTwitter()#" cfsqltype="cf_sql_bit" />,
+		  <cfqueryparam value="#ARGUMENTS.speaker.getBlog()#" cfsqltype="cf_sql_varchar" />,
+		  <cfqueryparam value="#APPLICATION.utils.dataEnc(ARGUMENTS.speaker.getBio())#" cfsqltype="cf_sql_varchar" />,
 		  <cfqueryparam value="#ARGUMENTS.speaker.getSpecialties()#" cfsqltype="cf_sql_varchar" />,
 		  <cfqueryparam value="#ARGUMENTS.speaker.getLocations()#" cfsqltype="cf_sql_varchar" />,
+		  <cfqueryparam value="#ARGUMENTS.speaker.getMajorCity()#" cfsqltype="cf_sql_varchar" />,
+		  <cfqueryparam value="#ARGUMENTS.speaker.getIsOnline()#" cfsqltype="cf_sql_bit" />,
 		  <cfqueryparam value="#ARGUMENTS.speaker.getIsACP()#" cfsqltype="cf_sql_bit" />,
 		  <cfqueryparam value="#ARGUMENTS.speaker.getIsAEL()#" cfsqltype="cf_sql_bit" />,
 		  <cfqueryparam value="#ARGUMENTS.speaker.getIsUGM()#" cfsqltype="cf_sql_bit" />,
@@ -73,7 +81,7 @@
   <cfset var speakerObject = '' />
   <cftry>
   <cfquery name="qGetSpeaker" datasource="#variables.instance.datasource.getDSN()#" username="#variables.instance.datasource.getUsername()#" password="#variables.instance.datasource.getPassword()#">
-	SELECT speakerId, speakerKey, userId, firstName, lastName, email, phone, showPhone, twitter, showTwitter, specialties, locations, isACP, isAEL, isUGM, isOther
+	SELECT speakerId, speakerKey, userId, firstName, lastName, email, phone, showPhone, twitter, showTwitter, blog, bio, specialties, locations, majorCity, isOnline, isACP, isAEL, isUGM, isOther
 	FROM speakers
 	WHERE speakerId = <cfqueryparam value="#ARGUMENTS.id#" cfsqltype="cf_sql_integer" />
   </cfquery>
@@ -95,8 +103,12 @@
 		showPhone	= qGetSpeaker.showPhone,
 		twitter    	= APPLICATION.utils.dataDec(qGetSpeaker.twitter),
 		showTwitter	= qGetSpeaker.showTwitter,
+		blog 		= qGetSpeaker.blog,
+		bio 		= APPLICATION.utils.dataDec(qGetSpeaker.bio),
 		specialties	= qGetSpeaker.specialties,
 		locations  	= qGetSpeaker.locations,
+		majorCity 	= qGetSpeaker.majorCity,
+		isOnline 	= qGetSpeaker.isOnline,
 		isACP      	= qGetSpeaker.isACP,
 		isAEL      	= qGetSpeaker.isAEL,
 		isUGM      	= qGetSpeaker.isUGM,
@@ -114,7 +126,7 @@
   <cfset var speakerObject = '' />
   <cftry>
   <cfquery name="qGetSpeaker" datasource="#variables.instance.datasource.getDSN()#" username="#variables.instance.datasource.getUsername()#" password="#variables.instance.datasource.getPassword()#">
-	SELECT speakerId, speakerKey, userId, firstName, lastName, email, phone, showPhone, twitter, showTwitter, specialties, locations, isACP, isAEL, isUGM, isOther
+	SELECT speakerId, speakerKey, userId, firstName, lastName, email, phone, showPhone, twitter, showTwitter, blog, bio, specialties, locations, majorCity, isOnline, isACP, isAEL, isUGM, isOther
 	FROM speakers
 	WHERE speakerKey = <cfqueryparam value="#ARGUMENTS.key#" cfsqltype="cf_sql_varchar" />
   </cfquery>
@@ -136,8 +148,12 @@
 		showPhone	= qGetSpeaker.showPhone,
 		twitter    	= APPLICATION.utils.dataDec(qGetSpeaker.twitter),
 		showTwitter	= qGetSpeaker.showTwitter,
+		blog 		= qGetSpeaker.blog,
+		bio 		= APPLICATION.utils.dataDec(qGetSpeaker.bio),
 		specialties	= qGetSpeaker.specialties,
 		locations  	= qGetSpeaker.locations,
+		majorCity 	= qGetSpeaker.majorCity,
+		isOnline 	= qGetSpeaker.isOnline,
 		isACP      	= qGetSpeaker.isACP,
 		isAEL      	= qGetSpeaker.isAEL,
 		isUGM      	= qGetSpeaker.isUGM,
@@ -155,7 +171,7 @@
   <cfset var speakerObject = '' />
   <cftry>
   <cfquery name="qGetSpeaker" datasource="#variables.instance.datasource.getDSN()#" username="#variables.instance.datasource.getUsername()#" password="#variables.instance.datasource.getPassword()#">
-	SELECT speakerId, speakerKey, userId, firstName, lastName, email, phone, showPhone, twitter, showTwitter, specialties, locations, isACP, isAEL, isUGM, isOther
+	SELECT speakerId, speakerKey, userId, firstName, lastName, email, phone, showPhone, twitter, showTwitter, blog, bio, specialties, locations, majorCity, isOnline, isACP, isAEL, isUGM, isOther
 	FROM speakers
 	WHERE userId = <cfqueryparam value="#ARGUMENTS.id#" cfsqltype="cf_sql_integer" />
   </cfquery>
@@ -177,8 +193,12 @@
 		showPhone	= qGetSpeaker.showPhone,
 		twitter    	= APPLICATION.utils.dataDec(qGetSpeaker.twitter),
 		showTwitter	= qGetSpeaker.showTwitter,
+		blog 		= qGetSpeaker.blog,
+		bio 		= APPLICATION.utils.dataDec(qGetSpeaker.bio),
 		specialties	= qGetSpeaker.specialties,
 		locations  	= qGetSpeaker.locations,
+		majorCity 	= qGetSpeaker.majorCity,
+		isOnline 	= qGetSpeaker.isOnline,
 		isACP      	= qGetSpeaker.isACP,
 		isAEL      	= qGetSpeaker.isAEL,
 		isUGM      	= qGetSpeaker.isUGM,
@@ -205,8 +225,12 @@
 	  showPhone = <cfqueryparam value="#ARGUMENTS.speaker.getShowPhone()#" cfsqltype="cf_sql_bit" />,
 	  twitter = <cfqueryparam value="#APPLICATION.utils.dataEnc(ARGUMENTS.speaker.getTwitter())#" cfsqltype="cf_sql_varchar" />,
 	  showTwitter = <cfqueryparam value="#ARGUMENTS.speaker.getShowTwitter()#" cfsqltype="cf_sql_bit" />,
+	  blog = <cfqueryparam value="#ARGUMENTS.speaker.getBlog()#" cfsqltype="cf_sql_varchar" />,
+	  bio = <cfqueryparam value="#APPLICATION.utils.dataEnc(ARGUMENTS.speaker.getBio())#" cfsqltype="cf_sql_varchar" />,
 	  specialties = <cfqueryparam value="#ARGUMENTS.speaker.getSpecialties()#" cfsqltype="cf_sql_varchar" />,
 	  locations = <cfqueryparam value="#ARGUMENTS.speaker.getLocations()#" cfsqltype="cf_sql_varchar" />,
+	  majorCity = <cfqueryparam value="#ARGUMENTS.speaker.getMajorCity()#" cfsqltype="cf_sql_varchar" />,
+	  isOnline = <cfqueryparam value="#ARGUMENTS.speaker.getIsOnline()#" cfsqltype="cf_sql_bit" />,
 	  isACP = <cfqueryparam value="#ARGUMENTS.speaker.getIsACP()#" cfsqltype="cf_sql_bit" />,
 	  isAEL = <cfqueryparam value="#ARGUMENTS.speaker.getIsAEL()#" cfsqltype="cf_sql_bit" />,
 	  isUGM = <cfqueryparam value="#ARGUMENTS.speaker.getIsUGM()#" cfsqltype="cf_sql_bit" />,

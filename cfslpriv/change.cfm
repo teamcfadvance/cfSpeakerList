@@ -97,8 +97,9 @@
 
     <title><cfoutput>#APPLICATION.siteName#</cfoutput> &raquo; Dashboard &raquo; Change Password</title>
 
-    <link href="../css/bootstrap.min.css" rel="stylesheet">
-    <link href="../css/jumbotron.css" rel="stylesheet">
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <link href="//cdn.vsgcom.net/css/jumbotron.css" rel="stylesheet">
+    <link href="//cdn.vsgcom.net/css/strength-meter.min.css" rel="stylesheet">
 
     <!--- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries --->
     <!--[if lt IE 9]>
@@ -172,7 +173,7 @@
 		<div class="form-group">
 		  <label class="col-md-4 control-label" for="nPassword">New Password</label>
 		  <div class="col-md-4">
-			<input id="nPassword" name="nPassword" placeholder="Min 8 chars using each of a-z, A-Z and 0-9" class="form-control input-md" required type="password">
+			<input id="nPassword" name="nPassword" placeholder="My$tR0ngP@$sW0Rd#Year( Now() )#" class="form-control input-md" required type="password">
 		  </div>
 		</div>
 		
@@ -204,7 +205,13 @@
       <cfinclude template="../includes/footer.cfm" />
     </div> <!--- /container --->
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-    <script src="../js/bootstrap.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+    <script src="//cdn.vsgcom.net/js/strength-meter.min.js"></script>
+    <script>
+    	$(function() {
+    		$('#nPassword').strength({showMeter: true, toggleMask: false});
+    	})
+    </script>
   </body>
 </html>

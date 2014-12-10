@@ -7,8 +7,12 @@
 <cfproperty name="email" type="string" default="" />
 <cfproperty name="phone" type="string" default="" />
 <cfproperty name="twitter" type="string" default="" />
+<cfproperty name="blog" type="string" default="" />
+<cfproperty name="bio" type="string" default="" />
 <cfproperty name="specialties" type="string" default="" />
 <cfproperty name="locations" type="string" default="" />
+<cfproperty name="majorCity" type="string" default="" />
+<cfproperty name="isOnline" type="string" default="" />
 <cfproperty name="isACP" type="string" default="" />
 <cfproperty name="isAEL" type="string" default="" />
 <cfproperty name="isUGM" type="string" default="" />
@@ -26,8 +30,12 @@
 	showPhone = '',
 	twitter = '',
 	showTwitter = '',
+  blog = '',
+  bio = '',
 	specialties = '',
 	locations = '',
+  majorCity = '',
+  isOnline = '',
 	isACP = '',
 	isAEL = '',
 	isUGM = '',
@@ -46,8 +54,12 @@
   <cfargument name="showPhone" type="string" required="true" default="" hint="" />
   <cfargument name="twitter" type="string" required="true" default="" hint="" />
   <cfargument name="showTwitter" type="string" required="true" default="" hint="" />
+  <cfargument name="blog" type="string" required="true" default="" hint="" />
+  <cfargument name="bio" type="string" required="true" default="" hint="" />
   <cfargument name="specialties" type="string" required="true" default="" hint="" />
   <cfargument name="locations" type="string" required="true" default="" hint="" />
+  <cfargument name="majorCity" type="string" required="true" default="" hint="" />
+  <cfargument name="isOnline" type="string" required="true" default="" hint="" />
   <cfargument name="isACP" type="string" required="true" default="" hint="" />
   <cfargument name="isAEL" type="string" required="true" default="" hint="" />
   <cfargument name="isUGM" type="string" required="true" default="" hint="" />
@@ -64,8 +76,12 @@
 	setShowPhone(ARGUMENTS.showPhone);
 	setTwitter(ARGUMENTS.twitter);
 	setShowTwitter(ARGUMENTS.showTwitter);
+  setBlog(ARGUMENTS.blog);
+  setBio(ARGUMENTS.bio);
 	setSpecialties(ARGUMENTS.specialties);
 	setLocations(ARGUMENTS.locations);
+  setMajorCity(ARGUMENTS.majorCity);
+  setIsOnline(ARGUMENTS.isOnline);
 	setIsACP(ARGUMENTS.isACP);
 	setIsAEL(ARGUMENTS.isAEL);
 	setIsUGM(ARGUMENTS.isUGM);
@@ -125,6 +141,16 @@
   <cfset variables.instance.showTwitter = ARGUMENTS.showTwitter />
 </cffunction>
 
+<cffunction name="setBlog" access="public" output="false" hint="I set the blog value into the variables.instance scope.">
+  <cfargument name="blog" type="string" required="true" default="" hint="I am the blog value." />
+  <cfset variables.instance.blog = ARGUMENTS.blog />
+</cffunction>
+
+<cffunction name="setBio" access="public" output="false" hint="I set the bio value into the variables.instance scope.">
+  <cfargument name="bio" type="string" required="true" default="" hint="I am the bio value." />
+  <cfset variables.instance.bio = ARGUMENTS.bio />
+</cffunction>
+
 <cffunction name="setSpecialties" access="public" output="false" hint="I set the specialties value into the variables.instance scope.">
   <cfargument name="specialties" type="string" required="true" default="" hint="I am the specialties value." />
   <cfset variables.instance.specialties = ARGUMENTS.specialties />
@@ -133,6 +159,16 @@
 <cffunction name="setLocations" access="public" output="false" hint="I set the locations value into the variables.instance scope.">
   <cfargument name="locations" type="string" required="true" default="" hint="I am the locations value." />
   <cfset variables.instance.locations = ARGUMENTS.locations />
+</cffunction>
+
+<cffunction name="setMajorCity" access="public" output="false" hint="I set the majorCity value into the variables.instance scope.">
+  <cfargument name="majorCity" type="string" required="true" default="" hint="I am the majorCity value." />
+  <cfset variables.instance.majorCity = ARGUMENTS.majorCity />
+</cffunction>
+
+<cffunction name="setIsOnline" access="public" output="false" hint="I set the isOnline value into the variables.instance scope.">
+  <cfargument name="isOnline" type="string" required="true" default="" hint="I am the isOnline value." />
+  <cfset variables.instance.isOnline = ARGUMENTS.isOnline />
 </cffunction>
 
 <cffunction name="setIsACP" access="public" output="false" hint="I set the isACP value into the variables.instance scope.">
@@ -196,12 +232,28 @@
   <cfreturn variables.instance.showTwitter />
 </cffunction>
 
+<cffunction name="getBlog" access="public" output="false" returntype="string" hint="I return the blog value.">
+  <cfreturn variables.instance.blog />
+</cffunction>
+
+<cffunction name="getBio" access="public" output="false" returntype="string" hint="I return the bio value.">
+  <cfreturn variables.instance.bio />
+</cffunction>
+
 <cffunction name="getSpecialties" access="public" output="false" returntype="string" hint="I return the specialties value.">
   <cfreturn variables.instance.specialties />
 </cffunction>
 
 <cffunction name="getLocations" access="public" output="false" returntype="string" hint="I return the locations value.">
   <cfreturn variables.instance.locations />
+</cffunction>
+
+<cffunction name="getMajorCity" access="public" output="false" returntype="string" hint="I return the majorCity value.">
+  <cfreturn variables.instance.majorCity />
+</cffunction>
+
+<cffunction name="getIsOnline" access="public" output="false" returntype="string" hint="I return the isOnline value.">
+  <cfreturn variables.instance.isOnline />
 </cffunction>
 
 <cffunction name="getIsACP" access="public" output="false" returntype="string" hint="I return the isACP value.">

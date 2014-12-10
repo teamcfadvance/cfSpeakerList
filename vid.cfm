@@ -18,16 +18,19 @@
 		<cfif NOT IsDate(ts) OR DateDiff('h',ts,Now()) GT APPLICATION.verificationTimeout>
 			<!--- invalid date or already timed out, set an error message --->
 			<cfset errorMsg = '<p>We&apos;re sorry, but your verification email has expired.' />
+			<cfset panelClass = "panel-danger" />
 			<!--- check if we have a valid speaker object, and the previous mail timestamp is less than 7 days old --->
 			<cfif Len(speakerObj.getSpeakerId()) AND NOT DateDiff('h',ts,Now()) GT 167>
 				<!--- it is, resend the verification email --->
 				<cfset APPLICATION.utils.emailVerification(email = speakerObj.getEmail(), key = speakerObj.getSpeakerKey()) />
 				<!--- and notify the user the verification has been resent --->
 				<cfset errorMsg = errorMsg & ' We have sent another verification email to you at the email address you provided when you signed up. Please be sure to click the link in this newer email before the verification expiration in #APPLICATION.verificationTimeout# hours.</p>' />
+				<cfset panelClass = "panel-info" />
 			<!--- otherwise --->
 			<cfelse>
 				<!--- verification timestamp exceeds 7 days, notify the user to contact the list admins directly --->
 				<cfset errorMsg = errorMsg & ' We are unable to resend another verification email at this time. Please contact us at <a href="mailto:#APPLICATION.emailFrom#">#APPLICATION.emailFrom#</a> to let us know you&apos;re having difficulties and we can assist in getting your account verified and your information published.</p>' />
+				<cfset panelClass = "panel-danger" />
 			<!--- end checking if we have a valid speaker object, and the previous mail timestamp is less than 7 days old --->
 			</cfif>			
 		<!--- otherwise --->
@@ -36,6 +39,7 @@
 			<cfif NOT Len(speakerObj.getSpeakerId())>
 				<!--- it isn't, set an error message --->
 				<cfset errorMsg = '<p>We&apos;re sorry, but we did not receive the values we expected in your request. Please try your request again. If you continue to experience issues, please try to copy and paste the provided URL into your browser, ensure there are no line breaks.</p>' />
+				<cfset panelClass = "panel-danger" />
 			<!--- otherwise --->
 			<cfelse>
 				<!--- get a user object from the speaker object's user id --->
@@ -56,6 +60,7 @@
 	<cfset pathLen = 0 />
 	<!--- the path equals the script name, so notify user to check their email --->
 	<cfset errorMsg = '<p>An email has been sent to you at the email address you provided during sign-up. You must click the link within that email within the next #APPLICATION.verificationTimeout# hours to have your speaker information published in our database.</p>' />
+	<cfset panelClass = "panel-info" />
 <!--- end checking if the path equals the script name --->
 </cfif>
 
@@ -70,8 +75,8 @@
     <link rel="shortcut icon" href="<cfoutput>#RepeatString('../',pathLen)#</cfoutput>favicon.ico">
 
     <title><cfoutput>#APPLICATION.siteName#</cfoutput> &raquo; Email Verification</title>
-    <link href="<cfoutput>#RepeatString('../',pathLen)#</cfoutput>css/bootstrap.min.css" rel="stylesheet">
-    <link href="<cfoutput>#RepeatString('../',pathLen)#</cfoutput>css/jumbotron.css" rel="stylesheet">
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <link href="//cdn.vsgcom.net/css/jumbotron.css" rel="stylesheet">
 
     <!--- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries --->
     <!--[if lt IE 9]>
@@ -99,7 +104,7 @@
 	  		<cfif Len(errorMsg)>
 			
 
-			<div class="panel panel-danger">
+			<cfoutput><div class="panel #panelClass#"></cfoutput>
 			  <div class="panel-heading">Email Verification Incomplete</div>
 			  <div class="panel-body">
 				<cfoutput>#errorMsg#</cfoutput>
@@ -129,7 +134,7 @@
       <cfinclude template="includes/footer.cfm" />
     </div> <!--- /container --->
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-    <script src="<cfoutput>#RepeatString('../',pathLen)#</cfoutput>js/bootstrap.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
   </body>
 </html>

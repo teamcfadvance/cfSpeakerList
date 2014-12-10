@@ -6,13 +6,23 @@
 <cfparam name="FORM.phone" default="" type="string" />
 <cfparam name="FORM.showTwitter" default="0" type="boolean" />
 <cfparam name="FORM.twitter" default="" type="string" />
+<cfparam name="FORM.blog" default="" type="string" />
+<cfparam name="FORM.bio" default="" type="string" />
 <cfparam name="FORM.countries" default="" type="string" />
 <cfparam name="FORM.states" default="" type="string" />
+<cfparam name="FORM.majorCity" default="" type="string" />
 <cfparam name="FORM.otherLocations" default="" type="string" />
+<cfparam name="FORM.online" default="0" type="boolean" />
 <cfparam name="FORM.specialties" default="" type="string" />
 <cfparam name="FORM.programs" default="" type="string" />
 <cfparam name="FORM.capcha" default="999" />
 <cfparam name="FORM['ff' & Hash('capcha')]" default="#APPLICATION.formZero#" type="string" />
+
+<!--- make sure the form was submitted from this website --->
+<cfif NOT APPLICATION.utils.checkReferer( CGI.HTTP_HOST, CGI.HTTP_REFERER )>
+	<!--- it wasm't, redirect back to the form --->
+	<cflocation url="#CGI.SCRIPT_NAME#" />
+</cfif>
 
 <!--- set a null error message to check for later --->
 <cfset errorMsg = '' />
@@ -32,6 +42,7 @@
 			fName 		= saniForm.fName,
 			lName 		= saniForm.lName,
 			countries 	= saniForm.countries,
+			bio 		= saniForm.bio,
 			specialties = saniForm.specialties,
 			capcha 		= saniForm.capcha
 		}
@@ -49,21 +60,11 @@
 		<cfset errorMsg = errorMsg & '</ul>' />
 	</cfif>
 	
-	<!--- decrypt the capcha answer --->
-	<cfset cAnswer = APPLICATION.utils.dataDec(saniForm['ff' & Hash('capcha')], 'form') />
-	
 	<!--- verify the capcha is correct --->
-	<cfif saniForm.capcha EQ cAnswer>
-		<cfset validCapcha = true />
-	<cfelse>
-		<cfset validCapcha = false />
-	</cfif>	
-	
-	<!--- check if the sum of the capcha is not equal to the expected sum --->
-	<cfif NOT validCapcha>
+	<cfif saniForm.capcha NEQ APPLICATION.utils.dataDec(saniForm['ff' & Hash('capcha')], 'form')>
 		<!--- capcha mismatch, set an error message to display --->
 		<cfset errorMsg = '<p>We&apos;re sorry, but you did not enter the correct sum of the two numbers. You may have added the numbers incorrectly, typo&apos;d the answer, or at worst... you may not be human. Please try again.</p>' />
-	</cfif> 
+	</cfif>	
 	
 	<!--- check if this username (email) already exists --->
 	<cfset userExists = APPLICATION.userDAO.checkIfUserExists(saniForm.email) />
@@ -145,8 +146,12 @@
 			showPhone	= saniForm.showPhone,
 			twitter    	= saniForm.twitter,
 			showTwitter	= saniForm.showTwitter,
+			blog 		= saniForm.blog,
+			bio 		= saniForm.bio,
 			specialties	= ListSort(saniForm.specialties,'textnocase'),
 			locations  	= thisSpeakerLocs,
+			majorCity 	= saniForm.majorCity,
+			isOnline 	= saniForm.online,
 			isACP      	= (ListFindNoCase(saniForm.programs,'acp') ? 1 : 0),
 			isAEL      	= (ListFindNoCase(saniForm.programs,'ael') ? 1 : 0),
 			isUGM      	= (ListFindNoCase(saniForm.programs,'ugm') ? 1 : 0),
@@ -185,8 +190,10 @@
 
     <title><cfoutput>#APPLICATION.siteName#</cfoutput> &raquo; Speaker Sign-Up</title>
 
-    <link href="css/bootstrap.min.css" rel="stylesheet">
-    <link href="css/jumbotron.css" rel="stylesheet">
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <link href="//cdn.vsgcom.net/css/jumbotron.css" rel="stylesheet">
+    <link href="//cdn.vsgcom.net/css/strength-meter.min.css" rel="stylesheet">
+    <link href="//cdn.vsgcom.net/css/bootstrap3-wysihtml5.min.css" rel="stylesheet">
 
     <!--- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries --->
     <!--[if lt IE 9]>
@@ -233,6 +240,7 @@
 		</cfif>
 			
 		<form class="form-horizontal" role="form" id="signup" method="post" action="#CGI.SCRIPT_NAME#">
+			#APPLICATION.utils.getRandomFormField()#
 		<fieldset>
 		
 		<!--- Form Name --->
@@ -243,7 +251,7 @@
 		  <label class="col-md-4 control-label" for="email">Email</label>  
 		  <div class="col-md-4">
 		  <input id="email" name="email" placeholder="someone@someplace.com" class="form-control input-md" required autofocus type="email" value="#FORM.email#">
-		  <span class="help-block">Used to login and receive contacts, never shared publicly</span>  
+		  <span class="help-block">Used to login, receive requests, and display your Gravatar. Never shared publicly</span>  
 		  </div>
 		</div>
 		
@@ -251,7 +259,7 @@
 		<div class="form-group">
 		  <label class="col-md-4 control-label" for="password">Password</label>
 		  <div class="col-md-4">
-			<input id="password" name="password" placeholder="Min 8 chars using each of a-z, A-Z and 0-9" class="form-control input-md" required type="password">
+			<input id="password" name="password" placeholder="My$tR0ngP@$sW0Rd#Year( Now() )#" class="form-control input-md" required type="password">
 		  </div>
 		</div>
 		
@@ -309,6 +317,15 @@
 		  </div>
 		</div>
 		
+		<!--- Text input--->
+		<div class="form-group">
+		  <label class="col-md-4 control-label" for="blog">Website/Blog URL</label>  
+		  <div class="col-md-4">
+		  <input id="blog" name="blog" placeholder="http://blog.domain.tld" class="form-control input-md" type="text" value="#FORM.blog#">
+		  <span class="help-block">Optional, shown publicly</span>  
+		  </div>
+		</div>
+		
 		<!--- Select Multiple --->
 		<div class="form-group">
 		  <label class="col-md-4 control-label" for="country">Countries</label>
@@ -337,10 +354,32 @@
 		
 		<!--- Text input--->
 		<div class="form-group">
+		  <label class="col-md-4 control-label" for="majorCity">Closest Major City</label>  
+		  <div class="col-md-4">
+		  <input id="majorCity" name="majorCity" placeholder="Richmond" class="form-control input-md" type="text" value="#FORM.majorCity#">
+		  <span class="help-block">Enter the closest major city to you</span>  
+		  </div>
+		</div>
+		
+		<!--- Text input--->
+		<div class="form-group">
 		  <label class="col-md-4 control-label" for="otherLocations">Other Locations</label>  
 		  <div class="col-md-4">
-		  <input id="otherLocations" name="otherLocations" placeholder="Online, Toronto, Paris" class="form-control input-md" type="text" value="#FORM.otherLocations#">
+		  <input id="otherLocations" name="otherLocations" placeholder="Toronto, Paris" class="form-control input-md" type="text" value="#FORM.otherLocations#">
 		  <span class="help-block">Enter other location(s) separated by commas</span>  
+		  </div>
+		</div>
+		
+		<!--- Checkbox --->
+		<div class="form-group">
+		  <label class="col-md-4 control-label" for="programs">Present Online?</label>
+		  <div class="col-md-4">
+		  	<div class="checkbox">
+				<label for="online">
+				  <input name="online" id="online" value="1" type="checkbox"<cfif FORM.online> checked="checked"</cfif>>
+				  Yes, I present online
+				</label>
+			</div>
 		  </div>
 		</div>
 		
@@ -350,6 +389,15 @@
 		  <div class="col-md-4">                     
 			<textarea class="form-control" id="specialties" name="specialties"><cfif Len(FORM.specialties)>#FORM.specialties#<cfelse>HTML5, CSS3, CFML, Web Design</cfif></textarea>
 		  <span class="help-block">Enter your specialties separated by commas</span>  
+		  </div>
+		</div>
+		
+		<!--- Textarea --->
+		<div class="form-group">
+		  <label class="col-md-4 control-label" for="bio">Biography</label>
+		  <div class="col-md-4">                     
+			<textarea class="form-control" id="bio" name="bio"><cfif Len(FORM.bio)>#FORM.bio#<cfelse></cfif></textarea>
+		  <span class="help-block">Enter your biography</span>  
 		  </div>
 		</div>
 		
@@ -366,7 +414,7 @@
 		  <div class="checkbox">
 			<label for="programs-1">
 			  <input name="programs" id="programs-1" value="AEL" type="checkbox"<cfif ListFindNoCase(FORM.programs,'ael')> checked="checked"</cfif>>
-			  Adobe E-Learning Professional (AEL)
+			  Adobe Education Leader (AEL)
 			</label>
 			</div>
 		  <div class="checkbox">
@@ -404,7 +452,7 @@
 		<div class="form-group">
 		  <label class="col-md-4 control-label" for="submit"></label>
 		  <div class="col-md-8">
-			<button id="submit" name="btn_Submit" type="submit" class="btn btn-success">Finish Sign Up</button>
+			<button id="submit" name="btn_Submit" type="submit" class="btn btn-success">Proceed to Email Verification</button>
 			<button id="reset" name="btn_Reset" type="reset" class="btn btn-danger">Clear Form</button>
 		  </div>
 		</div>
@@ -420,11 +468,14 @@
       <cfinclude template="includes/footer.cfm" />
     </div> <!--- /container --->
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-	<script src="http://ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>	
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+	<script src="//ajax.aspnetcdn.com/ajax/jquery.validate/1.11.1/jquery.validate.min.js"></script>
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
+    <script src="//cdn.vsgcom.net/js/strength-meter.min.js"></script>
+    <script src="//cdn.vsgcom.net/js/bootstrap3-wysihtml5.all.min.js"></script>
 	<script type="text/javascript">
 		$(function() {
+    		$('#password').strength({showMeter: true, toggleMask: false});
 			
 			$('#signup').validate({
 				errorClass: 'text-danger',
@@ -506,6 +557,21 @@
 				}
 				
 			});
+
+		});
+
+		$('#bio').wysihtml5({
+			toolbar: {
+			    "font-styles": true, //Font styling, e.g. h1, h2, etc. Default true
+			    "emphasis": true, //Italics, bold, etc. Default true
+			    "lists": true, //(Un)ordered lists, e.g. Bullets, Numbers. Default true
+			    "html": false, //Button which allows you to edit the generated HTML. Default false
+			    "link": false, //Button to insert a link. Default true
+			    "image": true, //Button to insert an image. Default true,
+			    "color": false, //Button to change color of font  
+			    "blockquote": false, //Blockquote  
+			    "size": 'sm' //default: none, other options are xs, sm, lg
+			}
 		});
 	</script>
   </body>

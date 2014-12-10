@@ -2,6 +2,7 @@
 <cfparam name="FORM.cName" default="" type="string" />
 <cfparam name="FORM.orgName" default="" type="string" />
 <cfparam name="FORM.email" default="" type="string" />
+<cfparam name="FORM.eventName" default="" type="string" />
 <cfparam name="FORM.venue" default="" type="string" />
 <cfparam name="FORM.eventDate" default="" type="string" />
 <cfparam name="FORM.eventTime" default="" type="string" />
@@ -9,6 +10,12 @@
 <cfparam name="FORM.specialty" default="" type="string" />
 <cfparam name="FORM.capcha" default="" type="string" />
 <cfparam name="FORM['ff' & Hash('capcha')]" default="#APPLICATION.formZero#" type="string" />
+
+<!--- make sure the form was submitted from this website --->
+<cfif NOT APPLICATION.utils.checkReferer( CGI.HTTP_HOST, CGI.HTTP_REFERER )>
+	<!--- it wasm't, redirect back to the index --->
+	<cflocation url="/index.cfm" />
+</cfif>
 
 <!--- set a null error message to check for later --->
 <cfset errorMsg = '' />
@@ -25,6 +32,7 @@
 			cName 		= saniForm.cName,
 			orgName 	= saniForm.orgName,
 			email 		= saniForm.email,
+			eventName 	= saniForm.eventName,
 			venue 		= saniForm.venue,
 			eventDate 	= saniForm.eventDate,
 			eventTime	= saniForm.eventTime,
@@ -46,21 +54,11 @@
 		<cfset errorMsg = errorMsg & '</ul>' />
 	</cfif>
 	
-	<!--- decrypt the capcha answer --->
-	<cfset cAnswer = APPLICATION.utils.dataDec(saniForm['ff' & Hash('capcha')], 'form') />
-	
 	<!--- verify the capcha is correct --->
-	<cfif saniForm.capcha EQ cAnswer>
-		<cfset validCapcha = true />
-	<cfelse>
-		<cfset validCapcha = false />
-	</cfif>	
-	
-	<!--- check if the sum of the capcha is not equal to the expected sum --->
-	<cfif NOT validCapcha>
+	<cfif saniForm.capcha NEQ APPLICATION.utils.dataDec(saniForm['ff' & Hash('capcha')], 'form')>
 		<!--- capcha mismatch, set an error message to display --->
 		<cfset errorMsg = '<p>We&apos;re sorry, but you did not enter the correct sum of the two numbers. You may have added the numbers incorrectly, typo&apos;d the answer, or at worst... you may not be human. Please try again.</p>' />
-	</cfif>
+	</cfif>	
 	
 	<!--- get the speaker object from the passed in speaker key --->
 	<cfset speakerObj = APPLICATION.speakerDAO.getSpeakerByKey(FORM['ff' & Hash('speakerKey','SHA-384')]) />
@@ -76,6 +74,30 @@
 	
 		<!--- carriage return --->
 		<cfset cR = Chr(10) & Chr(13) />
+
+		<!--- create a speaker request object using the passed values --->
+		<cfset speakerRequestObj = createObject('component','core.beans.SpeakerRequest').init(
+			speakerRequestId	= 0,
+			speakerId       	= speakerObj.getSpeakerId(),
+			requestedBy     	= saniForm.cName,
+			organization    	= saniForm.orgName,
+			email           	= saniForm.email,
+			eventName 			= saniForm.eventName,
+			venue           	= saniForm.venue,
+			eventDate       	= saniForm.eventDate,
+			eventTime       	= saniForm.eventTime,
+			attendees       	= saniForm.attendees,
+			topic           	= saniForm.specialty,
+			isAccepted      	= 0,
+			isCompleted     	= 0,
+			isActive        	= 1
+	    ) />
+
+	    <!--- save the speaker request object --->
+	    <cfset speakerRequestObj.setSpeakerRequestId( APPLICATION.speakerRequestDAO.saveSpeakerRequest( speakerRequestObj ) ) />
+
+	    <!--- generate the encrypted speaker request id --->
+	    <cfset encRequestId = APPLICATION.utils.dataEnc(speakerRequestObj.getSpeakerRequestId(), 'form') />
 	
 		<!--- we have, send a request email to the speaker --->
 		<cfmail to="#speakerObj.getEmail()#" from="#saniForm.email#" subject="#APPLICATION.siteName# Speaker Request" bcc="#APPLICATION.bccEmail#" charset="utf-8">
@@ -84,6 +106,10 @@
 			<p>Hello #speakerObj.getFirstName()#,</p>
 			<p>#saniForm.cName# (#saniForm.email#) from #saniForm.orgName# has sent the following speaker request to you from #APPLICATION.siteName#:</p>
 			<table>
+				<tr>
+					<td><strong>Event Name</strong></td>
+					<td>#saniForm.eventName#</td>
+				</tr>
 				<tr>
 					<td><strong>Venue/Location</strong></td>
 					<td>#saniForm.venue#</td>
@@ -104,6 +130,9 @@
 			<p>&nbsp;</p>
 			<p>Please reply to this email to contact #saniForm.cName# directly about this request.</p>
 			<p>&nbsp;</p>
+			<p>If you accept this request, please click the following link to update your statistics in our system:</p>
+			<p><a href="#CGI.HTTP_HOST#/accept.cfm/#encRequestId#">Click to accept</a></p>
+			<p>&nbsp;</p>
 			<p>Sincerely,<br />The #APPLICATION.siteName# Team</p>
 		 </cfmailpart>
 		 <cfmailpart type="plain">
@@ -111,11 +140,14 @@
 			Hello #APPLICATION.utils.decodeVal(speakerObj.getFirstName())#,#cR##cR#
 			#APPLICATION.utils.decodeVal(saniForm.cName)# (#APPLICATION.utils.decodeVal(saniForm.email)#) from #APPLICATION.utils.decodeVal(saniForm.orgName)# has sent the following#cR#
 			speaker request to you from #APPLICATION.siteName#:#cR##cR##cR#
+			Event Name#chr(9)##chr(9)##APPLICATION.utils.decodeVal(saniForm.eventName)##cR##cR#
 			Venue/Location#chr(9)##chr(9)##APPLICATION.utils.decodeVal(saniForm.venue)##cR##cR#
 			Date and Time#chr(9)##chr(9)##APPLICATION.utils.decodeVal(saniForm.eventDate)# #APPLICATION.utils.decodeVal(saniForm.eventTime)##cR##cR#
 			Expected No. of Attendees#chr(9)##chr(9)##APPLICATION.utils.decodeVal(saniForm.attendees)##cR##cR#
 			Requested Topic/Specialty#chr(9)##APPLICATION.utils.decodeVal(saniForm.specialty)##cR##cR##cR#
-			Please reply to this email to contact #APPLICATION.utils.decodeVal(saniForm.cName)# directly about this request.#cR##cR#
+			Please reply to this email to contact #APPLICATION.utils.decodeVal(saniForm.cName)# directly about this request.#cR##cR##cR#
+			If you accept this request, please click the following link to update your statistics in our system:#cR#
+			#CGI.HTTP_HOST#/accept.cfm/#encRequestId##cR##cR#
 			Sincerely,#cR#
 			The #APPLICATION.siteName# Team#cR##cR#
 		 </cfmailpart>
@@ -123,6 +155,12 @@
 		
 	<!--- end ensuring we have no errors --->	
 	</cfif>
+	
+<!--- otherwise --->
+<cfelse>
+
+	<!--- form not submitted, redirect back to the index --->
+	<cflocation url="/index.cfm" />		
 
 <!--- end checking if the form was submitted --->	
 </cfif>
@@ -139,8 +177,8 @@
 
     <title><cfoutput>#APPLICATION.siteName#</cfoutput> &raquo; Speaker Request</title>
 
-    <link href="css/bootstrap.min.css" rel="stylesheet">
-    <link href="css/jumbotron.css" rel="stylesheet">
+    <link href="//maxcdn.bootstrapcdn.com/bootstrap/3.3.1/css/bootstrap.min.css" rel="stylesheet">
+    <link href="//cdn.vsgcom.net/css/jumbotron.css" rel="stylesheet">
 
     <!--- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries --->
     <!--[if lt IE 9]>
@@ -198,7 +236,7 @@
       <cfinclude template="includes/footer.cfm" />
     </div> <!--- /container --->
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
-    <script src="js/bootstrap.min.js"></script>
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.3.1/js/bootstrap.min.js"></script>
   </body>
 </html>
