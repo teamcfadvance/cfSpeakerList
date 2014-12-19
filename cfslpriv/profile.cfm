@@ -363,6 +363,18 @@
 			</label>
 			</div>
 		  <div class="checkbox">
+			<label for="programs-4">
+			  <input name="programs" id="programs-4" value="ACL" type="checkbox"<cfif speakerObj.getIsACL()> checked="checked"</cfif>>
+			  Adobe Campus Leader (ACL)
+			</label>
+			</div>
+		  <div class="checkbox">
+			<label for="programs-5">
+			  <input name="programs" id="programs-5" value="AET" type="checkbox"<cfif speakerObj.getIsAET()> checked="checked"</cfif>>
+			  Adobe Education Trainer (AET)
+			</label>
+			</div>
+		  <div class="checkbox">
 			<label for="programs-2">
 			  <input name="programs" id="programs-2" value="UGM" type="checkbox"<cfif speakerObj.getIsUGM()> checked="checked"</cfif>>
 			  Adobe User Group Manager (UGM)

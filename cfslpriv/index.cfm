@@ -208,9 +208,11 @@
 						<ul>
 						<cfif speakerObj.getIsACP()><li>Adobe Community Professional (ACP)</li></cfif>
 						<cfif speakerObj.getIsAEL()><li>Adobe Education Leader (AEL)</li></cfif>
+						<cfif speakerObj.getIsAET()><li>Adobe Education Trainer (AET)</li></cfif>
+						<cfif speakerObj.getIsACL()><li>Adobe Campus Leader (ACL)</li></cfif>
 						<cfif speakerObj.getIsUGM()><li>Adobe User Group Manager (UGM)</li></cfif>
 						<cfif speakerObj.getIsOther()><li>Other design/development program member</li></cfif>
-						<cfif NOT speakerObj.getIsACP() AND NOT speakerObj.getIsAEL() AND NOT speakerObj.getIsUGM() AND NOT speakerObj.getIsOther()><li>Not in any program</li></cfif>
+						<cfif NOT speakerObj.getIsACP() AND NOT speakerObj.getIsAEL() AND NOT speakerObj.getIsUGM() AND NOT speakerObj.getIsOther() AND NOT speakerObj.getIsAET() AND NOT speakerObj.getIsACL()><li>Not in any program</li></cfif>
 						</ul>
 					</td>
 				  </tr>

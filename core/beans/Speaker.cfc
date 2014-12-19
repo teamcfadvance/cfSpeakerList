@@ -15,6 +15,8 @@
 <cfproperty name="isOnline" type="string" default="" />
 <cfproperty name="isACP" type="string" default="" />
 <cfproperty name="isAEL" type="string" default="" />
+<cfproperty name="isAET" type="string" default="" />
+<cfproperty name="isACL" type="string" default="" />
 <cfproperty name="isUGM" type="string" default="" />
 <cfproperty name="isOther" type="string" default="" />
 
@@ -38,6 +40,8 @@
   isOnline = '',
 	isACP = '',
 	isAEL = '',
+  isAET = '',
+  isACL = '',
 	isUGM = '',
 	isOther = ''
 } />
@@ -62,6 +66,8 @@
   <cfargument name="isOnline" type="string" required="true" default="" hint="" />
   <cfargument name="isACP" type="string" required="true" default="" hint="" />
   <cfargument name="isAEL" type="string" required="true" default="" hint="" />
+  <cfargument name="isAET" type="string" required="true" default="" hint="" />
+  <cfargument name="isACL" type="string" required="true" default="" hint="" />
   <cfargument name="isUGM" type="string" required="true" default="" hint="" />
   <cfargument name="isOther" type="string" required="true" default="" hint="" />
   <!--- set the initial values of the bean --->
@@ -84,6 +90,8 @@
   setIsOnline(ARGUMENTS.isOnline);
 	setIsACP(ARGUMENTS.isACP);
 	setIsAEL(ARGUMENTS.isAEL);
+  setIsAET(ARGUMENTS.isAET);
+  setIsACL(ARGUMENTS.isACL);
 	setIsUGM(ARGUMENTS.isUGM);
 	setIsOther(ARGUMENTS.isOther);
   </cfscript>
@@ -181,6 +189,16 @@
   <cfset variables.instance.isAEL = ARGUMENTS.isAEL />
 </cffunction>
 
+<cffunction name="setIsAET" access="public" output="false" hint="I set the isAET value into the variables.instance scope.">
+  <cfargument name="isAET" type="string" required="true" default="" hint="I am the isAET value." />
+  <cfset variables.instance.isAET = ARGUMENTS.isAET />
+</cffunction>
+
+<cffunction name="setIsACL" access="public" output="false" hint="I set the isACL value into the variables.instance scope.">
+  <cfargument name="isACL" type="string" required="true" default="" hint="I am the isACL value." />
+  <cfset variables.instance.isACL = ARGUMENTS.isACL />
+</cffunction>
+
 <cffunction name="setIsUGM" access="public" output="false" hint="I set the isUGM value into the variables.instance scope.">
   <cfargument name="isUGM" type="string" required="true" default="" hint="I am the isUGM value." />
   <cfset variables.instance.isUGM = ARGUMENTS.isUGM />
@@ -262,6 +280,14 @@
 
 <cffunction name="getIsAEL" access="public" output="false" returntype="string" hint="I return the isAEL value.">
   <cfreturn variables.instance.isAEL />
+</cffunction>
+
+<cffunction name="getIsAET" access="public" output="false" returntype="string" hint="I return the isAET value.">
+  <cfreturn variables.instance.isAET />
+</cffunction>
+
+<cffunction name="getIsACL" access="public" output="false" returntype="string" hint="I return the isACL value.">
+  <cfreturn variables.instance.isACL />
 </cffunction>
 
 <cffunction name="getIsUGM" access="public" output="false" returntype="string" hint="I return the isUGM value.">

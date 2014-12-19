@@ -154,6 +154,8 @@
 			isOnline 	= saniForm.online,
 			isACP      	= (ListFindNoCase(saniForm.programs,'acp') ? 1 : 0),
 			isAEL      	= (ListFindNoCase(saniForm.programs,'ael') ? 1 : 0),
+		  	isAET 		= (ListFindNoCase(saniForm.programs,'aet') ? 1 : 0),
+		  	isACL 		= (ListFindNoCase(saniForm.programs,'acl') ? 1 : 0),
 			isUGM      	= (ListFindNoCase(saniForm.programs,'ugm') ? 1 : 0),
 			isOther    	= (ListFindNoCase(saniForm.programs,'other') ? 1 : 0)
 		) />
@@ -415,6 +417,18 @@
 			<label for="programs-1">
 			  <input name="programs" id="programs-1" value="AEL" type="checkbox"<cfif ListFindNoCase(FORM.programs,'ael')> checked="checked"</cfif>>
 			  Adobe Education Leader (AEL)
+			</label>
+			</div>
+		  <div class="checkbox">
+			<label for="programs-4">
+			  <input name="programs" id="programs-4" value="ACL" type="checkbox"<cfif ListFindNoCase(FORM.programs,'acl')> checked="checked"</cfif>>
+			  Adobe Campus Leader (ACL)
+			</label>
+			</div>
+		  <div class="checkbox">
+			<label for="programs-5">
+			  <input name="programs" id="programs-5" value="AET" type="checkbox"<cfif ListFindNoCase(FORM.programs,'aet')> checked="checked"</cfif>>
+			  Adobe Education Trainer (AET)
 			</label>
 			</div>
 		  <div class="checkbox">

@@ -36,6 +36,8 @@
   <cfargument name="isOnline" type="any" required="false" default="" hint="I am the isOnline boolean to return records for." />
   <cfargument name="isACP" type="any" required="false" default="" hint="I am the isACP boolean to return records for." />
   <cfargument name="isAEL" type="any" required="false" default="" hint="I am the isAEL boolean to return records for." />
+  <cfargument name="isAET" type="any" required="false" default="" hint="I am the isAET boolean to return records for." />
+  <cfargument name="isACL" type="any" required="false" default="" hint="I am the isACL boolean to return records for." />
   <cfargument name="isUGM" type="any" required="false" default="" hint="I am the isUGM boolean to return records for." />
   <cfargument name="isOther" type="any" required="false" default="" hint="I am the isOther boolean to return records for." />
   <cfargument name="orderBy" type="any" required="false" default="" hint="I am the column(s) (and optional ordinal ASC or DESC) that records should be ordered by." />
@@ -78,6 +80,12 @@
     </cfif>
     <cfif IsDefined('ARGUMENTS.isAEL') AND ARGUMENTS.isAEL NEQ "">
 		<cfset thisFilter.isAEL = ARGUMENTS.isAEL />
+    </cfif>
+    <cfif IsDefined('ARGUMENTS.isAET') AND ARGUMENTS.isAET NEQ "">
+		<cfset thisFilter.isAET = ARGUMENTS.isAET />
+    </cfif>
+    <cfif IsDefined('ARGUMENTS.isACL') AND ARGUMENTS.isACL NEQ "">
+		<cfset thisFilter.isACL = ARGUMENTS.isACL />
     </cfif>
     <cfif IsDefined('ARGUMENTS.isUGM') AND ARGUMENTS.isUGM NEQ "">
 		<cfset thisFilter.isUGM = ARGUMENTS.isUGM />
@@ -295,6 +303,12 @@
     <cfif structKeyExists(ARGUMENTS.filter, 'isAEL')>
 		AND s.isAEL = <cfqueryparam value="#ARGUMENTS.filter.isAEL#" cfsqltype="cf_sql_bit" />
     </cfif>
+    <cfif structKeyExists(ARGUMENTS.filter, 'isAET')>
+		AND s.isAET = <cfqueryparam value="#ARGUMENTS.filter.isAET#" cfsqltype="cf_sql_bit" />
+    </cfif>
+    <cfif structKeyExists(ARGUMENTS.filter, 'isACL')>
+		AND s.isACL = <cfqueryparam value="#ARGUMENTS.filter.isACL#" cfsqltype="cf_sql_bit" />
+    </cfif>
     <cfif structKeyExists(ARGUMENTS.filter, 'isUGM')>
 		AND s.isUGM = <cfqueryparam value="#ARGUMENTS.filter.isUGM#" cfsqltype="cf_sql_bit" />
     </cfif>
@@ -353,6 +367,12 @@
     </cfif>
     <cfif structKeyExists(ARGUMENTS.filter, 'isAEL')>
 		AND s.isAEL = <cfqueryparam value="#ARGUMENTS.filter.isAEL#" cfsqltype="cf_sql_bit" />
+    </cfif>
+    <cfif structKeyExists(ARGUMENTS.filter, 'isAET')>
+		AND s.isAET = <cfqueryparam value="#ARGUMENTS.filter.isAET#" cfsqltype="cf_sql_bit" />
+    </cfif>
+    <cfif structKeyExists(ARGUMENTS.filter, 'isACL')>
+		AND s.isACL = <cfqueryparam value="#ARGUMENTS.filter.isACL#" cfsqltype="cf_sql_bit" />
     </cfif>
     <cfif structKeyExists(ARGUMENTS.filter, 'isUGM')>
 		AND s.isUGM = <cfqueryparam value="#ARGUMENTS.filter.isUGM#" cfsqltype="cf_sql_bit" />
