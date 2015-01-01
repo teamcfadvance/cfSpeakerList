@@ -320,6 +320,8 @@ CREATE TABLE `speakers` (
   `isOnline` tinyint(1) NOT NULL DEFAULT '0',
   `isACP` tinyint(1) NOT NULL DEFAULT '0',
   `isAEL` tinyint(1) NOT NULL DEFAULT '0',
+  `isAET` tinyint(1) NOT NULL DEFAULT '0',
+  `isACL` tinyint(1) NOT NULL DEFAULT '0',
   `isUGM` tinyint(1) NOT NULL DEFAULT '0',
   `isOther` tinyint(1) NOT NULL DEFAULT '0',
   PRIMARY KEY (`speakerId`)
